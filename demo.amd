@@ -6,6 +6,8 @@ define the relationships between the variables.
 
 *Like so:*
 
+---
+
 Fuel usage is a function of distance divided by the rate of consumption.
 
     @fuel_usage = @distance / @mileage
@@ -13,6 +15,7 @@ Fuel usage is a function of distance divided by the rate of consumption.
 Traveling [100]{distance [0..200]} miles in a car rated at
 [25]{mileage [5..40]}mpg uses [4]{fuel_usage} gallons.
 
+---
 
 The goal is to provide a simple notation for defining these variables and
 linking them to the logic, so that such documents can be easily created and
@@ -38,15 +41,18 @@ the logic that drives the relationships between the variables is hidden. It’s
 possible to [expose the source](http://worrydream.com/TenBrighterIdeas/), but
 it’s still separate from the interactivity.
 
+There are similar projects like [R Markdown](http://www.rstudio.com/ide/docs/authoring/using_markdown), but any interactivity is within
+embedded modules, not *integral* to the text.
+
 ### `litcoffee`
 
 The recent release of Literate CoffeeScript is a really nice approach to
 literate programming. It allows for writing a Markdown file that can also be
-executed, by actually running the code blocks. The file can be either parsed
-as Markdown, for viewing as a nicely formatted — yet still static — HTML page.
+executed by actually running the code blocks. The file can be either parsed as
+Markdown, for viewing as a nicely formatted — yet still static — HTML page.
 Or, it can be compiled by the `coffee` compiler into JavaScript and executed.
 
-What if the HTML representation weren’t static?
+But what if the HTML representation weren’t static?
 
 
 
@@ -79,17 +85,17 @@ token inside the braces is the name of the variable. Names are global, so
 using the same variable name again will link those controls.
 
 More complicated controls are specified by adding *configuration* inside the
-braces, eg: `[5]{some_number [0..10]}` creates a slider from 0 to 10, starting
-at [5]{some_number [0..10]}.
+braces, eg: `[5]{some_number [0...10]}` creates a slider from 0 to 10, starting
+at [5]{some_number [0...10]}.
 
 Graphs are effectively embedded images, and the notation is similar.
-`![Graph title]{graphFn x=[-10..10]}` will create a graph driven by `graphFn`
-and a range from `-10` to `10`.
+`![Graph title]{graphFn x=[-10...10]}` will create a graph driven by `graphFn`
+over a range from `-10` to `10`.
 
     graphFn = (x) ->
         return slope * x
 
-![Graph title]{graphFn x=[-10..10]}
+![Graph title]{graphFn x=[-10...10]}
 [1]{slope [0..20]}
 
 The type of control is determined by the configuration. A simple
@@ -140,14 +146,23 @@ results seen immediately.
         return Math.pow(x,rating)
 
 The growth in our credit default swap operation shows no sign of slowing:
-![Money over time]{growth x=[1999..2020]}
+![Money over time]{growth x=[1999..2020] highlight=2013}
 
 
 ## Forward
 
----While obviously not as powerful as Tangle or a custom document, and it does
+---While obviously not as powerful as Tangle, a custom document, or things like IPython, and it does
 require familiarity with CoffeeScript. However, there is a great appeal in having the
 source be a fairly simple plaintext file that exposes its logic directly.
 
+It fills this void of lightweight interactive document creation
+
+
+The compilation command and are still in need of some user-friendliness and
+robustness, but they will be public on GitHub shortly.
+
 The plan going forward is to expand on the notation, and add helpers for
-working with graphs and datasets.
+working with graphs and datasets. Also, a more useful editor for the code
+blocks, perhaps CodeMirror, is definitely in order.
+
+Take a peek at the raw `.amd` file used to generate this document.
