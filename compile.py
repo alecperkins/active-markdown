@@ -18,6 +18,8 @@ head = """
             background: #fbfbfb;
             padding: 1em;
             border: 1px solid #ccc;
+            max-height: 200px;
+            overflow: scroll;
         }
         body {
             max-width: 660px;
@@ -116,10 +118,10 @@ def doReplace(matchobj):
 
 
 
-PATTERN = '([!`*]?)\[([\w\d\s]*)]{(.*)}([`*]?)'
+PATTERN = '([!`*]?)\[([$%\.\w\d\s]*)]{([\w\d=\.,\[\] ]+)}([`*]?)'
 
 
-source = file('source2.livemd').read()
+source = file('source2.amd').read()
 
 result = re.sub(PATTERN, doReplace, source)
 

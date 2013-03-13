@@ -1,4 +1,4 @@
-# A Live Markdown Document
+# An Active Markdown Document
 
 ## Ornare Dolor
 

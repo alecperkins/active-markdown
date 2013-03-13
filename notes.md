@@ -1,10 +1,11 @@
 
 http://worrydream.com/Tangle/
 http://www.wolfram.com/cdf/uses-examples/
-
+http://dry.ly/2011/02/21/coffeescript--processingjs--crazy-delicious/
 
 https://help.github.com/articles/github-flavored-markdown
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#wiki-tables
+https://github.com/dcurtis/markdown-mark
 
 in code, functions are run within their own scope
 use @ to access the context
@@ -14,10 +15,11 @@ livemd --include-libs   Pack libs into output file, so no external files are req
 
 
 code editors: auto suggest/complete variable names
+code mirror?
 
 
 [5]{some_number [0...10]}                           = <input type="range">
-[5]{some_number [0...inf]}                          = <input type="range">			? - flexible, auto updates min/max
+[5]{some_number [0...inf]}                          = <input type="range">          ? - flexible, auto updates min/max
 
 [lorem]{text_value}                                 = <input type="text">
 
@@ -31,7 +33,7 @@ code editors: auto suggest/complete variable names
 
 
 Lists:
-- [ ]{var_name} Foo bar								= <li><input type="checkbox"></li>
+- [ ]{var_name} Foo bar                             = <li><input type="checkbox"></li>
 - [x]{var_name} Foo bar
 
 
@@ -51,9 +53,9 @@ Lists:
 | zebra stripes | are neat      |    $1 |
 
 @matrix_variable = [
-	[col_0, col_1, col_2]       # row 0
-	[col_0, col_1, col_2]		# row 1
-	[col_0, col_1, col_2]		# row 2
+    [col_0, col_1, col_2]       # row 0
+    [col_0, col_1, col_2]       # row 1
+    [col_0, col_1, col_2]       # row 2
 ]
 
 -- or just define datasets in code blocks? and embed table like a graph ![Table title]{matrix_variable cols=Column,Headers}
@@ -61,6 +63,7 @@ Lists:
 
 
 helper functions for formatting currency, time, percents, etc
+hooks into processing.js, d3.js, flot.js
 
 gear icon for changing configuration of variables inline
 but why would I do that when there's this little window into the code right here?

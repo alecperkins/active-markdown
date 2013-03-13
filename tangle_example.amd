@@ -6,10 +6,10 @@ California has 278 state parks, including state beaches and historic parks. The 
 ## What Prop 21 would do:
 Proposes to charge car owners an extra $18 on their annual registration bill, to go into the state park fund. Cars that pay the charge would have free park admission.
 
-	code block with actual relationships between fees, proportions, attendance
+	# code block with actual relationships between fees, proportions, attendance
 
 ## Analysis:
-Suppose that an extra [$18]{fee [0..50]} was charged to [100%]{proportion [0..100]} of [vehicle registrations]{fee_recipients ['vehicle registrations','California taxpayers']. Park admission would be [$0]{park_admission [0..25]} for [those who paid the charge].
+Suppose that an extra [$18]{fee [0..50]} was charged to [100%]{proportion [0..100]} of [vehicle registrations]{fee_recipients ['vehicle registrations','California taxpayers']}. Park admission would be [$0]{park_admission [0..25]} for [those who paid the charge]{admission_fee_for}.
 
 This would collect an extra [$437 million]{budget_difference} ([$504 million]{tax_revenue} from the tax, minus [$67 million]{lost_revenue} lost revenue from admission) for a total state park budget of [$837 million]{total_budget}. This [is]{sufficient_for_park} sufficient to maintain the parks in their current state, [plus fund a program to bring safety and cleanliness up to acceptable standards over the next 7 years]{additional_programs}.
 

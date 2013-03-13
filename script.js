@@ -7,7 +7,7 @@
 
   $('#toggle-raw').one('click', function() {
     return setTimeout(function() {
-      return $('body').append("<style>\n	#raw.visible {\n		max-height: " + ($('#raw').height()) + "px;\n	}\n</style>");
+      return $('body').append("<style>\n    #raw.visible {\n        max-height: " + ($('#raw').height()) + "px;\n    }\n</style>");
     }, 1000);
   });
 
@@ -31,7 +31,6 @@
         return Executor.prototype._deferredExecute.apply(_this, arguments);
       };
       this._variables = {};
-      $('pre code').on('blur', this._deferredExecute);
     }
 
     Executor.prototype.getOrCreateVariable = function(attrs) {
@@ -59,13 +58,13 @@
     };
 
     Executor.prototype._compileCode = function() {
-      var code;
-      code = '';
+      var coffee_code_str, js_code_str;
+      coffee_code_str = '';
       $('pre code').each(function(i, el) {
-        return code += $(el).html();
+        return coffee_code_str += $(el).html();
       });
-      code = CoffeeScript.compile(code);
-      return code;
+      js_code_str = CoffeeScript.compile(coffee_code_str);
+      return js_code_str;
     };
 
     Executor.prototype._deferredExecute = function() {
@@ -73,13 +72,13 @@
       if (!this._is_executing) {
         this._is_executing = true;
         return _.defer(function() {
-          var code, fn, state;
+          var fn, js_code_str, state;
           console.log(new Date());
           state = _this._prepareState();
           console.log(state, state.some_number);
-          code = _this._compileCode();
-          fn = Function(code);
-          fn.call(state, code);
+          js_code_str = _this._compileCode();
+          fn = Function(js_code_str);
+          fn.call(state, js_code_str);
           console.log(state);
           _this._updateVariablesFrom(state);
           return _this._is_executing = false;
@@ -214,6 +213,7 @@
     console.log('config', config);
     start = _.first(config);
     end = _.last(config);
+    text_content = _.string.strip(text_content, '$%');
     number_model = executor.getOrCreateVariable({
       name: name,
       start: start,
