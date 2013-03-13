@@ -21,3 +21,5 @@ mollis ornare vel eu [5]{some_number}.
 
 Morbi leo risus, porta ac [5]{other_number} ac, vestibulum
 at eros.
+
+`[5]{other_number}`

@@ -17,6 +17,8 @@ livemd --include-libs   Pack libs into output file, so no external files are req
 code editors: auto suggest/complete variable names
 code mirror?
 
+[5]{some_number $[0...10]}
+[5]{some_number %[0...10]}
 
 [5]{some_number [0...10]}                           = <input type="range">
 [5]{some_number [0...inf]}                          = <input type="range">          ? - flexible, auto updates min/max

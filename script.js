@@ -31,6 +31,7 @@
         return Executor.prototype._deferredExecute.apply(_this, arguments);
       };
       this._variables = {};
+      $('pre code').on('blur', this._deferredExecute);
     }
 
     Executor.prototype.getOrCreateVariable = function(attrs) {
@@ -61,8 +62,9 @@
       var coffee_code_str, js_code_str;
       coffee_code_str = '';
       $('pre code').each(function(i, el) {
-        return coffee_code_str += $(el).html();
+        return coffee_code_str += $(el).text();
       });
+      console.log(coffee_code_str);
       js_code_str = CoffeeScript.compile(coffee_code_str);
       return js_code_str;
     };
@@ -175,8 +177,8 @@
     }
 
     NumberVar.prototype.ui = {
-      range: '[type="range"]',
-      output: 'span'
+      range: 'input[type="range"]',
+      output: 'span.output'
     };
 
     NumberVar.prototype.events = {
@@ -184,13 +186,13 @@
     };
 
     NumberVar.prototype._update = function() {
-      console.log('update value is', this.ui.range.val());
+      console.log('update value is', this.ui, parseInt(this.ui.range.val()));
       return this.model.set({
         value: parseInt(this.ui.range.val())
       });
     };
 
-    NumberVar.prototype.template = "<span class=\"variable-label\">{{ name }}</span>\n<input type=\"range\" min=\"{{ start }}\" max=\"{{ end }}\" value=\"{{ value }}\">\n<span>{{ value }}</span>";
+    NumberVar.prototype.template = "<span class=\"variable-label\">{{ name }}</span>\n<input type=\"range\" min=\"{{ start }}\" max=\"{{ end }}\" value=\"{{ value }}\">\n<span class=\"output\">{{ value }}</span>";
 
     return NumberVar;
 
@@ -313,7 +315,7 @@
 
   $('.live-text').each(makeLive);
 
-  $('code').each(function(i, code) {
+  $('pre code').each(function(i, code) {
     return $(code).attr('contenteditable', true);
   });
 

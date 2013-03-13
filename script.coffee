@@ -21,7 +21,7 @@ class Executor
 
     constructor: ->
         @_variables = {}
-        # $('pre code').on('blur', @_deferredExecute)
+        $('pre code').on('blur', @_deferredExecute)
 
     getOrCreateVariable: (attrs) ->
         {name} = attrs
@@ -46,7 +46,8 @@ class Executor
         # Concatenate all of the code blocks into one source string. This way,
         # the CoffeeScript compiler will include them in a single closure.
         $('pre code').each (i, el) ->
-            coffee_code_str += $(el).html()
+            coffee_code_str += $(el).text()
+        console.log coffee_code_str
         js_code_str = CoffeeScript.compile(coffee_code_str)
         return js_code_str
 
@@ -123,21 +124,21 @@ class Variable extends Backbone.NamedView
 
 class NumberVar extends Variable
     ui:
-        range: '[type="range"]'
-        output: 'span'
+        range: 'input[type="range"]'
+        output: 'span.output'
 
     events:
         'mouseup [type="range"]': '_update'
 
     _update: ->
-        console.log 'update value is', @ui.range.val()
+        console.log 'update value is', @ui, parseInt(@ui.range.val())
         @model.set
             value: parseInt(@ui.range.val())
 
     template: """
             <span class="variable-label">{{ name }}</span>
             <input type="range" min="{{ start }}" max="{{ end }}" value="{{ value }}">
-            <span>{{ value }}</span>
+            <span class="output">{{ value }}</span>
         """
 
 buildGraph = (text_content, name, config) ->
@@ -234,7 +235,7 @@ buildStringVar = (text_content, name, config) ->
 
 $('.live-text').each(makeLive)
 
-$('code').each (i, code) ->
+$('pre code').each (i, code) ->
     $(code).attr('contenteditable', true)
 
 

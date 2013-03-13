@@ -1,4 +1,5 @@
 
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <style>
         blockquote {
             border-left: 3px solid #ccc;
@@ -60,48 +61,237 @@
     </style>
     <button id="toggle-raw">raw</button>
     <button id="reset">reset</button>
-    <div id="raw"># An Active Markdown Document
+    <div id="raw"># An experiment in Active Markdown
 
-## Ornare Dolor
+A (hopefully) straightforward notation for adding interactivity to Markdown
+documents, using the document’s own code blocks to provide the logic and
+define the relationships between the variables.
 
-Lorem ipsum dolor sit amet, [consectetur](http://example.com) adipiscing elit. Donec id elit non mi
-porta gravida at eget metus. Nulla vitae elit libero, a pharetra augue. Aenean
-lacinia bibendum nulla sed *consectetur*. Curabitur blandit tempus porttitor.
-Nullam quis risus eget urna mollis ornare vel eu leo.
+*Like so:*
 
-    if @users_choice is 'on'
-        result = @some_number * 5
+Fuel usage is a function of distance divided by the rate of consumption.
+
+    @fuel_usage = @distance / @mileage
+
+Traveling [100]{distance [0..200]} miles in a car rated at
+[25]{mileage [5..40]}mpg uses [4]{fuel_usage} gallons.
+
+
+
+## Background
+
+### Regular Markdown
+
+Regular Markdown is pretty rad. It provides a great way to have plaintext
+"source code" for content, while still giving useful semantic formatting. Its
+output is static, but it doesn't have to be.
+
+### Tangle
+
+The amazing Bret Victor’s [`Tangle`](http://worrydream.com/Tangle/) library
+makes it possible to build interactive documents, with variables in text that
+can be adjusted, and the output displayed by modifying the text, generating a
+graph, and so on. While powerful, the library requires knowledge of HTML and
+JavaScript, and the result is effectively a small client-side webapp. Also,
+the logic that drives the relationships between the variables is hidden. It’s
+possible to [expose the source](http://worrydream.com/TenBrighterIdeas/), but
+it’s still separate from the interactivity.
+
+### `litcoffee`
+
+The recent release of Literate CoffeeScript is a really nice approach to
+literate programming. It allows for writing a Markdown file that can also be
+executed, by actually running the code blocks. The file can be either parsed
+as Markdown, for viewing as a nicely formatted — yet still static — HTML page.
+Or, it can be compiled by the `coffee` compiler into JavaScript and executed.
+
+What if the HTML representation weren’t static?
+
+
+
+## Active Markdown
+
+### Interactivity
+
+Thanks to `coffee-script.js`, it's possible to compile and execute
+CoffeeScript *in-browser*. This, combined with a little `Backbone` for
+managing the variables and interface, and we get interactive controls that can
+gather the state of all the variables, compile the CoffeeScript defined in the
+code blocks, execute that code using the current state, and reapply the state
+to the variables in the document.
+
+Different controls and outputs can be specified. Even graphs can be embedded,
+specifying a function and a range for the `x` values.
+
+`![]
+
+
+
+### Notation
+
+The notation is intended to be simple, and *feel* like Markdown. The approach
+is use the normal link and image syntax, but with braces instead of
+parenthesis and brackets. A simple interpolated variable looks like:
+`[alt text/default]{var_name}`, where the text in the brackets is the
+plaintext version of the variable (and also serves as a default value). The
+token inside the braces is the name of the variable. Names are global, so
+using the same variable name again will link those controls.
+
+More complicated controls are specified by adding *configuration* inside the
+braces, eg: `[5]{some_number [0..10]}` creates a slider from 0 to 10, starting
+at [5]{some_number [0..10]}.
+
+Graphs are effectively embedded images, and the notation is similar.
+`![Graph title]{graphFn x=[-10..10]}` will create a graph driven by `graphFn`
+and a range from `-10` to `10`.
+
+    graphFn = (x) ->
+        return slope * x
+
+![Graph title]{graphFn x=[-10..10]}
+[1]{slope [0..20]}
+
+The type of control is determined by the configuration. A simple
+`this or that` creates a binary choice between [this]{which_one this or that}.
+
+These variables can then be combined in the code for more complex logic:
+
+    coefficients =
+        'this': 5
+        'that': -1
+
+    @q1_result = @some_number * coefficients[@revenue]
+
+    if @revenue is 'profit'
+        @outlook = 'positive outlook'
     else
-        result = @some_number * 50
-    @other_number = result
-    console.log result, @other_number, this
+        @outlook = 'negative outlook'
+
+Choosing [profit]{revenue profit or loss} results in a
+[positive outlook]{outlook}: $[25]{q1_result}.
 
 
-Curabitur blandit [on]{users_choice on or off} porttitor. Integer posuere erat a ante venenatis
-dapibus posuere velit aliquet. Nullam [5]{some_number [0..10]} risus eget urna
-mollis ornare vel eu [5]{some_number}.
 
-Morbi leo risus, porta ac [5]{other_number} ac, vestibulum
-at eros.
+### Logic
+
+The code blocks, written using CoffeeScript, can do whatever they please. When
+executing, every block is concatenated into a single CoffeeScript source
+string. The code has access to the variables which are attached to the
+top-level `this` in its scope.
+
+At the beginning of the execution process, the current value for each variable
+is gathered into a state. The code is then executed, using that state as its
+`this` context. The code modifies the state and does whatever it does, then
+the state is reapplied to each variable, updating the display of each control
+and output in the document.
+
+#### contenteditable
+
+Changing parameters is great, but what if you want to challenge an author’s
+assumptions about their logic. Each code block is directly editable, and
+*recompiled* each time the document is executed. This means the logic and
+relationships between the variables can be modified on the fly, and the
+results seen immediately.
+
+
+
+Obviously not as powerful as Tangle or a custom document, and it does require
+familiarity with CoffeeScript. However, Active Markdown is a simple notation
+and exposes its logic directly.
 </div>
-<h1>An Active Markdown Document</h1>
-<h2>Ornare Dolor</h2>
-<p>Lorem ipsum dolor sit amet, <a href="http://example.com">consectetur</a> adipiscing elit. Donec id elit non mi
-porta gravida at eget metus. Nulla vitae elit libero, a pharetra augue. Aenean
-lacinia bibendum nulla sed <em>consectetur</em>. Curabitur blandit tempus porttitor.
-Nullam quis risus eget urna mollis ornare vel eu leo.</p>
-<pre><code>if @users_choice is 'on'
-    result = @some_number * 5
-else
-    result = @some_number * 50
-@other_number = result
-console.log result, @other_number, this
+<h1>An experiment in Active Markdown</h1>
+<p>A (hopefully) straightforward notation for adding interactivity to Markdown
+documents, using the document’s own code blocks to provide the logic and
+define the relationships between the variables.</p>
+<p><em>Like so:</em></p>
+<p>Fuel usage is a function of distance divided by the rate of consumption.</p>
+<pre><code>@fuel_usage = @distance / @mileage
 </code></pre>
-<p>Curabitur blandit <span class="live-text"  data-name="users_choice" data-config='["on", "or", "off"]'>on</span> porttitor. Integer posuere erat a ante venenatis
-dapibus posuere velit aliquet. Nullam <span class="live-text"  data-name="some_number" data-config='["[0..10]"]'>5</span> risus eget urna
-mollis ornare vel eu <span class="live-text"  data-name="some_number" data-config='[]'>5</span>.</p>
-<p>Morbi leo risus, porta ac <span class="live-text"  data-name="other_number" data-config='[]'>5</span> ac, vestibulum
-at eros.</p>
+<p>Traveling <span class="live-text"  data-name="distance" data-config='["[0..200]"]'>100</span> miles in a car rated at <span class="live-text"  data-name="mileage" data-config='["[5..40]"]'>25</span>mpg uses <span class="live-text"  data-name="fuel_usage" data-config='[]'>4</span> gallons.</p>
+<h2>Background</h2>
+<h3>Regular Markdown</h3>
+<p>Regular Markdown is pretty rad. It provides a great way to have plaintext
+"source code" for content, while still giving useful semantic formatting. Its
+output is static, but it doesn't have to be.</p>
+<h3>Tangle</h3>
+<p>The amazing Bret Victor’s <a href="http://worrydream.com/Tangle/"><code>Tangle</code></a> library
+makes it possible to build interactive documents, with variables in text that
+can be adjusted, and the output displayed by modifying the text, generating a
+graph, and so on. While powerful, the library requires knowledge of HTML and
+JavaScript, and the result is effectively a small client-side webapp. Also,
+the logic that drives the relationships between the variables is hidden. It’s
+possible to <a href="http://worrydream.com/TenBrighterIdeas/">expose the source</a>, but
+it’s still separate from the interactivity.</p>
+<h3><code>litcoffee</code></h3>
+<p>The recent release of Literate CoffeeScript is a really nice approach to
+literate programming. It allows for writing a Markdown file that can also be
+executed, by actually running the code blocks. The file can be either parsed
+as Markdown, for viewing as a nicely formatted — yet still static — HTML page.
+Or, it can be compiled by the <code>coffee</code> compiler into JavaScript and executed.</p>
+<p>What if the HTML representation weren’t static?</p>
+<h2>Active Markdown</h2>
+<h3>Interactivity</h3>
+<p>Thanks to <code>coffee-script.js</code>, it's possible to compile and execute
+CoffeeScript <em>in-browser</em>. This, combined with a little <code>Backbone</code> for
+managing the variables and interface, and we get interactive controls that can
+gather the state of all the variables, compile the CoffeeScript defined in the
+code blocks, execute that code using the current state, and reapply the state
+to the variables in the document.</p>
+<p>Different controls and outputs can be specified. Even graphs can be embedded,
+specifying a function and a range for the <code>x</code> values.</p>
+<p>`![]</p>
+<h3>Notation</h3>
+<p>The notation is intended to be simple, and <em>feel</em> like Markdown. The approach
+is use the normal link and image syntax, but with braces instead of
+parenthesis and brackets. A simple interpolated variable looks like:
+<code>[alt text/default]{var_name}</code>, where the text in the brackets is the
+plaintext version of the variable (and also serves as a default value). The
+token inside the braces is the name of the variable. Names are global, so
+using the same variable name again will link those controls.</p>
+<p>More complicated controls are specified by adding <em>configuration</em> inside the
+braces, eg: <code>[5]{some_number [0..10]}</code> creates a slider from 0 to 10, starting
+at <span class="live-text"  data-name="some_number" data-config='["[0..10]"]'>5</span>.</p>
+<p>Graphs are effectively embedded images, and the notation is similar.
+<code>![Graph title]{graphFn x=[-10..10]}</code> will create a graph driven by <code>graphFn</code>
+and a range from <code>-10</code> to <code>10</code>.</p>
+<pre><code>graphFn = (x) -&gt;
+    return slope * x
+</code></pre>
+<p>![Graph title]{graphFn x=[-10..10]} <span class="live-text"  data-name="slope" data-config='["[0..20]"]'>1</span></p>
+<p>The type of control is determined by the configuration. A simple
+<code>this or that</code> creates a binary choice between <span class="live-text"  data-name="which_one" data-config='["this", "or", "that"]'>this</span>.</p>
+<p>These variables can then be combined in the code for more complex logic:</p>
+<pre><code>coefficients =
+    'this': 5
+    'that': -1
+
+@q1_result = @some_number * coefficients[@revenue]
+
+if @revenue is 'profit'
+    @outlook = 'positive outlook'
+else
+    @outlook = 'negative outlook'
+</code></pre>
+<p>Choosing <span class="live-text"  data-name="revenue" data-config='["profit", "or", "loss"]'>profit</span> results in a <span class="live-text"  data-name="outlook" data-config='[]'>positive outlook</span>:  <span class="live-text"  data-name="q1_result" data-config='[]'>25</span>.</p>
+<h3>Logic</h3>
+<p>The code blocks, written using CoffeeScript, can do whatever they please. When
+executing, every block is concatenated into a single CoffeeScript source
+string. The code has access to the variables which are attached to the
+top-level <code>this</code> in its scope.</p>
+<p>At the beginning of the execution process, the current value for each variable
+is gathered into a state. The code is then executed, using that state as its
+<code>this</code> context. The code modifies the state and does whatever it does, then
+the state is reapplied to each variable, updating the display of each control
+and output in the document.</p>
+<h4>contenteditable</h4>
+<p>Changing parameters is great, but what if you want to challenge an author’s
+assumptions about their logic. Each code block is directly editable, and
+<em>recompiled</em> each time the document is executed. This means the logic and
+relationships between the variables can be modified on the fly, and the
+results seen immediately.</p>
+<p>Obviously not as powerful as Tangle or a custom document, and it does require
+familiarity with CoffeeScript. However, Active Markdown is a simple notation
+and exposes its logic directly.</p>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.string/2.3.0/underscore.string.min.js"></script>

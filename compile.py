@@ -1,4 +1,5 @@
-import re, markdown, json
+import re, json, codecs
+import markdown
 
 
 
@@ -6,6 +7,7 @@ import re, markdown, json
 
 
 head = """
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <style>
         blockquote {
             border-left: 3px solid #ccc;
@@ -89,9 +91,7 @@ def doReplace(matchobj):
 
     print graph_flag, text_content, var_name, script_config 
 
-    if graph_flag == '`':
-        wrap_tag = 'code'
-    elif graph_flag == '*':
+    if graph_flag == '*':
         wrap_tag = 'em'
     else:
         if graph_flag == '!':
@@ -100,7 +100,7 @@ def doReplace(matchobj):
             graph_flag = ''
         wrap_tag = None
 
-    result = """<span class="live-text" {graph} data-name="{name}" data-config='{config}'>{text_content}</span>""".format(
+    result = """ <span class="live-text" {graph} data-name="{name}" data-config='{config}'>{text_content}</span>""".format(
             text_content    = text_content,
             name            = var_name,
             config          = json.dumps(script_config),
@@ -118,17 +118,17 @@ def doReplace(matchobj):
 
 
 
-PATTERN = '([!`*]?)\[([$%\.\w\d\s]*)]{([\w\d=\.,\[\] ]+)}([`*]?)'
+PATTERN = '([!*]?[^`])\[([$%\.\w\d\s]*)]{([\w\d=\.,\[\] ]+)}([*]?)'
 
 
-source = file('source2.amd').read()
+source = codecs.open('demo.amd','r','utf-8').read()
 
 result = re.sub(PATTERN, doReplace, source)
 
-file('intermediary.md', 'w').write(result)
+codecs.open('intermediary.md', 'w', 'utf-8').write(result)
 
 result = markdown.markdown(result)
 
 result = head % (source,) + result + tail
 
-file('output.html','w').write(result)
+codecs.open('output.html', 'w', 'utf-8').write(result)
