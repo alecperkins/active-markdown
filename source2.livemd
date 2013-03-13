@@ -1,0 +1,23 @@
+# A Live Markdown Document
+
+## Ornare Dolor
+
+Lorem ipsum dolor sit amet, [consectetur](http://example.com) adipiscing elit. Donec id elit non mi
+porta gravida at eget metus. Nulla vitae elit libero, a pharetra augue. Aenean
+lacinia bibendum nulla sed *consectetur*. Curabitur blandit tempus porttitor.
+Nullam quis risus eget urna mollis ornare vel eu leo.
+
+    if @users_choice is 'on'
+        result = @some_number * 5
+    else
+        result = @some_number * 50
+    @other_number = result
+    console.log result, @other_number, this
+
+
+Curabitur blandit [on]{users_choice on or off} porttitor. Integer posuere erat a ante venenatis
+dapibus posuere velit aliquet. Nullam [5]{some_number [0..10]} risus eget urna
+mollis ornare vel eu [5]{some_number}.
+
+Morbi leo risus, porta ac [5]{other_number} ac, vestibulum
+at eros.

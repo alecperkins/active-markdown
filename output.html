@@ -1,0 +1,105 @@
+
+    <style>
+        blockquote {
+            border-left: 3px solid #ccc;
+            font-style: italic;
+            padding-left: 1em;
+            margin-left: 0;
+        }
+        pre {
+            color: #444;
+            background: #fbfbfb;
+            padding: 1em;
+            border: 1px solid #ccc;
+        }
+        body {
+            max-width: 660px;
+            margin: 0 auto;
+            padding: 1em;
+        }
+        p, blockquote {
+            line-height: 1.5;
+        }
+        .Variable {
+            border: 3px solid blue;
+            padding: 0.1em;
+        }
+        .Variable .variable-label {
+            font-size: 0.8em;
+            background-color: yellow;
+            border: 1px dotted #ccc;
+            font-family: Menlo;
+        }
+        .Variable.readonly {
+            border-color: rgba(0,0,255,0.4);
+        }
+        .NumberVar input {
+            cursor: pointer;
+        }
+        .BinaryVar label, .BinaryVar input {
+            cursor: pointer;
+        }
+
+        #raw {
+            font-family: Menlo;
+            white-space: pre;
+            border-bottom: 1px solid #ccc;
+            max-height: 0;
+            overflow: hidden;
+            -webkit-transition-property: max-height;
+            -webkit-transition-duration: 0.5s;
+        }
+        #raw.visible {
+            max-height: 10000px;
+        }
+    </style>
+    <button id="toggle-raw">raw</button>
+    <div id="raw"># A Live Markdown Document
+
+## Ornare Dolor
+
+Lorem ipsum dolor sit amet, [consectetur](http://example.com) adipiscing elit. Donec id elit non mi
+porta gravida at eget metus. Nulla vitae elit libero, a pharetra augue. Aenean
+lacinia bibendum nulla sed *consectetur*. Curabitur blandit tempus porttitor.
+Nullam quis risus eget urna mollis ornare vel eu leo.
+
+    if @users_choice is 'on'
+        result = @some_number * 5
+    else
+        result = @some_number * 50
+    @other_number = result
+    console.log result, @other_number, this
+
+
+Curabitur blandit [on]{users_choice on or off} porttitor. Integer posuere erat a ante venenatis
+dapibus posuere velit aliquet. Nullam [5]{some_number [0..10]} risus eget urna
+mollis ornare vel eu [5]{some_number}.
+
+Morbi leo risus, porta ac [5]{other_number} ac, vestibulum
+at eros.
+</div>
+<h1>A Live Markdown Document</h1>
+<h2>Ornare Dolor</h2>
+<p>Lorem ipsum dolor sit amet, <a href="http://example.com">consectetur</a> adipiscing elit. Donec id elit non mi
+porta gravida at eget metus. Nulla vitae elit libero, a pharetra augue. Aenean
+lacinia bibendum nulla sed <em>consectetur</em>. Curabitur blandit tempus porttitor.
+Nullam quis risus eget urna mollis ornare vel eu leo.</p>
+<pre><code>if @users_choice is 'on'
+    result = @some_number * 5
+else
+    result = @some_number * 50
+@other_number = result
+console.log result, @other_number, this
+</code></pre>
+<p>Curabitur blandit <span class="live-text"  data-name="users_choice" data-config='["on", "or", "off"]'>on</span> porttitor. Integer posuere erat a ante venenatis
+dapibus posuere velit aliquet. Nullam <span class="live-text"  data-name="some_number" data-config='["[0..10]"]'>5</span> risus eget urna
+mollis ornare vel eu <span class="live-text"  data-name="some_number" data-config='[]'>5</span>.</p>
+<p>Morbi leo risus, porta ac <span class="live-text"  data-name="other_number" data-config='[]'>5</span> ac, vestibulum
+at eros.</p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.string/2.3.0/underscore.string.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
+    <script src="https://raw.github.com/alecperkins/Backbone.NamedView/master/backbone.namedview.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.4.0/coffee-script.min.js"></script>
+    <script src="script.js"></script>
