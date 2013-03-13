@@ -15,6 +15,10 @@
     return $('#raw').toggleClass('visible');
   });
 
+  $('#reset').on('click', function() {
+    return window.location.reload();
+  });
+
   _.templateSettings = {
     interpolate: /\{\{(.+?)\}\}/g
   };
@@ -66,17 +70,21 @@
 
     Executor.prototype._deferredExecute = function() {
       var _this = this;
-      return _.defer(function() {
-        var code, fn, state;
-        console.log(new Date());
-        state = _this._prepareState();
-        console.log(state, state.some_number);
-        code = _this._compileCode();
-        fn = Function(code);
-        fn.call(state, code);
-        console.log(state);
-        return _this._updateVariablesFrom(state);
-      });
+      if (!this._is_executing) {
+        this._is_executing = true;
+        return _.defer(function() {
+          var code, fn, state;
+          console.log(new Date());
+          state = _this._prepareState();
+          console.log(state, state.some_number);
+          code = _this._compileCode();
+          fn = Function(code);
+          fn.call(state, code);
+          console.log(state);
+          _this._updateVariablesFrom(state);
+          return _this._is_executing = false;
+        });
+      }
     };
 
     Executor.prototype._updateVariablesFrom = function(state) {

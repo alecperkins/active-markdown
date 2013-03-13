@@ -10,6 +10,8 @@ $('#toggle-raw').one 'click', ->
 	, 1000
 $('#toggle-raw').on 'click', ->
 	$('#raw').toggleClass('visible')
+$('#reset').on 'click', ->
+	window.location.reload()
 
 _.templateSettings =
   interpolate : /\{\{(.+?)\}\}/g
@@ -46,15 +48,18 @@ class Executor
 		return code
 
 	_deferredExecute: =>
-		_.defer =>
-			console.log(new Date())
-			state = @_prepareState()
-			console.log(state, state.some_number)
-			code = @_compileCode()
-			fn = Function(code)
-			fn.call(state, code)
-			console.log state
-			@_updateVariablesFrom(state)
+		if not @_is_executing
+			@_is_executing = true
+			_.defer =>
+				console.log(new Date())
+				state = @_prepareState()
+				console.log(state, state.some_number)
+				code = @_compileCode()
+				fn = Function(code)
+				fn.call(state, code)
+				console.log state
+				@_updateVariablesFrom(state)
+				@_is_executing = false
 
 
 	_updateVariablesFrom: (state) ->

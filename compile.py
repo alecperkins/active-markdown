@@ -37,6 +37,9 @@ head = """
             border: 1px dotted #ccc;
             font-family: Menlo;
         }
+        .Variable .variable-label:before {
+            content: "@";
+        }
         .Variable.readonly {
             border-color: rgba(0,0,255,0.4);
         }
@@ -61,6 +64,7 @@ head = """
         }
     </style>
     <button id="toggle-raw">raw</button>
+    <button id="reset">reset</button>
     <div id="raw">%s</div>
 """
 
