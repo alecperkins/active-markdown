@@ -64,7 +64,6 @@
       $('pre code').each(function(i, el) {
         return coffee_code_str += $(el).text();
       });
-      console.log(coffee_code_str);
       js_code_str = CoffeeScript.compile(coffee_code_str);
       return js_code_str;
     };
@@ -75,13 +74,10 @@
         this._is_executing = true;
         return _.defer(function() {
           var fn, js_code_str, state;
-          console.log(new Date());
           state = _this._prepareState();
-          console.log(state, state.some_number);
           js_code_str = _this._compileCode();
           fn = Function(js_code_str);
           fn.call(state, js_code_str);
-          console.log(state);
           _this._updateVariablesFrom(state);
           return _this._is_executing = false;
         });
@@ -89,13 +85,13 @@
     };
 
     Executor.prototype._updateVariablesFrom = function(state) {
-      var k, v, _results;
+      var k, v, _ref, _results;
       _results = [];
       for (k in state) {
         v = state[k];
-        _results.push(this._variables[k].set({
+        _results.push((_ref = this._variables[k]) != null ? _ref.set({
           value: v
-        }));
+        }) : void 0);
       }
       return _results;
     };
@@ -112,9 +108,8 @@
     name = $tag.data('name');
     config = $tag.data('config');
     text_content = $tag.html();
-    console.log(name, config);
     if ($tag.data('graph')) {
-      live_element = buildGraph(text_content, name, config);
+      return;
     } else if (config.length === 3 && config[1] === 'or') {
       live_element = buildBinaryVar(text_content, name, config);
     } else if (/[[\d]+[\.]{2,3}[\d]+]/.test(config[0])) {
@@ -122,7 +117,6 @@
     } else {
       live_element = buildStringVar(text_content, name, config);
     }
-    console.log(live_element);
     return $tag.replaceWith(live_element.render());
   };
 
@@ -146,17 +140,17 @@
     };
 
     Variable.prototype.render = function() {
-      var name, selector, _ref;
-      console.log('Variable.render');
-      this.$el.html(_.template(this.template)(this.model.toJSON()));
-      _ref = this._ui_map;
-      for (name in _ref) {
-        selector = _ref[name];
-        console.log(name, selector);
-        this.ui[name] = this.$el.find(selector);
-      }
-      console.log(this.ui);
-      this.onRender();
+      var _this = this;
+      _.defer(function() {
+        var name, selector, _ref;
+        _this.$el.html(_.template(_this.template)(_this.model.toJSON()));
+        _ref = _this._ui_map;
+        for (name in _ref) {
+          selector = _ref[name];
+          _this.ui[name] = _this.$el.find(selector);
+        }
+        return _this.onRender();
+      });
       return this.el;
     };
 

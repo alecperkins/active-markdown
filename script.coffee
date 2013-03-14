@@ -47,7 +47,6 @@ class Executor
         # the CoffeeScript compiler will include them in a single closure.
         $('pre code').each (i, el) ->
             coffee_code_str += $(el).text()
-        console.log coffee_code_str
         js_code_str = CoffeeScript.compile(coffee_code_str)
         return js_code_str
 
@@ -55,9 +54,7 @@ class Executor
         if not @_is_executing
             @_is_executing = true
             _.defer =>
-                console.log(new Date())
                 state = @_prepareState()
-                console.log(state, state.some_number)
                 js_code_str = @_compileCode()
 
                 # Turn the code string into an actual function, and call it
@@ -66,7 +63,6 @@ class Executor
                 fn = Function(js_code_str)
                 fn.call(state, js_code_str)
 
-                console.log state
                 # Reassign the values of the variables using their maybe new
                 # values from the `state`.
                 @_updateVariablesFrom(state)
@@ -75,7 +71,7 @@ class Executor
 
     _updateVariablesFrom: (state) ->
         for k, v of state
-            @_variables[k].set
+            @_variables[k]?.set
                 value: v
         
 
@@ -87,10 +83,10 @@ makeLive = (i, el) ->
     name            = $tag.data('name')
     config          = $tag.data('config')
     text_content    = $tag.html()
-    console.log name, config
 
     if $tag.data('graph')
-        live_element = buildGraph(text_content, name, config)
+        return
+        # live_element = buildGraph(text_content, name, config)
     else if config.length is 3 and config[1] is 'or'
         live_element = buildBinaryVar(text_content, name, config)
     else if /[[\d]+[\.]{2,3}[\d]+]/.test(config[0])
@@ -98,7 +94,6 @@ makeLive = (i, el) ->
     else
         live_element = buildStringVar(text_content, name, config)
 
-    console.log live_element
     $tag.replaceWith(live_element.render())
 
 
@@ -110,13 +105,11 @@ class Variable extends Backbone.NamedView
         @_ui_map = _.extend {}, @ui
 
     render: =>
-        console.log 'Variable.render'
-        @$el.html(_.template(@template)(@model.toJSON()))
-        for name, selector of @_ui_map
-            console.log name, selector
-            @ui[name] = @$el.find(selector) 
-        console.log @ui
-        @onRender()
+        _.defer =>
+            @$el.html(_.template(@template)(@model.toJSON()))
+            for name, selector of @_ui_map
+                @ui[name] = @$el.find(selector) 
+            @onRender()
         return @el
 
     ui: {}
