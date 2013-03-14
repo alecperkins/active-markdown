@@ -8,10 +8,7 @@ $('#toggle-raw').one 'click', ->
             </style>
         """
     , 1000
-$('#toggle-raw').on 'click', ->
-    $('#raw').toggleClass('visible')
-$('#reset').on 'click', ->
-    window.location.reload()
+
 
 _.templateSettings =
   interpolate : /\{\{(.+?)\}\}/g
@@ -85,8 +82,7 @@ makeLive = (i, el) ->
     text_content    = $tag.html()
 
     if $tag.data('graph')
-        return
-        # live_element = buildGraph(text_content, name, config)
+        live_element = buildGraph(text_content, name, config)
     else if config.length is 3 and config[1] is 'or'
         live_element = buildBinaryVar(text_content, name, config)
     else if /[[\d]+[\.]{2,3}[\d]+]/.test(config[0])
@@ -103,6 +99,9 @@ class Variable extends Backbone.NamedView
     initialize: ->
         @listenTo(@model, 'change', @render)
         @_ui_map = _.extend {}, @ui
+        if @readonly
+            @$el.addClass('readonly')
+
 
     render: =>
         _.defer =>
@@ -115,52 +114,54 @@ class Variable extends Backbone.NamedView
     ui: {}
     onRender: ->
 
+
+
+
+
 class NumberVar extends Variable
     ui:
-        range: 'input[type="range"]'
+        slider: 'span.slider'
         output: 'span.output'
 
-    events:
-        'mouseup [type="range"]': '_update'
+    # events:
+    #     'mouseup [type="range"]': '_update'
 
     _update: ->
-        console.log 'update value is', @ui, parseInt(@ui.range.val())
         @model.set
             value: parseInt(@ui.range.val())
 
     template: """
             <span class="variable-label">{{ name }}</span>
-            <input type="range" min="{{ start }}" max="{{ end }}" value="{{ value }}">
+            <span class="slider"></span>
             <span class="output">{{ value }}</span>
         """
 
-buildGraph = (text_content, name, config) ->
-    $t = $ "GRAPH"
-    return {
-        render: -> $t
-    }
+    onRender: ->
+        @ui.slider.slider
+            min: @model.get('min')
+            max: @model.get('max')
+
 
 buildNumberVar = (text_content, name, config) ->
-    console.log 'buildNumberVar'
     config = _.string.strip(config[0],'][').split('.')
-    console.log 'config', config
-    start = _.first(config)
-    end = _.last(config)
+    min = _.first(config)
+    max = _.last(config)
 
     text_content = _.string.strip(text_content, '$%')
 
     number_model = executor.getOrCreateVariable
         name: name
-        start: start
-        end: end
+        min: min
+        max: max
         value: parseInt(text_content)
 
     variable_view = new NumberVar
         model: number_model
-    
-    console.log start, end
 
     return variable_view
+
+
+
 
 class BinaryVar extends Variable
     template: """
@@ -207,7 +208,7 @@ buildBinaryVar = (text_content, name, config) ->
 
 
 class StringVar extends Variable
-    className: 'readonly'
+    readonly: true
     template: """
             <span class="variable-label">{{ name }}</span>
             {{ value }}
@@ -222,6 +223,50 @@ buildStringVar = (text_content, name, config) ->
         model: var_model
 
     return variable_view
+
+
+
+
+class GraphView extends Variable
+    readonly: true
+    tagName: 'div'
+    template: """
+        <div class="graph-title">{{ title }}</div>
+        <div class="graph-canvas"></div>
+    """
+    ui:
+        'canvas': '.graph-canvas'
+    onRender: ->
+        @ui.canvas.css
+            height: @ui.canvas.width() / 2
+        @_generateGraph()
+
+    _generateGraph: ->
+        config = @model.get('config')
+        x_range = config[0].split('=')[1]
+        x_range = _.string.strip(x_range,'[]').split('.')
+        start = parseInt(_.first(x_range))
+        end = parseInt(_.last(x_range))
+        series = []
+
+        graphFn = @model.get('value')
+
+        for x in [start...end] by 0.1
+            series.push [x, graphFn(x)]
+
+        $.plot(@ui.canvas, [series])
+
+
+
+buildGraph = (text_content, name, config) ->
+    $t = $ "GRAPH"
+    var_model = executor.getOrCreateVariable
+        name: name
+        title: text_content
+        config: config
+    graph_view = new GraphView
+        model: var_model
+    return graph_view
 
 
 

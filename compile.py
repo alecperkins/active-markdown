@@ -4,13 +4,7 @@ import markdown
 
 
 
-
-
-template = """
-<html>
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <style>
+style = u"""
         blockquote {
             border-left: 3px solid #ccc;
             font-style: italic;
@@ -28,32 +22,60 @@ template = """
         body {
             max-width: 660px;
             margin: 0 auto;
-            padding: 1em;
+            padding: 2em 1em;
+            font-family: Georgia;
+            background: #fdfdfd;
+            color: #0e0e0e;
         }
         p, blockquote {
             line-height: 1.5;
         }
+        hr {
+            border: 0;
+            border-bottom: 1px solid #ccc;
+            margin-top: 1.5em;
+            margin-bottom: 1.5em;
+        }
         .Variable {
-            border: 3px solid blue;
+            border: 1px solid rgba(0,0,255,0.8);
             padding: 0.1em;
+            position: relative;
+            border-radius: 3px;
         }
         .Variable .variable-label {
             font-size: 0.8em;
             background-color: yellow;
             border: 1px dotted #ccc;
-            font-family: Menlo;
+            font-family: Menlo, Courier New, monospace;
         }
         .Variable .variable-label:before {
             content: "@";
         }
         .Variable.readonly {
-            border-color: rgba(0,0,255,0.4);
+            border-color: rgba(0,0,255,0.2);
         }
-        .NumberVar input {
-            cursor: pointer;
+        .NumberVar .slider {
+            width: 200px;
+            position: absolute;
+            bottom: 100%;
+            left: -25px;
+            display: none;
+        }
+        .NumberVar:hover .slider {
+            display: block;
         }
         .BinaryVar label, .BinaryVar input {
             cursor: pointer;
+        }
+        .GraphView {
+            margin: 1em 0;
+        }
+        .GraphView .graph-title {
+            text-align: center;
+            font-weight: bold;
+        }
+        .GraphView .graph-canvas {
+            width: 100%;
         }
 
         #raw {
@@ -68,14 +90,21 @@ template = """
         #raw.visible {
             max-height: 10000px;
         }
+"""
+
+template = u"""
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <style>
+        {STYLE}
     </style>
 </head>
 <body>
-    <button id="toggle-raw">raw</button>
-    <button id="reset">reset</button>
-    <div id="raw">%s</div>
-    <div id="content">%s</div>
+    <div id="content">{CONTENT}</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+    <link href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.string/2.3.0/underscore.string.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
@@ -129,11 +158,12 @@ PATTERN = '([!*]?[^`])\[([$%\.\w\d\s]*)]{([\w\d=\.,\[\] ]+)}([*]?)'
 source = codecs.open('demo.amd','r','utf-8').read()
 
 result = re.sub(PATTERN, doReplace, source)
-
-codecs.open('intermediary.md', 'w', 'utf-8').write(result)
-
 result = markdown.markdown(result)
 
-result = template % (source, result)
+result = template.format(
+        STYLE   = style,
+        # RAW     = source,
+        CONTENT = result,
+    )
 
 codecs.open('output.html', 'w', 'utf-8').write(result)
