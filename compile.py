@@ -6,7 +6,9 @@ import markdown
 
 
 
-head = """
+template = """
+<html>
+<head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <style>
         blockquote {
@@ -67,19 +69,22 @@ head = """
             max-height: 10000px;
         }
     </style>
+</head>
+<body>
     <button id="toggle-raw">raw</button>
     <button id="reset">reset</button>
     <div id="raw">%s</div>
-"""
-
-tail = """
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script>
+    <div id="content">%s</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.string/2.3.0/underscore.string.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
     <script src="https://raw.github.com/alecperkins/Backbone.NamedView/master/backbone.namedview.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.4.0/coffee-script.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.7/jquery.flot.min.js"></script>
     <script src="script.js"></script>
+</body>
+</html>
 """
 
 def doReplace(matchobj):
@@ -129,6 +134,6 @@ codecs.open('intermediary.md', 'w', 'utf-8').write(result)
 
 result = markdown.markdown(result)
 
-result = head % (source,) + result + tail
+result = template % (source, result)
 
 codecs.open('output.html', 'w', 'utf-8').write(result)
