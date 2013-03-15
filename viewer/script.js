@@ -5,14 +5,9 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  $('#toggle-raw').one('click', function() {
-    return setTimeout(function() {
-      return $('body').append("<style>\n    #raw.visible {\n        max-height: " + ($('#raw').height()) + "px;\n    }\n</style>");
-    }, 1000);
-  });
-
   _.templateSettings = {
-    interpolate: /\{\{(.+?)\}\}/g
+    interpolate: /\{\{(.+?)\}\}/g,
+    evaluate: /\{\%(.+?)\%\}/g
   };
 
   Executor = (function() {
@@ -128,18 +123,19 @@
 
     Variable.prototype.initialize = function() {
       this.listenTo(this.model, 'change', this.render);
-      this._ui_map = _.extend({}, this.ui);
-      if (this.readonly) {
-        return this.$el.addClass('readonly');
-      }
+      return this._ui_map = _.extend({}, this.ui);
     };
 
     Variable.prototype.render = function() {
       var _this = this;
+      this.ui = {};
+      if (this.readonly) {
+        this.$el.addClass('readonly');
+      }
       _.defer(function() {
         var name, selector, _ref;
         _this.$el.html(_.template(_this.template)(_this.model.toJSON()));
-        _ref = _this._ui_map;
+        _ref = _this.ui_map;
         for (name in _ref) {
           selector = _ref[name];
           _this.ui[name] = _this.$el.find(selector);
@@ -148,8 +144,6 @@
       });
       return this.el;
     };
-
-    Variable.prototype.ui = {};
 
     Variable.prototype.onRender = function() {};
 
@@ -162,26 +156,36 @@
     __extends(NumberVar, _super);
 
     function NumberVar() {
+      var _this = this;
+      this._update = function(e, ui) {
+        return NumberVar.prototype._update.apply(_this, arguments);
+      };
       return NumberVar.__super__.constructor.apply(this, arguments);
     }
 
-    NumberVar.prototype.ui = {
+    NumberVar.prototype.ui_map = {
       slider: 'span.slider',
       output: 'span.output'
     };
 
-    NumberVar.prototype._update = function() {
+    NumberVar.prototype._update = function(e, ui) {
       return this.model.set({
-        value: parseInt(this.ui.range.val())
+        value: parseInt(ui.value)
       });
     };
 
     NumberVar.prototype.template = "<span class=\"variable-label\">{{ name }}</span>\n<span class=\"slider\"></span>\n<span class=\"output\">{{ value }}</span>";
 
     NumberVar.prototype.onRender = function() {
+      var _this = this;
       return this.ui.slider.slider({
         min: this.model.get('min'),
-        max: this.model.get('max')
+        max: this.model.get('max'),
+        value: this.model.get('value'),
+        change: this._update,
+        slide: function(e, ui) {
+          return _this.ui.output.text(ui.value);
+        }
       });
     };
 
@@ -197,8 +201,8 @@
     text_content = _.string.strip(text_content, '$%');
     number_model = executor.getOrCreateVariable({
       name: name,
-      min: min,
-      max: max,
+      min: parseInt(min),
+      max: parseInt(max),
       value: parseInt(text_content)
     });
     variable_view = new NumberVar({
@@ -231,7 +235,7 @@
       'change input': '_update'
     };
 
-    BinaryVar.prototype.ui = {
+    BinaryVar.prototype.ui_map = {
       'a': '.option-a',
       'b': '.option-b'
     };
@@ -250,7 +254,6 @@
 
   buildBinaryVar = function(text_content, name, config) {
     var var_model, variable_view;
-    console.log('buildBinaryVar');
     var_model = executor.getOrCreateVariable({
       name: name,
       value: text_content,
@@ -273,7 +276,7 @@
 
     StringVar.prototype.readonly = true;
 
-    StringVar.prototype.template = "<span class=\"variable-label\">{{ name }}</span>\n{{ value }}";
+    StringVar.prototype.template = "<span class=\"variable-label\">{{ name }}</span>\n{% if(value.toFixed) { %}\n    {{ value.toFixed(1) }}\n{% } else { %}\n    {{ value }}\n{% } %}";
 
     return StringVar;
 
@@ -305,7 +308,7 @@
 
     GraphView.prototype.template = "<div class=\"graph-title\">{{ title }}</div>\n<div class=\"graph-canvas\"></div>";
 
-    GraphView.prototype.ui = {
+    GraphView.prototype.ui_map = {
       'canvas': '.graph-canvas'
     };
 
@@ -336,8 +339,7 @@
   })(Variable);
 
   buildGraph = function(text_content, name, config) {
-    var $t, graph_view, var_model;
-    $t = $("GRAPH");
+    var graph_view, var_model;
     var_model = executor.getOrCreateVariable({
       name: name,
       title: text_content,
@@ -354,7 +356,5 @@
   $('pre code').each(function(i, code) {
     return $(code).attr('contenteditable', true);
   });
-
-  console.log(executor);
 
 }).call(this);

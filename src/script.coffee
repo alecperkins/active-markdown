@@ -1,17 +1,7 @@
-$('#toggle-raw').one 'click', ->
-    setTimeout ->
-        $('body').append """
-            <style>
-                #raw.visible {
-                    max-height: #{ $('#raw').height() }px;
-                }
-            </style>
-        """
-    , 1000
-
 
 _.templateSettings =
   interpolate : /\{\{(.+?)\}\}/g
+  evaluate : /\{\%(.+?)\%\}/g
 
 
 class Executor
@@ -99,19 +89,18 @@ class Variable extends Backbone.NamedView
     initialize: ->
         @listenTo(@model, 'change', @render)
         @_ui_map = _.extend {}, @ui
-        if @readonly
-            @$el.addClass('readonly')
-
 
     render: =>
+        @ui = {}
+        if @readonly
+            @$el.addClass('readonly')
         _.defer =>
             @$el.html(_.template(@template)(@model.toJSON()))
-            for name, selector of @_ui_map
+            for name, selector of @ui_map
                 @ui[name] = @$el.find(selector) 
             @onRender()
         return @el
 
-    ui: {}
     onRender: ->
 
 
@@ -119,16 +108,13 @@ class Variable extends Backbone.NamedView
 
 
 class NumberVar extends Variable
-    ui:
+    ui_map:
         slider: 'span.slider'
         output: 'span.output'
 
-    # events:
-    #     'mouseup [type="range"]': '_update'
-
-    _update: ->
+    _update: (e, ui) =>
         @model.set
-            value: parseInt(@ui.range.val())
+            value: parseInt(ui.value)
 
     template: """
             <span class="variable-label">{{ name }}</span>
@@ -140,6 +126,10 @@ class NumberVar extends Variable
         @ui.slider.slider
             min: @model.get('min')
             max: @model.get('max')
+            value: @model.get('value')
+            change: @_update
+            slide: (e, ui) =>
+                @ui.output.text(ui.value)
 
 
 buildNumberVar = (text_content, name, config) ->
@@ -151,8 +141,8 @@ buildNumberVar = (text_content, name, config) ->
 
     number_model = executor.getOrCreateVariable
         name: name
-        min: min
-        max: max
+        min: parseInt(min)
+        max: parseInt(max)
         value: parseInt(text_content)
 
     variable_view = new NumberVar
@@ -179,7 +169,7 @@ class BinaryVar extends Variable
     events:
         'change input': '_update'
 
-    ui:
+    ui_map:
         'a': '.option-a'
         'b': '.option-b'
 
@@ -192,7 +182,6 @@ class BinaryVar extends Variable
 
 
 buildBinaryVar = (text_content, name, config) ->
-    console.log 'buildBinaryVar'
 
     var_model = executor.getOrCreateVariable
         name: name
@@ -211,7 +200,11 @@ class StringVar extends Variable
     readonly: true
     template: """
             <span class="variable-label">{{ name }}</span>
-            {{ value }}
+            {% if(value.toFixed) { %}
+                {{ value.toFixed(1) }}
+            {% } else { %}
+                {{ value }}
+            {% } %}
         """
 
 buildStringVar = (text_content, name, config) ->
@@ -234,7 +227,7 @@ class GraphView extends Variable
         <div class="graph-title">{{ title }}</div>
         <div class="graph-canvas"></div>
     """
-    ui:
+    ui_map:
         'canvas': '.graph-canvas'
     onRender: ->
         @ui.canvas.css
@@ -259,7 +252,6 @@ class GraphView extends Variable
 
 
 buildGraph = (text_content, name, config) ->
-    $t = $ "GRAPH"
     var_model = executor.getOrCreateVariable
         name: name
         title: text_content
@@ -277,4 +269,3 @@ $('pre code').each (i, code) ->
     $(code).attr('contenteditable', true)
 
 
-console.log executor

@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+import codecs, json, markdown, os, re, sys
+
+
+def replaceWithSpan(matchobj):
+    graph_flag      = matchobj.group(1)
+    text_content    = matchobj.group(2)
+    script_config   = matchobj.group(3).split(' ')
+
+    var_name = script_config.pop(0)
+
+    if graph_flag == '!':
+        graph_flag = 'data-graph="true"'
+    else:
+        graph_flag = ''
+
+    span = u""" <span class="live-text" {graph} data-name="{name}" data-config='{config}'>{text_content}</span>""".format(
+            text_content    = text_content,
+            name            = var_name,
+            config          = json.dumps(script_config),
+            graph           = graph_flag,
+        )
+
+    return span
+
+
+def parse(amd_source):
+    AMD_PATTERN = '([!]?[^`])\[([$%-\.\w\d\s]*)]{([-\w\d=\.,\[\] ]+)}'
+
+    markdown_intermediary = re.sub(AMD_PATTERN, replaceWithSpan, amd_source)
+    html_output = markdown.markdown(markdown_intermediary)
+    return html_output
+
+
+def assembleOutput(html_content):
+    template = codecs.open('viewer/template.html', 'r', 'utf-8').read()
+    style = codecs.open('viewer/style.css', 'r', 'utf-8').read()
+    script = codecs.open('viewer/script.js', 'r', 'utf-8').read()
+    
+    viewer_file = template.format(
+            STYLE   = style,
+            CONTENT = html_content,
+            SCRIPT  = script,
+        )
+
+    return viewer_file
+
+
+def getFilePaths():
+    cwd = os.getcwd()
+    source_name = sys.argv[1]
+    source_path = os.path.join(cwd, source_name)
+    project_name = os.path.splitext(source_name)[0]
+    output_name = project_name + '.html'
+    output_path = os.path.join(cwd, output_name)
+    return source_name, source_path, output_name, output_path
+    
+
+if __name__ == '__main__':
+    source_name, source_path, output_name, output_path = getFilePaths()
+    amd_source = codecs.open(source_path,'r','utf-8').read()
+
+    parsed_content = parse(amd_source)
+    full_output = assembleOutput(parsed_content)
+    codecs.open(output_path, 'w', 'utf-8').write(full_output)
+    print 'Compiled', source_name, '-->', output_name
+
+
