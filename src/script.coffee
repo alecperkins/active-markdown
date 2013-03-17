@@ -7,8 +7,6 @@ _.templateSettings =
 makeActive = (i, el) ->
     $el = $(el)
     config_str = $el.data('config')
-    console.log ''
-    console.log config_str
 
     element_classes = [
         StringElement
@@ -22,20 +20,27 @@ makeActive = (i, el) ->
     element_class = _.find element_classes, (cls) ->
         return cls.config_pattern.test(config_str)
 
-    console.log element_class
     element_class.make($el, config_str)
 
 
 # Public: the base View for all of the active elements in the page. It handles
 #         most of the boilerplate
 class BaseElementView extends Backbone.NamedView
+    ui: {}
     render: ->
+        if @readonly
+            @$el.addClass('readonly')
         if @_template?
-            @$el.html(@_template(@model.toJSON()))
+            @$el.html(_.template(@_template)(@model.toJSON()))
+            @ui = {}
+            for name, selector of @_ui_map
+                @ui[name] = @$el.find(selector)
         @_onRender()
         return @el
 
-    _template: ->
+
+    _ui_map: {}
+    _template: ''
 
     _onRender: ->
 
@@ -58,35 +63,114 @@ class BaseElementView extends Backbone.NamedView
 class StringElement extends BaseElementView
     @config_pattern: /(^[\w\d_]+$)/
 
-    _template: _.template """
+    readonly: true
+
+    _template: """
         <span class="value">{{ value }}</span>
-        <span class="help">{{ name }}</span>
+        <span class="name">{{ name }}</span>
     """
 
     initialize: (parsed_config) ->
-        console.log parsed_config
         @model = new Backbone.Model
             value: parsed_config.text_content
             name: parsed_config.name
 
     @_parseConfig: (config_match) ->
-        console.log config_match
         return {
-            name: config_match[0]
+            name: config_match[1]
         }
 
 
+parseNumber = (val) ->
+    # TODO: handle constants
+    return parseFloat(val)
+
+parseStep = (val) ->
+    return 1
+
+parseInclusivity = (val) ->
+    return val.length is 2
+
+
+class DragManager
+    start: (view, e) ->
+
+
+        console.log e
+        { pageX } = e
+        @_drag_start_x = pageX
+        @_is_dragging = true
+        dragging_control = this
+
+drag_manager = new DragManager()
 
 class NumberElement extends BaseElementView
     @config_pattern: /([\w\d]+) \[([\w\d]*)([\.]*)([\w\d]*)\]([\w \d\.]*)/
 
     initialize: (parsed_config) ->
-        @model = new Backbone.Model()
+        parsed_config.value = parseInt(parsed_config.text_content)
+        # TODO: parse before and after text
+        delete parsed_config.text_content
+        @model = new Backbone.Model(parsed_config)
 
-    @_parseConfig: (config_str) ->
+
+    @_parseConfig: (config_match) ->
+        console.log config_match
+        ###
+        [
+            "calories [10..100] by 10",
+            "calories",
+            "10",
+            "..",
+            "100",
+            " by 10",
+            index: 0,
+            input: "calories [10..100] by 10"
+        ]
+        ###
+
+        [var_name, min, dots, max, step] = config_match[1..5]
         
-        return {}
+        return {
+            name        : var_name
+            min         : parseNumber(min)
+            max         : parseNumber(max)
+            inclusive   : parseInclusivity(dots)
+            step        : parseStep(step)
+        }
 
+    _ui_map:
+        'value': '.value'
+
+    _template: """
+        <span class="value">{{ value }}</span>
+        <span class="name">{{ name }}</span>
+    """
+
+    events:
+        'mousedown'     : '_startDragging'
+        'mousemove'     : '_drag'
+        'mouseup'       : 'stopDragging'
+
+    _startDragging: (e) ->
+        drag_manager.start(this, e)
+        return
+    
+    onDrag: (e) ->
+        if @_is_dragging
+            { pageX } = e
+            delta = @_drag_start_x - pageX
+            @model.set
+                value: @model.get('value') + delta / -5
+            @ui.value.text(@model.get('value'))
+            e.preventDefault()
+        return
+
+    stopDragging: (e) ->
+        { pageX } = e
+        @_is_dragging = false
+        console.log @_drag_start_x - pageX, @_is_dragging
+        return
 
 
 class BooleanElement extends BaseElementView

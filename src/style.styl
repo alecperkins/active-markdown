@@ -1,6 +1,41 @@
 
-$element_color = blue
+$element_color = rgba(0,0,255,1)
+$read_only_element_color = rgba(0,0,255,0.3)
+
+$tag_bg_color = yellow
+$tag_border_color = black
+
+$serif = Georgia, serif
+$sans_serif = Helvetica, Arial, Open Sans, sans-serif
+$monospace = Menlo, Courier New, monospace
+
+
+body.display-variable-names
+    .BaseElementView .name
+        display: block
 
 .BaseElementView
-	display			: inline
-	border-bottom 	: 1px dashed $element_color
+
+    display         : inline
+    border-bottom   : 1px dashed $element_color
+    position        : relative
+
+    &.readonly
+        border-bottom-color: $read_only_element_color
+
+    &:hover .name
+        display: block
+
+    .name
+        position        : absolute
+        bottom          : 100%
+        left            : 0
+        display         : none
+        background      : $tag_bg_color
+        border          : 1px dotted $tag_border_color
+        font-family     : $monospace
+        padding         : 0.25em
+        opacity         : 0.9
+        &:before
+            content         : "@"
+            font-style      : italic
