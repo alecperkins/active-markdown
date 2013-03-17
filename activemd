@@ -7,19 +7,16 @@ import codecs, json, markdown, os, re, sys
 def replaceWithSpan(matchobj):
     graph_flag      = matchobj.group(1)
     text_content    = matchobj.group(2)
-    script_config   = matchobj.group(3).split(' ')
-
-    var_name = script_config.pop(0)
+    script_config   = matchobj.group(3)
 
     if graph_flag == '!':
         graph_flag = 'data-graph="true"'
     else:
         graph_flag = ''
 
-    span = u""" <span class="live-text" {graph} data-name="{name}" data-config='{config}'>{text_content}</span>""".format(
+    span = u""" <span class="AMDElement" {graph} data-config='{config}'>{text_content}</span>""".format(
             text_content    = text_content,
-            name            = var_name,
-            config          = json.dumps(script_config),
+            config          = script_config,
             graph           = graph_flag,
         )
 
