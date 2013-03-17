@@ -10,16 +10,131 @@ makeActive = (i, el) ->
     console.log ''
     console.log config_str
 
-    matchers =
-        string  : /(^[\w\d_]+$)/
-        number  : /([\w\d]+) \[([\w\d]*)([\.]*)([\w\d]*)\]([\w \d\.]*)/
-        boolean : /([\w\d]+) ([\w]+) or ([\w]+)/
-        choice  : /([\w\d]+) \[([\w,\d ]+)\]/
-        graph   : /([=\.\,\w\d]+) x=\[([-\d\.\w]+)\]([\w \d\.]*)/
-        viz     : /(viz=[\w\d_]+)/
+    element_classes = [
+        StringElement
+        NumberElement
+        BooleanElement
+        ChoiceElement
+        GraphElement
+        VisualizationElement
+    ]
 
-    for type, expr of matchers
-        console.log type, expr.test(config_str)
+    element_class = _.find element_classes, (cls) ->
+        return cls.config_pattern.test(config_str)
+
+    console.log element_class
+    element_class.make($el, config_str)
+
+
+# Public: the base View for all of the active elements in the page. It handles
+#         most of the boilerplate
+class BaseElementView extends Backbone.NamedView
+    render: ->
+        if @_template?
+            @$el.html(@_template(@model.toJSON()))
+        @_onRender()
+        return @el
+
+    _template: ->
+
+    _onRender: ->
+
+    @make: ($el) ->
+        console.log 'Making', @name
+
+        config_data = $el.data('config').match(@config_pattern)
+
+        parsed_config = @_parseConfig(config_data)
+        parsed_config.text_content = $el.text()
+
+        view = new @(parsed_config)
+
+        $el.replaceWith(view.render())
+
+    @_parseConfig: ->
+
+
+
+class StringElement extends BaseElementView
+    @config_pattern: /(^[\w\d_]+$)/
+
+    _template: _.template """
+        <span class="value">{{ value }}</span>
+        <span class="help">{{ name }}</span>
+    """
+
+    initialize: (parsed_config) ->
+        console.log parsed_config
+        @model = new Backbone.Model
+            value: parsed_config.text_content
+            name: parsed_config.name
+
+    @_parseConfig: (config_match) ->
+        console.log config_match
+        return {
+            name: config_match[0]
+        }
+
+
+
+class NumberElement extends BaseElementView
+    @config_pattern: /([\w\d]+) \[([\w\d]*)([\.]*)([\w\d]*)\]([\w \d\.]*)/
+
+    initialize: (parsed_config) ->
+        @model = new Backbone.Model()
+
+    @_parseConfig: (config_str) ->
+        
+        return {}
+
+
+
+class BooleanElement extends BaseElementView
+    @config_pattern: /([\w\d]+) ([\w]+) or ([\w]+)/
+
+    initialize: (parsed_config) ->
+        @model = new Backbone.Model()
+
+    @_parseConfig: (config_str) ->
+        
+        return {}
+
+
+
+class ChoiceElement extends BaseElementView
+    @config_pattern: /([\w\d]+) \[([\w,\d ]+)\]/
+
+    initialize: (parsed_config) ->
+        @model = new Backbone.Model()
+
+    @_parseConfig: (config_str) ->
+        
+        return {}
+
+
+
+class GraphElement extends BaseElementView
+    @config_pattern: /([=\.\,\w\d]+) x=\[([-\d\.\w]+)\]([\w \d\.]*)/
+
+    initialize: (parsed_config) ->
+        @model = new Backbone.Model()
+
+    @_parseConfig: (config_str) ->
+        
+        return {}
+
+
+
+class VisualizationElement extends BaseElementView
+    @config_pattern: /(viz=[\w\d_]+)/
+
+    initialize: (parsed_config) ->
+        @model = new Backbone.Model()
+
+    @_parseConfig: (config_str) ->
+        
+        return {}
+
 
 
 # possible configs:
