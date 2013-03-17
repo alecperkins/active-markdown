@@ -1,6 +1,6 @@
 # Active Markdown
 
-Active Markdown is an extension of the Markdown format with a notation for easy interactivity in the rendered HTML output. It uses the document’s own code blocks to provide the logic and define the relationships between the variables. A sample `.amd` file looks like…
+Active Markdown is an extension of the Markdown format with a notation for easy interactivity in the rendered HTML output. It uses the document’s own code blocks to provide the logic and define the relationships between the variables. A sample file looks like…
 
 
     # St Ives
@@ -69,10 +69,10 @@ This is still experimental, and very rough around the edges. For more informatio
 
 3. Compile a file
 
-        $ ./activemd <filename>.amd
-        Compiling <filename>.amd --> <filename>.html
+        $ ./activemd <filename>.md
+        Compiling <filename>.md --> <filename>.html
 
-    This will generate an HTML file of the same name, but with the `.html` extension. The source file can have any extension, so long as it's plain text, but `.amd` is recommended. Try it on `sample_amd_files/st-ives.amd` or `docs/an-experiment/index.amd`.
+    This will generate an HTML file of the same name, but with the `.html` extension. The source file can have any extension, so long as it's plain text, but `.md` is recommended. Try it on `sample_amd_files/st-ives.md` or `docs/an-experiment/index.md`.
 
 4. View the output
 
