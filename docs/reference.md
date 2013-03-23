@@ -125,30 +125,33 @@ return a `y` value. Each function creates a separate series. The graph type
 defaults to `scatter`, and is specified after the functions. It MUST be one
 of `scatter`, `line`, `bar`. The `x` range MUST be finite.
 
-`![<graph_title>]{<graph_type>=<graph_function1>,<graph_type>=<graph_function2>,... <x_range>}`
+`![<graph alt text>]{<graph_type>=<graph_function1>,<graph_type>=<graph_function2>,... <x_range>}`
+
+The graph alt text is parsed for a `x vs y` pattern, extracting the labels
+for the `x` and `y` axes if present.
 
 
-* Scatter graph titled "Graph Title" of graphFn(x) from -10 to 10.
+* Scatter graph labeled "Graph alt" of graphFn(x) from -10 to 10.
   (scatter is default, but MAY be specified.)
 
-    `![Graph Title]{graphFn: x=-10..10}`
+    `![Graph alt]{graphFn: x=-10..10}`
 
-    `![Graph Title]{scatter=graphFn: x=-10..10}`
+    `![Graph alt]{scatter=graphFn: x=-10..10}`
 
-    ![Graph Title]{scatter=graphFn: x=-10..10}
+    ![Graph alt]{scatter=graphFn: x=-10..10}
 
-* Line graph titled "sin <em>of</em> x" of Math.sin(x) from -2pi to 2pi.
+* Line graph with the x label "x" and the y label "sin(x)" of Math.sin(x) from -2pi to 2pi.
 
-    `![sin *of* x]{line=Math.sin: x=-2pi..2i] by 0.25pi}`
+    `![sin(x) vs x]{line=Math.sin: x=-2pi..2i] by 0.25pi}`
 
-    ![sin *of* x]{line=Math.sin: x=-2pi..2i] by 0.25pi}
+    ![sin(x) vs x]{line=Math.sin: x=-2pi..2i] by 0.25pi}
 
-* Scatter graph titled "Graph Title" of graphFn(x) and otherFn(x) from -10 to 10.
+* Scatter graph labeled "Graph alt text" of graphFn(x) and otherFn(x) from -10 to 10.
   Multiple series (each series as a function in a comma-separated list).
 
     `![Graph Title]{bar=graphFn,line=otherFn: x=-10..10}`
 
-    ![Graph Title]{bar=graphFn,line=otherFn: x=-10..10}
+    ![Graph alt text]{bar=graphFn,line=otherFn: x=-10..10}
 
 ### Visualization
 
