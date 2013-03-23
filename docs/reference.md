@@ -90,11 +90,11 @@ the text becomes a *control label*.
 
     [pick one]{some_flag: true or false}
 
-* Boolean,"#{value}", default = true
+* Boolean,"before #{value}", default = true
 
-    `[true]{some_flag: true or false}`
+    `[before true]{some_flag: true or false}`
 
-    [true]{some_flag: true or false}
+    [before true]{some_flag: true or false}
 
 * Boolean, true label = "on", false label = "off", "#{label} deck"
 
@@ -112,19 +112,19 @@ found in the text, it is treated as the default value, and the remaining text
 becomes a template. Otherwise, the default value is `undefined` and the entire
 text becomes a *control label*.
 
-`[* choice *]{<var_name> [<choice 1>,<choice 2>,<choice 3>,...]}`
+`[* choice *]{<var_name>: <choice 1>,<choice 2>,<choice 3>,...}`
 
 * String select field, "before #{value} after"
 
-    `[before alpha after]{option_picked alpha,bravo,charlie,delta,echo}`
+    `[before alpha after]{option_picked: alpha,bravo,charlie,delta,echo}`
 
-    [before alpha after]{option_picked alpha,bravo,charlie,delta,echo}
+    [before alpha after]{option_picked: alpha,bravo,charlie,delta,echo}
 
 * String select field, "before #{value} after"
 
-    `[first option]{option_picked "first option",second,third,"fourth ,-separated option"}`
+    `[first option]{option_picked: "first option",second,third,"fourth ,-separated option"}`
 
-    [first option]{option_picked "first option",second,third,"fourth ,-separated option"}
+    [first option]{option_picked: "first option",second,third,"fourth ,-separated option"}
 
 
 ### Graph

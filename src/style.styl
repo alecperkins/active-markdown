@@ -43,5 +43,42 @@ body.display-variable-names
 .NumberElement
     cursor: col-resize
 
-body.dragging-horizontal
+.BooleanElement
+    cursor: pointer
+
+    .switch
+        position: relative
+        top: 0
+        color: green
+        -webkit-transition-property: 'top, green'
+        -webkit-transition-duration: 0.05s
+
+    .true-label, .false-label, .undefined-label
+        display: none
+
+    &[value="undefined"]
+        .undefined-label
+            display: inline
+
+        .switch
+            top: 0.12em
+            color: gray
+
+    &[value="true"]
+        .true-label
+            display: inline
+
+        .switch
+            top: 0
+            color: green
+
+    &[value="false"]
+        .false-label
+            display: inline
+
+        .switch
+            top: 0.25em
+            color: red
+
+body.dragging-x
     cursor: col-resize

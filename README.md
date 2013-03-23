@@ -7,11 +7,11 @@ Active Markdown is an extension of the Markdown format with a notation for easy 
 
     An old riddle.
 
-    > As [I]{travelers I or we} [was]{verb} going to **St Ives**  
-    > I met a man with [7]{wives [1...10]} wives  
-    > Every wife had [7]{sacks [1...10]} sacks  
-    > Every sack had [7]{cats [1...10]} cats  
-    > Every cat had [7]{kits [1...10]} kits  
+    > As [I]{travelers: I or we} [was]{verb} going to **St Ives**  
+    > I met a man with [7]{wives: 1..10} wives  
+    > Every wife had [7]{sacks: 1..10} sacks  
+    > Every sack had [7]{cats: 1..10} cats  
+    > Every cat had [7]{kits: 1..10} kits  
     > Kits, cats, sacks, wives  
 
         total_sacks     = @wives * @sacks
@@ -37,14 +37,14 @@ Active Markdown is an extension of the Markdown format with a notation for easy 
 
 ([rendered form &raquo;](http://show-em.net/e8ea079ab0fe444a8c83/st-ives.html))
 
-…where the `[7]{wives [1...10]}` gets replaced with a slider from `1` to `10`, defaulting at `7`. Whenever the value of one of the variables is changed, the code in the given code block is executed using the current state of all the variables. Then, the variables are updated with the new state.
+…where the `[7]{wives: 1..10}` gets replaced with a slider from `1` to `10`, defaulting at `7`. Whenever the value of one of the variables is changed, the code in the given code block is executed using the current state of all the variables. Then, the variables are updated with the new state.
 
 The notation is similar to the syntax for images and links, but when combined with some UI code by the rendering command, creates a rich, interactive document. Inspired by [literate CoffeeScript](http://coffeescript.org/#literate) and [Tangle](http://worrydream.com/Tangle/), the goal is a lightweight format for specifying interaction without requiring the creation of a webapp. Also, the document exposes its logic directly, and allows for easy modification and experimentation.
 
     [text value]{var_name}                  - interpolated variable (readonly)
-    [5]{var_name [1...10]}                  - slider from 1 to 10, default 5
-    [this]{var_name this or that}           - radio buttons between `this` or `that`
-    ![Graph title]{graphFn x=[-10...10]}    - graph called 'Graph title' of the function
+    [5]{var_name: 1..10}                    - slider from 1 to 10, default 5
+    [this]{var_name: this or that}          - radio buttons between `this` or `that`
+    ![Graph labels]{graphFn: x=-10..10}     - graph called 'Graph title' of the function
                                               `graphFn` of `x` from `-10` to `10`
 
 The code blocks have access to these variables under the top-level `this` object. Also, the code blocks are *editable*, and recompiled for every execution, allowing for additional interactivity. (Note: the code in the code blocks MUST be [CoffeeScript](http://coffeescript.org).)
