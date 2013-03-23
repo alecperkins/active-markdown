@@ -10,10 +10,10 @@ An old riddle.
 > Kits, cats, sacks, wives  
 > How many were going to St Ives?
 
-    total_sacks     = @wives * @sacks
-    total_cats      = total_sacks * @cats
-    total_kits      = total_cats * @kits
-    man             = 1
+    total_sacks = @wives * @sacks
+    total_cats  = total_sacks * @cats
+    total_kits  = total_cats * @kits
+    man         = 1
 
     if @travelers
         narrator = 2

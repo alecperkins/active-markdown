@@ -466,6 +466,35 @@ class GraphElement extends BaseElementView
         console.log 'plotting graph for', @model.get('name')
 
 
+
+
+
+class CodeBlock extends Backbone.NamedView
+
+    initialize: ({ @source }) ->
+        @render()
+
+    render: ->
+        @_editor = CodeMirror @el,
+            value: @source
+            mode:  "coffeescript"
+            onBlur: @_update
+            lineNumbers: true
+            viewportMargin: Infinity
+        console.log @_editor
+        # @_editor, 'blur', @_update)
+
+    _update: =>
+        @trigger('change:source')
+
+    getSource: (line_number_start) ->
+        @_editor.setOption('firstLineNumber', line_number_start)
+        return @_editor.getValue()
+
+
+
+
+
 ###
 possible configs:
 
@@ -498,11 +527,18 @@ Viz
 
 ###
 
-$('pre code').each (i, code) ->
-    $(code).attr('contenteditable', true)
-
 executor = new Executor()
 drag_manager = new DragManager()
+
+$('pre').each (i, el) ->
+    $el = $(el)
+    source = $el.find('code').text()
+    $new_el = $('<div>')
+    $el.replaceWith($new_el)
+    executor.addCodeBlock new CodeBlock
+        el: $new_el
+        source: source
+
 
 $('.AMDElement').each (i, el) ->
     $el = $(el)

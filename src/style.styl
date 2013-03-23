@@ -45,6 +45,8 @@ body
     background: $background_color
     color: $text_color
     line-height: 1.5
+    font-size: 16px
+    padding: 1em
 
 h1, h2, h3, h4, h5, h6
     font-weight: 300
@@ -58,14 +60,20 @@ blockquote
     em
         font-style: normal
 
-pre
+hr
+    margin: 2em 0
+    border: 0
+    border-top: 1px solid $border_color
+
+.CodeMirror
     border: 1px solid $border_color
-    border-radius: 4px
-    background: $code_bg_color
-    padding: 1em
-    max-height: 24em
-    overflow: scroll
-    
+    height: auto
+    font-size: 0.8em
+
+.CodeMirror-scroll
+    height: auto
+    overflow-y: hidden
+    overflow-x: auto
 
 
 

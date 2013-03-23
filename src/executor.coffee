@@ -2,7 +2,11 @@ class Executor
 
     constructor: ->
         @_variables = {}
-        $('pre code').on('blur', @_deferredExecute)
+        @_code_blocks = []
+
+    addCodeBlock: (block) ->
+        @_code_blocks.push(block)
+        block.on('change:source', @_deferredExecute)
 
     getOrCreateVariable: (attrs) ->
         {name} = attrs
@@ -16,6 +20,9 @@ class Executor
         variable_model.set(attrs)
         return variable_model
 
+    _updateLineNumbers: (line_count) ->
+
+
     _prepareState: ->
         state = {}
         _.each @_variables, (v) ->
@@ -26,8 +33,11 @@ class Executor
         coffee_code_str = ''
         # Concatenate all of the code blocks into one source string. This way,
         # the CoffeeScript compiler will include them in a single closure.
-        $('pre code').each (i, el) ->
-            coffee_code_str += $(el).text()
+        _.each @_code_blocks, (block, i) ->
+            line_count = coffee_code_str.split('\n').length
+            line_count += i
+            coffee_code_str += block.getSource(line_count) + '\n'
+        console.log coffee_code_str
         js_code_str = CoffeeScript.compile(coffee_code_str)
         return js_code_str
 
