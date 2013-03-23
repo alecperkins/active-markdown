@@ -12,7 +12,7 @@ class Executor
         else
             variable_model = new Backbone.Model(name)
             @_variables[name] = variable_model
-            variable_model.on('change', @_deferredExecute)
+            variable_model.on('change:value', @_deferredExecute)
         variable_model.set(attrs)
         return variable_model
 

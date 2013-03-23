@@ -154,9 +154,10 @@ class StringElement extends BaseElementView
     """
 
     initialize: (parsed_config) ->
-        @model = new Backbone.Model
+        @model = executor.getOrCreateVariable
             value: parsed_config.text_content
             name: parsed_config.name
+        @model.on('change:value', @render)
 
     @_parseConfig: (config_match) ->
         return {
@@ -172,7 +173,7 @@ class NumberElement extends BaseElementView
     initialize: (parsed_config) ->
         parsed_config.value = @_parseTextContent(parsed_config)
         delete parsed_config.text_content
-        @model = new Backbone.Model(parsed_config)
+        @model = executor.getOrCreateVariable(parsed_config)
         @model.on('change', @render)
 
     ###
@@ -303,7 +304,7 @@ class BooleanElement extends BaseElementView
         parsed_config.value = @_parseTextContent(parsed_config)
         delete parsed_config.text_content
         console.log parsed_config
-        @model = new Backbone.Model(parsed_config)
+        @model = executor.getOrCreateVariable(parsed_config)
 
     @_parseConfig: (config_match) ->
         console.log 'BooleanElement', config_match
@@ -352,8 +353,8 @@ class BooleanElement extends BaseElementView
             false_group = matchLabel(false_label)
             if false_group
                 default_value = false
-                @_before_text = true_group[1]
-                @_after_text = true_group[2]
+                @_before_text = false_group[1]
+                @_after_text = false_group[2]
 
         return default_value
 
@@ -406,7 +407,7 @@ class GraphElement extends BaseElementView
     initialize: (parsed_config) ->
         @_parseTextContent(parsed_config)
         delete parsed_config.text_content
-        @model = new Backbone.Model(parsed_config)
+        @model = executor.getOrCreateVariable(parsed_config)
 
     _parseTextContent: (parsed_config) ->
         { @text_content } = parsed_config

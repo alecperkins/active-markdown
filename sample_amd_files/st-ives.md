@@ -2,7 +2,7 @@
 
 An old riddle.
 
-> As [I]{travelers: I or we} [was]{verb} going to **St Ives**  
+> As [I]{travelers: we or I} [was]{verb} going to **St Ives**  
 > I met a man with [7 wives]{wives: 1..10}  
 > Every wife had [7 sacks]{sacks: 1..10}  
 > Every sack had [7 cats]{cats: 1..10}  
@@ -15,12 +15,12 @@ An old riddle.
     total_kits      = total_cats * @kits
     man             = 1
 
-    if @travelers is 'I'
-        narrator = 1
-        @verb = 'was'
-    else
+    if @travelers
         narrator = 2
         @verb = 'were'
+    else
+        narrator = 1
+        @verb = 'was'
 
 The first guess is often [2753]{first_guess}…
 
