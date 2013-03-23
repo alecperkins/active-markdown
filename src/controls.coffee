@@ -1,12 +1,6 @@
-
 _.templateSettings =
   interpolate : /\{\{(.+?)\}\}/g
   evaluate : /\{\%(.+?)\%\}/g
-
-
-
-
-
 
 parseNumber = (val) ->
     constants = ['e', 'pi', 'ln2', 'ln10', 'log2e', 'log10e', 'sqrt1_2', 'sqrt2']
@@ -32,6 +26,7 @@ parseStep = (val) ->
 
 parseInclusivity = (val) ->
     return val.length is 2
+
 
 ###
 Handles drag operations- done globally to enable sliding action that starts on an element but continues across the window
@@ -105,15 +100,6 @@ class DragManager
             ui = @_assembleUI(pageX, pageY)
             @_dragging_target.stopDragging?(ui)
             @_reset()
-
-
-drag_manager = new DragManager()
-
-
-
-
-
-
 
 # Public: the base View for all of the active elements in the page. It handles
 #         most of the boilerplate
@@ -493,6 +479,11 @@ Viz
 
 ###
 
+$('pre code').each (i, code) ->
+    $(code).attr('contenteditable', true)
+
+executor = new Executor()
+drag_manager = new DragManager()
 
 $('.AMDElement').each (i, el) ->
     $el = $(el)
