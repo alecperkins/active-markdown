@@ -5,13 +5,13 @@ A read-only output of the current value of the specified variable
 `<var_name>`. The text is the default value, though it will be
 replaced when the HTML version loads.
 
-`[<text>]{<var_name>}`
+`[<default text>]{<var_name>}`
 
 * String
 
-    `[text]{var_name}`
+    `[text content]{var_name}`
 
-    [text]{var_name}
+    [text content]{var_name}
 
 
 
@@ -25,8 +25,9 @@ other descriptive text to be included in the control.
 
 A range MUST be specified, but MAY be infinite in both directions. The range
 is specified using the CoffeeScript-style dots, where `..` is inclusive and
-`...` excludes the end. ie, `[1..4]` is the range `1 <= n <= 4`, while
-`[1...4]` is `1 <= n < 4`.
+`...` excludes the end. ie, `1..4` is the range `1 <= n <= 4`, while
+`1...4` is `1 <= n < 4`. Infinite is expressed by omitting the number, so
+`1...` is from 1 to infinity, and `...` is from -infinity to infinity.
 
 Specifying a display precision MAY be done using the default number value in
 the text. `200.` formats to `0` decimal places. `200.000` formats to `3`
@@ -37,31 +38,31 @@ eg `2pi` or `0.5pi`, which is treated as `n * Math.PI`. This can be done in
 the range min or max, or in the step. The constants MUST be one of `e`, `pi`,
 `ln2`, `ln10`, `log2e`, `log10e`, `sqrt1_2`, `sqrt2`, (uppercase or lowercase).
 
-`[* <number>.<decimal*> *]{<var_name> [<min>..<exclusive><max>] by <step>}`
+`[* <number>.<decimal*> *]{<var_name>: <min>..<exclusive><max> by <step>}`
 
 * Number, precision of 1, slider step by 10, "#{value.toFixed(0)} calories"
 
-    `[200. calories]{calories [10..100] by 10}`
+    `[200. calories]{calories: 10..100 by 10}`
 
-    [200. calories]{calories [10..100] by 10}
+    [200. calories]{calories: 10..100 by 10}
 
 * Number, precision of 0.1, slider step by 0.1, "#{value.toFixed(1) calories"
 
-    `[200.0 calories]{calories [10..100] by 0.1}`
+    `[200.0 calories]{calories: 10..100 by 0.1}`
 
-    [200.0 calories]{calories [10..100] by 0.1}
+    [200.0 calories]{calories: 10..100 by 0.1}
 
 * Number, no precision, slider step by 1, no slider max, "#{value} calories"
 
-    `[200 calories]{calories [0..]}`
+    `[200 calories]{calories: 0..}`
 
-    [200 calories]{calories [0..]}
+    [200 calories]{calories: 0..}
 
 * Number, no precision, slider step by 1, no min/max, "over #{value} calories"
 
-    `[over 200 calories]{calories [..]}`
+    `[over 200 calories]{calories: ..}`
 
-    [over 200 calories]{calories [..]}
+    [over 200 calories]{calories: ..}
 
 
 
@@ -76,21 +77,21 @@ the text becomes a *control label*.
 
 * Boolean,"#{value}", default = undefined
 
-    `[pick one]{some_flag true or false}`
+    `[pick one]{some_flag: true or false}`
 
-    [pick one]{some_flag true or false}
+    [pick one]{some_flag: true or false}
 
 * Boolean,"#{value}", default = true
 
-    `[true]{some_flag true or false}`
+    `[true]{some_flag: true or false}`
 
-    [true]{some_flag true or false}
+    [true]{some_flag: true or false}
 
 * Boolean, true label = "on", false label = "off", "#{label} deck"
 
-    `[on deck]{some_flag on or off}`
+    `[on deck]{some_flag: on or off}`
 
-    [on deck]{some_flag on or off}
+    [on deck]{some_flag: on or off}
 
 
 
@@ -106,10 +107,15 @@ text becomes a *control label*.
 
 * String select field, "before #{value} after"
 
-    `[before alpha after]{option_picked [alpha,bravo,charlie,delta,echo]}`
+    `[before alpha after]{option_picked alpha,bravo,charlie,delta,echo}`
 
-    [before alpha after]{option_picked [alpha,bravo,charlie,delta,echo]}
+    [before alpha after]{option_picked alpha,bravo,charlie,delta,echo}
 
+* String select field, "before #{value} after"
+
+    `[first option]{option_picked "first option",second,third,"fourth ,-separated option"}`
+
+    [first option]{option_picked "first option",second,third,"fourth ,-separated option"}
 
 
 ### Graph
@@ -125,24 +131,24 @@ of `scatter`, `line`, `bar`. The `x` range MUST be finite.
 * Scatter graph titled "Graph Title" of graphFn(x) from -10 to 10.
   (scatter is default, but MAY be specified.)
 
-    `![Graph Title]{graphFn x=[-10..10]}`
+    `![Graph Title]{graphFn: x=-10..10}`
 
-    `![Graph Title]{scatter=graphFn x=[-10..10]}`
+    `![Graph Title]{scatter=graphFn: x=-10..10}`
 
-    ![Graph Title]{scatter=graphFn x=[-10..10]}
+    ![Graph Title]{scatter=graphFn: x=-10..10}
 
 * Line graph titled "sin <em>of</em> x" of Math.sin(x) from -2pi to 2pi.
 
-    `![sin *of* x]{line=Math.sin x=[-2pi..2pi] by 0.25pi}`
+    `![sin *of* x]{line=Math.sin: x=-2pi..2i] by 0.25pi}`
 
-    ![sin *of* x]{line=Math.sin x=[-2pi..2pi] by 0.25pi}
+    ![sin *of* x]{line=Math.sin: x=-2pi..2i] by 0.25pi}
 
 * Scatter graph titled "Graph Title" of graphFn(x) and otherFn(x) from -10 to 10.
   Multiple series (each series as a function in a comma-separated list).
 
-    `![Graph Title]{bar=graphFn,line=otherFn x=[-10..10]}`
+    `![Graph Title]{bar=graphFn,line=otherFn: x=-10..10}`
 
-    ![Graph Title]{bar=graphFn,line=otherFn x=[-10..10]}
+    ![Graph Title]{bar=graphFn,line=otherFn: x=-10..10}
 
 ### Visualization
 
@@ -170,11 +176,20 @@ code and not considered part of the executable code, even if it is valid
 CoffeeScript. Likewise, inline code around Active Markdown notation is
 rendered as raw code, instead of AMD controls.
 
+```coffeescript
+
+    # This code is just treated as a static code block, and not executed
+    # as Active Markdown logic.
+    someFn = ->
+        return false
+
+```
+
 ### Async helpers
 
 The state is updated after the immediate execution of the code in the active
 code blocks. However, anything that is asynchronous, like an AJAX request,
-will happen *after* the outputs have been updates. This means regular 
+will happen *after* the outputs have been updated. This means regular 
 assignment will not be reflected in the output variables. These helpers allow
 for setting and updating the output via async code.
 

@@ -24,7 +24,7 @@ def replaceWithSpan(matchobj):
 
 
 def parse(amd_source):
-    AMD_PATTERN = '([!]?[^`])\[([$%-\.\w\d\s]*)]{([-\w\d=\.,\[\] ]+)}'
+    AMD_PATTERN = '([!]?[^`])\[([$%-\.\w\d\s]*)]{([-\w\d=\.\:,\[\] ]+)}'
 
     markdown_intermediary = re.sub(AMD_PATTERN, replaceWithSpan, amd_source)
     html_output = markdown.markdown(markdown_intermediary)

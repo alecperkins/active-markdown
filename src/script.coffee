@@ -47,9 +47,9 @@ class BaseElementView extends Backbone.NamedView
     @make: ($el) ->
         console.log 'Making', @name
 
-        config_data = $el.data('config').match(@config_pattern)
+        config_match = $el.data('config').match(@config_pattern)
 
-        parsed_config = @_parseConfig(config_data)
+        parsed_config = @_parseConfig(config_match)
         parsed_config.text_content = $el.text()
 
         view = new @(parsed_config)
@@ -144,7 +144,7 @@ class DragManager
 drag_manager = new DragManager()
 
 class NumberElement extends BaseElementView
-    @config_pattern: /([\w\d]+) \[([\w\d]*)([\.]*)([\w\d]*)\]([\w \d\.]*)/
+    @config_pattern: /([\w\d]+): ([\w\d-]*)([\.]{2,3})([\w\d-]*)( by [\w\d\.-]+)*/
 
     initialize: (parsed_config) ->
         parsed_config.value = parseInt(parsed_config.text_content)
@@ -207,37 +207,37 @@ class NumberElement extends BaseElementView
 
 
 class BooleanElement extends BaseElementView
-    @config_pattern: /([\w\d]+) ([\w]+) or ([\w]+)/
+    @config_pattern: /([\w\d]+): ([\w]+) or ([\w]+)/
 
     initialize: (parsed_config) ->
         @model = new Backbone.Model()
 
-    @_parseConfig: (config_str) ->
-        
+    @_parseConfig: (config_match) ->
+        console.log 'BooleanElement', config_match
         return {}
 
 
 
 class ChoiceElement extends BaseElementView
-    @config_pattern: /([\w\d]+) \[([\w,\d ]+)\]/
+    @config_pattern: /([\w\d]+): ([\d\w\"-_ ]+)(,\s*[-_\w\" \d]+)+/
 
     initialize: (parsed_config) ->
         @model = new Backbone.Model()
 
-    @_parseConfig: (config_str) ->
-        
+    @_parseConfig: (config_match) ->
+        console.log 'ChoiceElement', config_match
         return {}
 
 
 
 class GraphElement extends BaseElementView
-    @config_pattern: /([=\.\,\w\d]+) x=\[([-\d\.\w]+)\]([\w \d\.]*)/
+    @config_pattern: /([=\.\,\w\d]+): x=([-]?[\d\w]+)(\.{2,3})([-]?[\d\w]+)( by [\w\d\.-]+)*/
 
     initialize: (parsed_config) ->
         @model = new Backbone.Model()
 
-    @_parseConfig: (config_str) ->
-        
+    @_parseConfig: (config_match) ->
+        console.log 'GraphElement', config_match
         return {}
 
 
@@ -248,41 +248,42 @@ class VisualizationElement extends BaseElementView
     initialize: (parsed_config) ->
         @model = new Backbone.Model()
 
-    @_parseConfig: (config_str) ->
-        
+    @_parseConfig: (config_match) ->
+        console.log 'VisualizationElement', config_match
         return {}
 
 
+###
+possible configs:
 
-# possible configs:
+String
+    (^[\w\d_]+$)                                            var_name
 
-# String
-#     ([\w\d_]+)                                            var_name
+Number
+    ([\w\d]+): ([\w\d-]*)([\.]{2,3})([\w\d-]*)( by [\w\d\.-]+)*    calories: 10..100 by -10
+    ([\w\d]+): ([\w\d-]*)([\.]{2,3})([\w\d-]*)( by [\w\d\.-]+)*    calories: 10..100 by 0.1pi
+    ([\w\d]+): ([\w\d-]*)([\.]{2,3})([\w\d-]*)( by [\w\d\.-]+)*    calories: 0..
+    ([\w\d]+): ([\w\d-]*)([\.]{2,3})([\w\d-]*)( by [\w\d\.-]+)*    calories: ..
 
-# Number
-#     ([\w\d]+) \[([\w\d]*)([\.]*)([\w\d]*)\]([\w \d\.]*)   calories [10..100] by 10
-#     ([\w\d]+) \[([\w\d]*)([\.]*)([\w\d]*)\]([\w \d\.]*)   calories [10..100] by 0.1
-#     ([\w\d]+) \[([\w\d]*)([\.]*)([\w\d]*)\]([\w \d\.]*)   calories [0..]
-#     ([\w\d]+) \[([\w\d]*)([\.]*)([\w\d]*)\]([\w \d\.]*)   calories [..]
+Boolean
+    ([\w\d]+): ([\w]+) or ([\w]+)                           some_flag: true or false
+    ([\w\d]+): ([\w]+) or ([\w]+)                           some_flag: on or off
 
-# Boolean
-#     ([\w\d]+) ([\w]+) or ([\w]+)                          some_flag true or false
-#     ([\w\d]+) ([\w]+) or ([\w]+)                          some_flag on or off
+Choice
+    ([\w\d]+): ([\d\w\"-_ ]+)(,\s*[-_\w\" \d]+)+                option_picked: alpha,bravo,charlie,delta,echo
+    ([\w\d]+): ([\d\w\"-_ ]+)(,\s*[-_\w\" \d]+)+                option_picked: "opt with spaces",otheropt,"opt with -_"
 
-# Choice
-#     ([\w\d]+) \[([\w,\d ]+)\]                             option_picked [alpha,bravo,charlie,delta,echo]
+Graph
+    ([=\.\,\w\d]+): x=([-]?[\d\w]+)(\.{2,3})([-]?[\d\w]+)( by [\w\d\.-]+)*              graphFn: x=-10..10
+    ([=\.\,\w\d]+): x=([-]?[\d\w]+)(\.{2,3})([-]?[\d\w]+)( by [\w\d\.-]+)*              scatter=graphFn: x=-10..10
+    ([=\.\,\w\d]+): x=([-]?[\d\w]+)(\.{2,3})([-]?[\d\w]+)( by [\w\d\.-]+)*              scatter=graphFn: x=-10..10
+    ([=\.\,\w\d]+): x=([-]?[\d\w]+)(\.{2,3})([-]?[\d\w]+)( by [\w\d\.-]+)*              line=Math.sin: x=-2pi..2pi by 0.25pi
+    ([=\.\,\w\d]+): x=([-]?[\d\w]+)(\.{2,3})([-]?[\d\w]+)( by [\w\d\.-]+)*              bar=graphFn,line=otherFn: x=-10..10
 
-# Graph
-#     ([=\.\,\w\d]+) x=\[([-\d\.\w]+)\]([\w \d\.]*)         graphFn x=[-10..10]
-#     ([=\.\,\w\d]+) x=\[([-\d\.\w]+)\]([\w \d\.]*)         scatter=graphFn x=[-10..10]
-#     ([=\.\,\w\d]+) x=\[([-\d\.\w]+)\]([\w \d\.]*)         scatter=graphFn x=[-10..10]
-#     ([=\.\,\w\d]+) x=\[([-\d\.\w]+)\]([\w \d\.]*)         line=Math.sin x=[-2pi..2pi] by 0.25pi
-#     ([=\.\,\w\d]+) x=\[([-\d\.\w]+)\]([\w \d\.]*)         bar=graphFn,line=otherFn x=[-10..10]
+Viz
+    (viz=[\w\d_=]+)                                         viz=hookToProcessing
 
-# Viz
-#     (viz=[\w\d_=]+)                                           viz=hookToProcessing
-
-
+###
 
 
 $('.AMDElement').each(makeActive)
