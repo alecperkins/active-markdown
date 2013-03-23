@@ -254,9 +254,13 @@ class NumberElement extends BaseElementView
         new_val = @_original_value + Math.floor(x_delta / 5) * @model.get('step')
         max = @model.get('max')
         min = @model.get('min')
-        if max? and new_val > max
-            new_val = max
-        else if min? and new_val < min
+        if max?
+            inclusive = @model.get('inclusive')
+            if (inclusive and new_val > max) or (not inclusive and new_val >= max)
+                new_val = max
+                if not inclusive
+                    new_val -= @model.get('step')
+        if min? and new_val < min
             new_val = min
         @model.set
             value: new_val

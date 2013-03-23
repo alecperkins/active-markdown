@@ -40,23 +40,26 @@ the range min or max, or in the step. The constants MUST be one of `e`, `pi`,
 
 `[* <number>.<decimal*> *]{<var_name>: <min>..<exclusive><max> by <step>}`
 
+The default value MAY contradict any min or max set by the range. However,
+upon first interaction, the value will be brought within the range.
+
 * Number, precision of 1, slider step by 10, "#{value.toFixed(0)} calories"
 
     `[200. calories]{calories: 10..100 by 10}`
 
     [200. calories]{calories: 10..100 by 10}
 
-* Number, precision of 0.1, slider step by 0.1, "#{value.toFixed(1) calories"
+* Number, precision of 0.1, slider step by 0.1, not inclusive, "#{value.toFixed(1) calories"
 
-    `[200.0 calories]{calories: 10..100 by 0.1}`
+    `[80.0 calories]{calories: 10...100 by 0.1}`
 
-    [200.0 calories]{calories: 10..100 by 0.1}
+    [80.0 calories]{calories: 10...100 by 0.1}
 
 * Number, no precision, slider step by 1, no slider max, "#{value} calories"
 
-    `[200 calories]{calories: 0..}`
+    `[50 calories]{calories: 0..}`
 
-    [200 calories]{calories: 0..}
+    [50 calories]{calories: 0..}
 
 * Number, precision of 0.01, slider step by 1, no min/max, "over $#{value} per day"
 
