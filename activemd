@@ -5,9 +5,13 @@ import codecs, json, markdown, os, re, sys
 
 
 def replaceWithSpan(matchobj):
-    graph_flag      = matchobj.group(1)
-    text_content    = matchobj.group(2)
-    script_config   = matchobj.group(3)
+    code_flag       = matchobj.group(1)
+    graph_flag      = matchobj.group(2)
+    text_content    = matchobj.group(3)
+    script_config   = matchobj.group(4)
+
+    if code_flag:
+        return '`%s[%s]{%s}' % (graph_flag, text_content, script_config)
 
     if graph_flag == '!':
         graph_flag = 'data-graph="true"'
@@ -24,7 +28,7 @@ def replaceWithSpan(matchobj):
 
 
 def parse(amd_source):
-    AMD_PATTERN = '([^`][!]?)\[([$%-\.\w\d\s]*)]{([-\w\d=\.\:,\[\] ]+)}'
+    AMD_PATTERN = '(`?)(!?)\[([$%-\.\w\d\s]*)]{([-\w\d=\.\:,\[\] ]+)}'
 
     markdown_intermediary = re.sub(AMD_PATTERN, replaceWithSpan, amd_source)
     html_output = markdown.markdown(markdown_intermediary)
