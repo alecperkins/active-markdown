@@ -2,11 +2,11 @@
 
 An old riddle.
 
-> As [I]{travelers I or we} [was]{verb} going to **St Ives**  
-> I met a man with [7]{wives [1...10]} wives  
-> Every wife had [7]{sacks [1...10]} sacks  
-> Every sack had [7]{cats [1...10]} cats  
-> Every cat had [7]{kits [1...10]} kits  
+> As [I]{travelers: I or we} [was]{verb} going to **St Ives**  
+> I met a man with [7 wives]{wives: 1..10}  
+> Every wife had [7 sacks]{sacks: 1..10}  
+> Every sack had [7 cats]{cats: 1..10}  
+> Every cat had [7 kits]{kits: 1..10}  
 > Kits, cats, sacks, wives  
 
     total_sacks     = @wives * @sacks
