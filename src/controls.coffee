@@ -108,6 +108,8 @@ class BaseElementView extends Backbone.NamedView
     render: =>
         if @readonly
             @$el.addClass('readonly')
+        else
+            @$el.addClass('editable')
         if @_template?
             @$el.html(_.template(@_template)(@_getContext()))
             @ui = {}
@@ -158,12 +160,24 @@ class StringElement extends BaseElementView
             value: parsed_config.text_content
             name: parsed_config.name
         @model.on('change:value', @render)
+        @_fadeChange = _.debounce(@_doFade, 1000)
+
 
     @_parseConfig: (config_match) ->
         return {
             name: config_match[1]
         }
 
+    _onRender: ->
+        @_pingChange()
+        @_fadeChange()
+
+    _pingChange: ->
+        @$el.addClass('changed no-transition')
+
+    _doFade: =>
+        @$el.removeClass('no-transition')
+        @$el.removeClass('changed')
 
 
 
@@ -275,6 +289,7 @@ class NumberElement extends BaseElementView
     _startDragging: (e) ->
         drag_manager.start(e, this, 'x')
         @_original_value = @model.get('value')
+        @$el.addClass('active')
         e.preventDefault()
         return
     
@@ -293,6 +308,9 @@ class NumberElement extends BaseElementView
         @model.set
             value: new_val
         return
+
+    stopDragging: ->
+        @$el.removeClass('active')
 
 
 
@@ -504,4 +522,5 @@ $('.AMDElement').each (i, el) ->
         element_class.make($el, config_str)
     else
         console.error 'unable to make element for', $el
+
 

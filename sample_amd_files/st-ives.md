@@ -2,7 +2,7 @@
 
 An old riddle.
 
-> As [I]{travelers: we or I} [was]{verb} going to **St Ives**  
+> As [I]{travelers: we or I} [was]{verb} going to *St Ives*  
 > I met a man with [7 wives]{wives: 1..10}  
 > Every wife had [7 sacks]{sacks: 1..10}  
 > Every sack had [7 cats]{cats: 1..10}  
@@ -26,7 +26,7 @@ The first guess is often [2753]{first_guess}…
 
     @first_guess = man + @wives + total_cats + total_kits + narrator
 
-…but the correct answer is [1]{answer}
+…but the correct answer is **[1]{answer}**.
 
     @answer = narrator
 
