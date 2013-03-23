@@ -412,39 +412,53 @@ class BooleanElement extends BaseElementView
 
 
 
-class ChoiceElement extends BaseElementView
-    @config_pattern: /([\w\d]+): ([\d\w\"-_ ]+)(,\s*[-_\w\" \d]+)+/
-
-    initialize: (parsed_config) ->
-        @model = new Backbone.Model()
-
-    @_parseConfig: (config_match) ->
-        # console.log 'ChoiceElement', config_match
-        return {}
-
 
 
 class GraphElement extends BaseElementView
     @config_pattern: /([=\.\,\w\d]+): x=([-]?[\d\w]+)(\.{2,3})([-]?[\d\w]+)( by [\w\d\.-]+)*/
 
     initialize: (parsed_config) ->
-        @model = new Backbone.Model()
+        @_parseTextContent(parsed_config)
+        delete parsed_config.text_content
+        @model = new Backbone.Model(parsed_config)
+
+    _parseTextContent: (parsed_config) ->
+        { @text_content } = parsed_config
+        if false# match x vs y pattern
+            ''
+        else
+            parsed_config.x_label = 'x'
+            parsed_config.y_label = 'y'
 
     @_parseConfig: (config_match) ->
-        # console.log 'GraphElement', config_match
-        return {}
+        console.log 'GraphElement', config_match
+        [
+            name
+            min
+            dots
+            max
+            step
+        ] = config_match[1..4]
+        return {
+            name        : name
+            min         : parseNumber(min)
+            max         : parseNumber(max)
+            inclusive   : parseInclusivity(dots)
+            step        : parseStep(step)
+        }
 
+    _template: """
+        <div class="graph-canvas"></div>
+        <div class="name">{{ name }}</div>
+    """
 
+    _onRender: ->
+        @$el.attr
+            title: @text_content
+        @_plotGraph()
 
-class VisualizationElement extends BaseElementView
-    @config_pattern: /(viz=[\w\d_]+)/
-
-    initialize: (parsed_config) ->
-        @model = new Backbone.Model()
-
-    @_parseConfig: (config_match) ->
-        # console.log 'VisualizationElement', config_match
-        return {}
+    _plotGraph: ->
+        console.log 'plotting graph for', @model.get('name')
 
 
 ###
@@ -488,9 +502,7 @@ $('.AMDElement').each (i, el) ->
         StringElement
         NumberElement
         BooleanElement
-        ChoiceElement
         GraphElement
-        VisualizationElement
     ]
 
     element_class = _.find element_classes, (cls) ->

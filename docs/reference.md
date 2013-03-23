@@ -139,6 +139,8 @@ of `scatter`, `line`, `bar`. The `x` range MUST be finite.
 The graph alt text is parsed for a `x vs y` pattern, extracting the labels
 for the `x` and `y` axes if present.
 
+    graphFn = (x) -> Math.pow(x,2)
+    otherFn = (x) -> Math.pow(x,3)
 
 * Scatter graph labeled "Graph alt" of graphFn(x) from -10 to 10.
   (scatter is default, but MAY be specified.)
@@ -151,9 +153,9 @@ for the `x` and `y` axes if present.
 
 * Line graph with the x label "x" and the y label "sin(x)" of Math.sin(x) from -2pi to 2pi.
 
-    `![sin(x) vs x]{line=Math.sin: x=-2pi..2i] by 0.25pi}`
+    `![sin(x) vs x]{line=Math.sin: x=-2pi..2pi by 0.25pi}`
 
-    ![sin(x) vs x]{line=Math.sin: x=-2pi..2i] by 0.25pi}
+    ![sin(x) vs x]{line=Math.sin: x=-2pi..2pi by 0.25pi}
 
 * Scatter graph labeled "Graph alt text" of graphFn(x) and otherFn(x) from -10 to 10.
   Multiple series (each series as a function in a comma-separated list).
