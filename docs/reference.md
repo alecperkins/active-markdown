@@ -58,11 +58,11 @@ the range min or max, or in the step. The constants MUST be one of `e`, `pi`,
 
     [200 calories]{calories: 0..}
 
-* Number, no precision, slider step by 1, no min/max, "over #{value} calories"
+* Number, precision of 0.01, slider step by 1, no min/max, "over $#{value} per day"
 
-    `[over 200 calories]{calories: ..}`
+    `[over $200.00 per day]{payment: ..}`
 
-    [over 200 calories]{calories: ..}
+    [over $200.00 per day]{payment: ..}
 
 
 

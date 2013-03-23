@@ -31,7 +31,7 @@ class BaseElementView extends Backbone.NamedView
         if @readonly
             @$el.addClass('readonly')
         if @_template?
-            @$el.html(_.template(@_template)(@model.toJSON()))
+            @$el.html(_.template(@_template)(@_getContext()))
             @ui = {}
             for name, selector of @_ui_map
                 @ui[name] = @$el.find(selector)
@@ -43,6 +43,8 @@ class BaseElementView extends Backbone.NamedView
     _template: ''
 
     _onRender: ->
+
+    _getContext: -> @model.toJSON()
 
     @make: ($el) ->
         console.log 'Making', @name
@@ -57,6 +59,7 @@ class BaseElementView extends Backbone.NamedView
         $el.replaceWith(view.render())
 
     @_parseConfig: ->
+
 
 
 
@@ -86,6 +89,8 @@ parseNumber = (val) ->
     return parseFloat(val)
 
 parseStep = (val) ->
+    if val
+        return parseFloat(_.string.lstrip(val, ' by '))
     return 1
 
 parseInclusivity = (val) ->
@@ -147,36 +152,75 @@ class NumberElement extends BaseElementView
     @config_pattern: /([\w\d]+): ([\w\d-]*)([\.]{2,3})([\w\d-]*)( by [\w\d\.-]+)*/
 
     initialize: (parsed_config) ->
-        parsed_config.value = parseInt(parsed_config.text_content)
-        # TODO: parse before and after text
+        parsed_config.value = @_parseTextContent(parsed_config.text_content)
         delete parsed_config.text_content
         @model = new Backbone.Model(parsed_config)
         @model.on('change', @render)
+
+    _parseTextContent: (text_content) ->
+        pattern = /([a-zA-Z$ ]*)([\-\d]+)(\.?)(\d*)([a-zA-Z ]*)/
+        ###
+            [
+              '200 calories',
+              '',
+              '200',
+              '',
+              '',
+              ' calories',
+              index: 0,
+              input: '200 calories'
+            ]
+        ###
+        default_value     = undefined
+        @_before_text       = ''
+        @_after_text        = ''
+        @_display_precision = null
+
+        match_group = text_content.match(pattern)[1..5]
+        if match_group
+            [
+                @_before_text
+                value
+                point
+                decimal
+                @_after_text
+            ] = match_group
+
+            default_value = parseFloat([value, point, decimal].join(''))
+            if point
+                @_display_precision = decimal.length
+        return default_value
 
 
     @_parseConfig: (config_match) ->
         console.log config_match
         ###
         [
-            "calories [10..100] by 10",
+            "calories 10..100 by 10",
             "calories",
             "10",
             "..",
             "100",
             " by 10",
             index: 0,
-            input: "calories [10..100] by 10"
+            input: "calories 10..100 by 10"
         ]
         ###
 
         [var_name, min, dots, max, step] = config_match[1..5]
         
+        if min and max
+            val = (max - min) / 2
+        else
+            val = 0
+
         return {
             name        : var_name
             min         : parseNumber(min)
             max         : parseNumber(max)
             inclusive   : parseInclusivity(dots)
             step        : parseStep(step)
+            value       : val
         }
 
     _ui_map:
@@ -186,6 +230,16 @@ class NumberElement extends BaseElementView
         <span class="value">{{ value }}</span>
         <span class="name">{{ name }}</span>
     """
+
+    _getContext: ->
+        display_val = @model.get('value')
+        if @_display_precision?
+            display_val = display_val.toFixed(@_display_precision)
+        return {
+            value: "#{@_before_text}#{display_val}#{@_after_text}"
+            name: @model.get('name')
+        }
+
 
     events:
         'mousedown'     : '_startDragging'
@@ -197,8 +251,15 @@ class NumberElement extends BaseElementView
         return
     
     onDrag: ({ x_start, x_stop, y_start, y_stop, x_delta, y_delta }) ->
+        new_val = @_original_value + Math.floor(x_delta / 5) * @model.get('step')
+        max = @model.get('max')
+        min = @model.get('min')
+        if max? and new_val > max
+            new_val = max
+        else if min? and new_val < min
+            new_val = min
         @model.set
-            value: @_original_value + x_delta / 5
+            value: new_val
         return
 
     stopDragging: ({ x_start, x_stop, y_start, y_stop, x_delta, y_delta }) ->
