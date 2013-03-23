@@ -49,7 +49,7 @@ upon first interaction, the value will be brought within the range.
 
     [200. calories]{calories: 10..100 by 10}
 
-* Number, precision of 0.1, slider step by 0.1, not inclusive, "#{value.toFixed(1) calories"
+* Number, precision of 0.1, slider step by 0.1, not inclusive, "#{value.toFixed(1)} calories"
 
     `[80.0 calories]{calories: 10...100 by 0.1}`
 
@@ -61,7 +61,13 @@ upon first interaction, the value will be brought within the range.
 
     [50 calories]{calories: 0..}
 
-* Number, precision of 0.01, slider step by 1, no min/max, "over $#{value} per day"
+* Number, precision of 0.0001, slider step by 0.01, "#{value.toFixed(4)}"
+
+    `[4.0000]{num: pi..2pi by 0.01}`
+
+    [4.0000]{num: pi..2pi by 0.01}
+
+* Number, precision of 0.01, slider step by 1, no min/max, "over $#{value.toFixed(2)} per day"
 
     `[over $200.00 per day]{payment: ..}`
 

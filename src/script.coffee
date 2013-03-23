@@ -85,12 +85,25 @@ class StringElement extends BaseElementView
 
 
 parseNumber = (val) ->
-    # TODO: handle constants
-    return parseFloat(val)
+    constants = ['e', 'pi', 'ln2', 'ln10', 'log2e', 'log10e', 'sqrt1_2', 'sqrt2']
+    old_val = val
+    parsed_val = null
+
+    for c in constants
+        r = RegExp("(\\d)*#{ c }")
+        group = val.match(r)
+        if group
+            mult = if group[1] then parseFloat(group[1]) else 1
+            parsed_val = mult * Math[c.toUpperCase()]
+            break
+    if not parsed_val?
+        parsed_val = parseFloat(val)
+    console.log old_val, parsed_val
+    return parsed_val
 
 parseStep = (val) ->
     if val
-        return parseFloat(_.string.lstrip(val, ' by '))
+        return parseNumber(_.string.lstrip(val, ' by '))
     return 1
 
 parseInclusivity = (val) ->
@@ -269,6 +282,8 @@ class NumberElement extends BaseElementView
     stopDragging: ({ x_start, x_stop, y_start, y_stop, x_delta, y_delta }) ->
         console.log 'STOPPED!', x_delta, y_delta
         return
+
+
 
 
 class BooleanElement extends BaseElementView
