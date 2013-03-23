@@ -27,7 +27,7 @@ makeActive = (i, el) ->
 #         most of the boilerplate
 class BaseElementView extends Backbone.NamedView
     ui: {}
-    render: ->
+    render: =>
         if @readonly
             @$el.addClass('readonly')
         if @_template?
@@ -93,14 +93,53 @@ parseInclusivity = (val) ->
 
 
 class DragManager
-    start: (view, e) ->
+    constructor: ->
+        @_reset()
+        @_$window = $(window)
+        @_$body = $('body')
 
+    _reset: ->
+        if @_direction?
+            @_$body.removeClass("dragging-#{ @_direction }")
+        @_dragging_target = null
+        @_drag_start_x = null
+        @_drag_start_y = null
+        @_direction = null
 
-        console.log e
-        { pageX } = e
+    _assembleUI: (cur_x, cur_y) ->
+        return {
+            x_start: @_drag_start_x
+            y_start: @_drag_start_y
+            x_delta: cur_x - @_drag_start_x
+            y_delta: cur_y - @_drag_start_y
+            x_stop: null
+            y_stop: null
+        }
+
+    start: (e, view, @_direction) ->
+        { pageX, pageY } = e
+        console.log 'start at', pageX, pageY
         @_drag_start_x = pageX
-        @_is_dragging = true
-        dragging_control = this
+        @_drag_start_y = pageY
+        @_dragging_target = view
+        @_$window.on('mousemove', @drag)
+        @_$window.on('mouseup', @stop)
+        @_$body.addClass("dragging-#{ @_direction }")
+
+    drag: (e) =>
+        { pageX, pageY } = e
+        ui = @_assembleUI(pageX, pageY)
+        @_dragging_target.onDrag(ui)
+
+    stop: (e) =>
+        @_$window.off('mousemove', @drag)
+        @_$window.off('mouseup', @stop)
+        if @_dragging_target?
+            { pageX, pageY } = e
+            ui = @_assembleUI(pageX, pageY)
+            @_dragging_target.stopDragging(ui)
+            @_reset()
+
 
 drag_manager = new DragManager()
 
@@ -112,6 +151,7 @@ class NumberElement extends BaseElementView
         # TODO: parse before and after text
         delete parsed_config.text_content
         @model = new Backbone.Model(parsed_config)
+        @model.on('change', @render)
 
 
     @_parseConfig: (config_match) ->
@@ -149,27 +189,20 @@ class NumberElement extends BaseElementView
 
     events:
         'mousedown'     : '_startDragging'
-        'mousemove'     : '_drag'
-        'mouseup'       : 'stopDragging'
 
     _startDragging: (e) ->
-        drag_manager.start(this, e)
+        drag_manager.start(e, this, 'horizontal')
+        @_original_value = @model.get('value')
+        e.preventDefault()
         return
     
-    onDrag: (e) ->
-        if @_is_dragging
-            { pageX } = e
-            delta = @_drag_start_x - pageX
-            @model.set
-                value: @model.get('value') + delta / -5
-            @ui.value.text(@model.get('value'))
-            e.preventDefault()
+    onDrag: ({ x_start, x_stop, y_start, y_stop, x_delta, y_delta }) ->
+        @model.set
+            value: @_original_value + x_delta / 5
         return
 
-    stopDragging: (e) ->
-        { pageX } = e
-        @_is_dragging = false
-        console.log @_drag_start_x - pageX, @_is_dragging
+    stopDragging: ({ x_start, x_stop, y_start, y_stop, x_delta, y_delta }) ->
+        console.log 'STOPPED!', x_delta, y_delta
         return
 
 
