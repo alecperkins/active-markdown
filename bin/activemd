@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+ 
+/*
+ 
+    This is the main entry point for activemd. It provides a command-line
+    interface to the core activemd code in `command/`, using [cli](https://github.com/chriso/cli).
+ 
+*/
+ 
+var path = require('path');
+var fs   = require('fs');
+var lib  = path.join(path.dirname(fs.realpathSync(__filename)), '../lib');
+ 
+var cli  = require('cli');
+ 
+cli.enable('status')
+ 
+cli.parse({
+});
+ 
+cli.main(function(args, options) {
+    require(lib + '/activemd').run(args, options);
+});

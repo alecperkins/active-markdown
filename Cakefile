@@ -1,7 +1,3 @@
-# build
-# build -m --minify
-# build -w --watch
-# build -p --pages
 
 ###
 Compile style to:
@@ -25,18 +21,6 @@ Jade            = require 'jade'
 Sqwish          = require 'sqwish'
 Stylus          = require 'stylus'
 UglifyJS        = require 'uglify-js'
-
-# compileScriptFile = (from, to) ->
-#     sys.puts("Compiling script: #{ from }")
-#     script_source = fs.readFileSync(from)
-#     compiled = CoffeeScript.compile(script_source.toString())
-#     fs.writeFileSync(to.replace('.coffee', '.js'), compiled)
-
-
-
-
-
-
 
 
 
@@ -68,19 +52,19 @@ Includes:
 */\n"""
 
     lib_scripts: [
-            'libs/zepto-1.0.js'
-            'libs/underscore-1.4.4.js'
-            'libs/underscore.string-2.3.0.js'
-            'libs/backbone-1.0.0.js'
-            'libs/backbone.namedview.js'
-            'libs/codemirror-2.36.0/codemirror.js'
-            'libs/codemirror-2.36.0/coffeescript.js'
-            'libs/coffeescript-1.6.2.js'
+            'libraries/zepto-1.0.js'
+            'libraries/underscore-1.4.4.js'
+            'libraries/underscore.string-2.3.0.js'
+            'libraries/backbone-1.0.0.js'
+            'libraries/backbone.namedview.js'
+            'libraries/codemirror-2.36.0/codemirror.js'
+            'libraries/codemirror-2.36.0/coffeescript.js'
+            'libraries/coffeescript-1.6.2.js'
         ]
 
     lib_styles: [
-            'libs/codemirror-2.36.0/codemirror.css'
-            'libs/codemirror-2.36.0/solarized.css'
+            'libraries/codemirror-2.36.0/codemirror.css'
+            'libraries/codemirror-2.36.0/solarized.css'
         ]
 
     scripts: [
@@ -99,12 +83,14 @@ Includes:
             'style.styl'
         ]
 
+readViewerSource = (name) ->
+    return fs.readFileSync('viewer_src/' + name, 'utf-8').toString()
 
 
 concatenateFiles = (file_list, separator='\n') ->
     console.log file_list
     sources = file_list.map (file) ->
-        contents = fs.readFileSync('viewer_src/' + file, 'utf-8').toString()
+        contents = readViewerSource(file)
         return contents
     return sources.join(separator)
 
@@ -122,9 +108,19 @@ minifyJS = (js_script_code) ->
 
 
 
+task 'updatepages', 'Update the gh-pages branch', (options) ->
+
+
+
+
+
+
 option '-m', '--minify', 'Minify JavaScript and CSS'
 
 task 'build', 'Compile all the things', (options) ->
+
+    if not fs.existsSync('viewer')
+
     js_script_code = concatenateFiles(viewer_files.lib_scripts, ';\n')
     coffee_script_code = concatenateFiles(viewer_files.scripts)
     js_script_code += '\n' + CoffeeScript.compile(coffee_script_code,)
@@ -150,11 +146,24 @@ task 'build', 'Compile all the things', (options) ->
         script_file_name    = 'viewer/activemarkdown-min.js'
         style_file_name     = 'viewer/activemarkdown-min.css'
 
+    else
+        script_file_name    = 'viewer/activemarkdown.js'
+        style_file_name     = 'viewer/activemarkdown.css'
+
     js_script_code = viewer_files.script_header + js_script_code
     css_style_code = viewer_files.style_header + css_style_code
 
     fs.writeFileSync('viewer/style.css', css_style_code, 'utf-8')
     fs.writeFileSync('viewer/script.js', js_script_code, 'utf-8')
+    compileViewerTemplate()
 
 
 
+compileViewerTemplate = ->
+    compiled_template = readViewerSource('libs/jaderuntime.js')
+    template_source = readViewerSource('template.jade')
+    compiled_template += ';' + Jade.compile template_source,
+        debug   : false
+        client  : true
+    compiled_template += ';return anonymous(this);'
+    fs.writeFileSync('viewer/template.js', compiled_template.toString(), 'utf-8')

@@ -11,7 +11,7 @@ class StringElement extends BaseElement
 
     initialize: (parsed_config) ->
         @model = executor.getOrCreateVariable
-            value: parsed_config.text_content
+            value: undefined
             name: parsed_config.name
         @model.on('change:value', @render)
         @_fadeChange = _.debounce(@_doFade, 1000)
