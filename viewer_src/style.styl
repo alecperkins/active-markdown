@@ -76,10 +76,9 @@ hr
     overflow-x: auto
 
 
-
 // Elements
 
-.BaseElementView
+.BaseElement
 
     display         : inline
     border-bottom   : 1px dotted $element_color
@@ -106,10 +105,10 @@ hr
     &.editable
         &:hover
             color: $element_hover_color
-            border-bottom-color: $element_hover_color
+            border-bottom: 1px solid $element_hover_color
         &.active
             color: $element_active_color
-            border-bottom-color: $element_active_color
+            border-bottom: 1px solid $element_active_color
 
     &:hover, &.active
         .name
@@ -132,7 +131,7 @@ hr
 
     cursor: col-resize
 
-.BooleanElement
+.SwitchElement
 
     cursor: pointer
 
@@ -179,5 +178,5 @@ body
     &.dragging-x
         cursor: col-resize
     &.display-variable-names
-        .BaseElementView .name
+        .BaseElement .name
             display: block
