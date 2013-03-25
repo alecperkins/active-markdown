@@ -16,6 +16,9 @@ var cli  = require('cli');
 cli.enable('status')
  
 cli.parse({
+    local   : ['l', 'Create local copies of the asset files'],
+    inline  : ['g', 'Send to gist or load from gist'],
+    sample  : ['', 'Generate a sample Active Markdown file'],
 });
  
 cli.main(function(args, options) {

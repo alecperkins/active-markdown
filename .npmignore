@@ -1,0 +1,6 @@
+node_modules
+_scratch
+.DS_store
+viewer_src
+command_src
+docs

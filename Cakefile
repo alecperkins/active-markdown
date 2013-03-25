@@ -12,7 +12,8 @@ write activemarkdown.org to ./CNAME
 ###
 
 
-fs              = require 'fs'
+fs              = require 'fs-extra'
+path            = require 'path'
 sys             = require 'sys'
 walk            = require 'walk'
 
@@ -21,6 +22,11 @@ Jade            = require 'jade'
 Sqwish          = require 'sqwish'
 Stylus          = require 'stylus'
 UglifyJS        = require 'uglify-js'
+
+
+
+PROJECT_ROOT    = path.dirname(fs.realpathSync(__filename))
+LIB_PATH        = path.join(PROJECT_ROOT, 'lib')
 
 
 
@@ -83,6 +89,8 @@ Includes:
             'style.styl'
         ]
 
+
+
 readViewerSource = (name) ->
     return fs.readFileSync('viewer_src/' + name, 'utf-8').toString()
 
@@ -93,6 +101,7 @@ concatenateFiles = (file_list, separator='\n') ->
         contents = readViewerSource(file)
         return contents
     return sources.join(separator)
+
 
 # Minify but don't mangle - NamedView doesn't work.
 # TODO: Make it possible to mangle the code.
@@ -108,10 +117,7 @@ minifyJS = (js_script_code) ->
 
 
 
-task 'updatepages', 'Update the gh-pages branch', (options) ->
-
-
-
+# task 'updatepages', 'Update the gh-pages branch', (options) ->
 
 
 
@@ -119,51 +125,84 @@ option '-m', '--minify', 'Minify JavaScript and CSS'
 
 task 'build', 'Compile all the things', (options) ->
 
-    if not fs.existsSync('viewer')
+    if not fs.existsSync(LIB_PATH)
+        fs.mkdirSync(LIB_PATH)
 
-    js_script_code = concatenateFiles(viewer_files.lib_scripts, ';\n')
-    coffee_script_code = concatenateFiles(viewer_files.scripts)
-    js_script_code += '\n' + CoffeeScript.compile(coffee_script_code,)
+    [ style_name , style_code ] = compileViewerStyles(options.minify)
+    fs.writeFile path.join(LIB_PATH, style_name), style_code,
+        encoding: 'utf-8'
 
+    [ script_name , script_code ] = compileViewerScripts(options.minify)
+    fs.writeFile path.join(LIB_PATH, script_name), script_code,
+        encoding: 'utf-8'
+
+    [ markup_name , markup_code ] = compileViewerTemplate()
+    fs.writeFile path.join(LIB_PATH, markup_name), markup_code,
+        encoding: 'utf-8'
+
+    [ command_name , command_code ] = compileCommand()
+    fs.writeFile path.join(LIB_PATH, command_name), command_code,
+        encoding: 'utf-8'
+    input = path.join(PROJECT_ROOT, 'command_src', 'sample.md')
+    output = path.join(LIB_PATH, 'sample.md')
+    fs.copy(input, output)
+
+
+
+
+compileCommand = ->
+    command_source_path = path.join(PROJECT_ROOT, 'command_src', 'activemd.coffee')
+    command_source = fs.readFileSync(command_source_path, 'utf-8').toString()
+    command_js = CoffeeScript.compile(command_source)
+    return ['activemd.js', command_js]
+
+
+compileViewerStyles = (minify=false) ->
     css_style_code = concatenateFiles(viewer_files.lib_styles)
     styl_style_code = concatenateFiles(viewer_files.styles)
     # Not actually async, just bonkers.
     Stylus.render styl_style_code, (err, css) ->
         css_style_code += '\n' + css
 
-    if options.minify
-
+    if minify
         css_full_length = css_style_code.length
         css_style_code = Sqwish.minify(css_style_code, true)
         css_min_length = css_style_code.length
         console.log 'css:', css_full_length, '->', css_min_length, css_min_length / css_full_length
+        style_file_name     = 'activemarkdown-min.css'
+    else
+        
+        style_file_name     = 'activemarkdown.css'
 
+    css_style_code = viewer_files.style_header + css_style_code
+    return [style_file_name, css_style_code]
+
+
+compileViewerScripts = (minify=false) ->
+    js_script_code = concatenateFiles(viewer_files.lib_scripts, ';\n')
+    coffee_script_code = concatenateFiles(viewer_files.scripts)
+    js_script_code += '\n' + CoffeeScript.compile(coffee_script_code,)
+
+    if minify
         js_full_length = js_script_code.length
         js_script_code = minifyJS(js_script_code)
         js_min_length = js_script_code.length
         console.log 'js:', js_full_length, '->', js_min_length, js_min_length / js_full_length
-
-        script_file_name    = 'viewer/activemarkdown-min.js'
-        style_file_name     = 'viewer/activemarkdown-min.css'
-
+        script_file_name    = 'activemarkdown-min.js'
     else
-        script_file_name    = 'viewer/activemarkdown.js'
-        style_file_name     = 'viewer/activemarkdown.css'
+        script_file_name    = 'activemarkdown.js'
 
     js_script_code = viewer_files.script_header + js_script_code
-    css_style_code = viewer_files.style_header + css_style_code
-
-    fs.writeFileSync('viewer/style.css', css_style_code, 'utf-8')
-    fs.writeFileSync('viewer/script.js', js_script_code, 'utf-8')
-    compileViewerTemplate()
-
+    return [script_file_name, js_script_code]
 
 
 compileViewerTemplate = ->
-    compiled_template = readViewerSource('libs/jaderuntime.js')
+    compiled_template = readViewerSource('libraries/jaderuntime.js')
     template_source = readViewerSource('template.jade')
     compiled_template += ';' + Jade.compile template_source,
         debug   : false
         client  : true
     compiled_template += ';return anonymous(this);'
-    fs.writeFileSync('viewer/template.js', compiled_template.toString(), 'utf-8')
+    return ['template.js', compiled_template]
+
+
