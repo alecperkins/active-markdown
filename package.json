@@ -1,0 +1,41 @@
+{
+  "name": "active-markdown",
+  "version": "0.1.0",
+  "description": "",
+  "preferGlobal": true,
+  "main": "bin/activemd",
+  "engines": {
+    "node": "0.8.x",
+    "npm":  "1.2.x"
+  },
+  "dependencies": {
+    "cli": "0.4.4-2",
+    "fs-extra": "0.6.0",
+    "showdown": "0.3.1"
+  },
+  "devDependencies": {
+    "jade": "0.28.2",
+    "sqwish": "0.2.1",
+    "stylus": "0.32.1",
+    "uglify-js": "2.2.5",
+    "walk": "2.2.1"
+  },
+  "bin": {
+    "activemd": "./bin/activemd"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/alecperkins/active-markdown.git"
+  },
+  "author": "Alec Perkins <alec@droptype.com>",
+  "license": {
+      "type": "Unlicense",
+      "url": "https://raw.github.com/alecperkins/active-markdown/master/UNLICENSE"
+  },
+  "contributors": [
+    {
+      "name": "Alec Perkins",
+      "email": "alec@droptype.com"
+    }
+  ]
+}
