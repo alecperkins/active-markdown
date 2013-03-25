@@ -39,9 +39,7 @@ assembleViewer = (opts) ->
         script      : scripts
         markup      : markup
 
-
     return markup_output
-
 
 
 
@@ -63,7 +61,6 @@ outputCompiledFile = (input_file_name, markup, inline=false) ->
         path_components.push('html')
         output_file_path = path_components.join('.')
         output_file_path = path.join(CWD, output_file_path)
-        console.log output_file_path
         fs.writeFileSync(output_file_path, html_output, 'utf-8')
     else
         process.stdout.write(html_output)
@@ -71,12 +68,31 @@ outputCompiledFile = (input_file_name, markup, inline=false) ->
 
 
 processMarkdown = (markdown_source) ->
-    # preprocess
-    pure_markdown = markdown_source
+    AMD_PATTERN = /(`?)(!?)\[([$%-\.\w\d\s]*)]{([-\w\d=\.\:,\[\] ]+)}/g
+    pure_markdown = markdown_source.replace AMD_PATTERN, (args...) ->
+        # console.log args
+        [
+            code_flag
+            graph_flag
+            text_content
+            script_config
+        ] = args[1..4]
+
+        if code_flag
+            return "`#{ graph_flag }[#{ text_content }]{#{ script_config }}"
+
+        if graph_flag is '!'
+            graph_flag = 'data-graph="true"'
+        else
+            graph_flag = ''
+
+        span = """ <span class="AMDElement" #{graph_flag} data-config="#{script_config}">#{text_content}</span>"""
+
+        return span
+
     converter = new Showdown.converter()
     markup = converter.makeHtml(pure_markdown)
     return markup
-
 
 
 
@@ -99,8 +115,6 @@ doCompileFile = (options, args) ->
         process.stdin.on 'end', ->
             markup = processMarkdown(markdown_source)
             outputCompiledFile('stdin', markup)
-
-
 
 
 

@@ -32,4 +32,4 @@ The first guess is often [2753]{first_guess}…
 
 - - -
 
-(This file is an example of [Active Markdown](https://github.com/alecperkins/active-markdown).
+(This file is an example of [Active Markdown](https://github.com/alecperkins/active-markdown)).
