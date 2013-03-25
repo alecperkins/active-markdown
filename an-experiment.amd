@@ -1,0 +1,178 @@
+# Active Markdown: an experiment
+
+A (hopefully) straightforward notation for adding interactivity to Markdown
+documents, using the documentâ€™s own code blocks to provide the logic and
+define the relationships between the variables.
+
+Like so:
+
+- - -
+
+Fuel usage is a function of *distance* divided by the rate of *consumption*.
+
+    @fuel_usage = @distance / @mileage
+
+Traveling [100]{distance [0..200]} miles in a car rated at
+[25]{mileage [5..40]}mpg uses [4]{fuel_usage} gallons.
+
+- - -
+
+The goal is to provide a simple notation for defining these variables and
+linking them to the logic, so that such documents can be easily created and
+read even in plaintext form, with minimal loss of information.
+
+
+## Background
+
+### Regular Markdown
+
+Regular Markdown is great. It provides a way to have plaintext
+â€œsource codeâ€ for content, while still giving useful semantic formatting.
+
+Its output is static, but it doesn't have to be.
+
+### Tangle
+
+The amazing Bret Victorâ€™s [`Tangle`](http://worrydream.com/Tangle/) library
+makes it possible to build interactive documents with variables in text that
+can be adjusted, and the output displayed by modifying the text, generating a
+graph, and so on. While powerful, the library requires knowledge of HTML, CSS,
+and JavaScript, and the result is effectively a small client-side webapp.
+Also, the logic that drives the relationships between the variables is hidden.
+Itâ€™s possible to [expose the source](http://worrydream.com/TenBrighterIdeas/),
+but itâ€™s still separate from the interactivity.
+
+There are similar projects, like
+[R Markdown](http://www.rstudio.com/ide/docs/authoring/using_markdown), but
+any interactivity is within embedded modules, not *integral* to the text.
+[IPython](http://ipython.org/) offers a powerful executable document tool,
+but it isnâ€™t exactly a lightweight format.
+
+### `.litcoffee`
+
+The recent release of [literate CoffeeScript](http://coffeescript.org/#literate)
+is a really nice approach to literate programming. It allows for writing a
+Markdown file that can also be executed by actually running the code blocks.
+The file can be either parsed as Markdown, for viewing as a nicely formatted
+â€”Â yet still static â€”Â HTML page. Or, it can be compiled by the `coffee`
+compiler into JavaScript and executed.
+
+But what if the HTML representation werenâ€™t static?
+
+
+## Active Markdown
+
+### Interactivity
+
+Thanks to `coffee-script.js`, it's possible to compile and execute
+CoffeeScript *in-browser*. This, combined with a little `Backbone` for
+managing the variables and interface, and we get interactive controls that can
+gather the state of all the variables, compile the CoffeeScript defined in the
+code blocks, execute that code using the current state, and reapply the state
+to the variables in the document.
+
+Different controls and outputs can be specified. Even graphs can be embedded,
+specifying a function and a range for the `x` values.
+
+
+### Notation
+
+The notation is intended to be simple, and *feel* like Markdown. The approach
+is use the normal link and image syntax, but with braces instead of
+parenthesis and brackets. A simple interpolated variable looks like:
+`[alt text/default]{var_name}`, where the text in the brackets is the
+plaintext version of the variable (and also serves as a default value). The
+token inside the braces is the name of the variable. Names are global, so
+using the same variable name again will link those controls.
+
+More complicated controls are specified by adding configuration inside the
+braces, eg: `[5]{some_number [0...10]}` creates a slider from 0 to 10,
+starting at [5]{some_number [0...10]}.
+
+The type of control is determined by the configuration. A simple
+`this or that` creates a binary choice between [this]{which_one this or that}.
+
+Graphs are effectively embedded images, and the notation is similar.
+`![Graph title]{graphFn x=[-10...10]}` will create a graph driven by `graphFn`
+over a range from `-10` to `10`.
+
+The code of that function can connect the graph to other variables:
+
+    @sinOfX = (x) =>
+        return Math.sin(@period * x)
+
+
+![sin of x]{sinOfX x=[0..12]}
+[1]{period [1...6]}
+
+These variables can then be combined in the code for more complex logic:
+
+    coefficients =
+        'profit' : 5
+        'loss'   : -1
+
+    @q1_result = @some_number * coefficients[@revenue]
+
+    if @revenue is 'profit'
+        @outlook = 'positive outlook'
+    else
+        @outlook = 'negative outlook'
+
+Choosing [profit]{revenue profit or loss} results in a
+[positive outlook]{outlook}: $[25]{q1_result}.
+
+
+### Logic
+
+The code blocks, written using CoffeeScript, are used to tie the variables
+together. When executing, every block is concatenated into a single
+CoffeeScript source string. The code has access to the variables which are
+attached to the top-level `this` in its scope.
+
+At the beginning of the execution process, the current value for each variable
+is gathered into a state. The code is then executed, using that state as its
+`this` context. The code modifies the state and does whatever it does, then
+the state is reapplied to each variable, updating the display of each control
+and output in the document.
+
+#### `contenteditable`
+
+Changing parameters is great, but what if you want to challenge an authorâ€™s
+assumptions about their logic? Each code block is directly editable, and
+*recompiled* each time the document is executed. This means the logic and
+relationships between the variables can be modified on the fly, and the
+results seen immediately.
+
+- - -
+
+The growth in our credit default swap operation shows no sign of slowing:
+
+    rating = 2
+    @growth = (x) ->
+        return Math.pow(x,rating)
+
+![Money over time]{growth x=[0..2020]}
+
+- - -
+
+
+## Forward
+
+In a sense, Active Markdown is an inversion of literate CoffeeScript. Instead
+of the document describing the code, *the code describes the document*.
+
+Right now, this is just an experiment. The compilation command and
+interactivity script are still in need of some user-friendliness and
+robustness, but they are [on GitHub](https://github.com/alecperkins/active-markdown).
+
+The plan going forward is to expand on the notation and add additional types
+of controls, and add helpers for working with graphs and datasets. Also, more
+refined controls (read: non-jQuery UI default) and a more useful editor for
+the code blocks, perhaps [CodeMirror](http://codemirror.net/), are definitely
+in order. Maybe the best approach is to actually use the Tangle controls?
+Identifying additional usecases will help guide development.
+
+Take a peek at the [raw `.amd` file](an-experiment.amd) used to generate this document.
+
+
+*â€” [@alecperkins](https://twitter.com/alecperkins), 2013-3-14*

@@ -1,1 +1,4 @@
 .DS_Store
+lib
+node_modules
+_scratch

@@ -161,7 +161,7 @@ starting at <span class="live-text"  data-name="some_number" data-config='["[0..
 <p>The type of control is determined by the configuration. A simple
 <code>this or that</code> creates a binary choice between <span class="live-text"  data-name="which_one" data-config='["this", "or", "that"]'>this</span>.</p>
 <p>Graphs are effectively embedded images, and the notation is similar.
-<code>&lt;span class="live-text" data-graph="true" data-name="graphFn" data-config='["x=[-10...10]"]'&gt;Graph title&lt;/span&gt;</code> will create a graph driven by <code>graphFn</code>
+<code>![Graph title]{graphFn x=[-10...10]}</code> will create a graph driven by <code>graphFn</code>
 over a range from <code>-10</code> to <code>10</code>.</p>
 <p>The code of that function can connect the graph to other variables:</p>
 <pre><code>@sinOfX = (x) =&gt;
@@ -217,7 +217,7 @@ refined controls (read: non-jQuery UI default) and a more useful editor for
 the code blocks, perhaps <a href="http://codemirror.net/">CodeMirror</a>, are definitely
 in order. Maybe the best approach is to actually use the Tangle controls?
 Identifying additional usecases will help guide development.</p>
-<p>Take a peek at the <a href="index.amd">raw <code>.amd</code> file</a> used to generate this document.</p>
+<p>Take a peek at the <a href="an-experiment.amd">raw <code>.amd</code> file</a> used to generate this document.</p>
 <p><em>— <a href="https://twitter.com/alecperkins">@alecperkins</a>, 2013-3-14</em></p></div>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
