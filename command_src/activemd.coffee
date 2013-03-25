@@ -1,9 +1,13 @@
 fs          = require 'fs-extra'
 path        = require 'path'
 Showdown    = require 'showdown'
+sys         = require 'sys'
+
 
 CWD = process.cwd()
 LIB_PATH = path.dirname(fs.realpathSync(__filename))
+
+
 
 assembleViewer = (opts) ->
     { input_file_name, inline, markup} = opts
@@ -77,7 +81,6 @@ processMarkdown = (markdown_source) ->
 
 
 doCompileFile = (options, args) ->
-    console.log 'compiling the file!'
 
     if process.stdin.isTTY
         input_file_name = args[0]
@@ -102,7 +105,17 @@ doCompileFile = (options, args) ->
 
 
 doGenerateSample = ->
-    console.log 'generating sample!'
+    sample_content = readLibFile('sample.md')
+
+    if process.stdout.isTTY
+        output_file_path = path.join(CWD, 'sample.md')
+        if fs.existsSync(output_file_path)
+            sys.puts('sample.md already exists')
+            process.exit(1)
+        sys.puts('Generating sample.md')
+        fs.writeFile(output_file_path, sample_content, 'utf-8')
+    else
+        process.stdout.write(sample_content)
 
 
 
