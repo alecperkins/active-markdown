@@ -1,7 +1,6 @@
-
 # Active Markdown, v0.1.0
 
-[Active Markdown](https://activemarkdown.org) is a tool for making reactive documents — in the vein of [Tangle](http://worrydream.com/Tangle) — using a plain text markdown source, with a special notation for adding interactive controls and variables. The logic is determined by the contents of the code blocks, which is actually executed on-the-fly to update the variables.
+[Active Markdown](http://activemarkdown.org) is a tool for making reactive documents — in the vein of [Tangle](http://worrydream.com/Tangle) — using a plain text markdown source, with a special notation for adding interactive controls and variables. The logic is determined by the contents of the code blocks, which is actually executed on-the-fly to update the variables.
 
 A sample raw Active Markdown file looks like this:
 
