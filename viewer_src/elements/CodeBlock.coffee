@@ -5,14 +5,12 @@ class CodeBlock extends Backbone.NamedView
 
     render: ->
         @_editor = CodeMirror @el,
-            value: @source
-            mode:  'coffeescript'
-            onBlur: @_update
-            lineNumbers: true
-            viewportMargin: Infinity
-            theme: 'solarized'
-        console.log @_editor
-        # @_editor, 'blur', @_update)
+            value           : @source
+            mode            :  'coffeescript'
+            onBlur          : @_update
+            lineNumbers     : true
+            viewportMargin  : Infinity
+            theme           : 'solarized'
 
     _update: =>
         @trigger('change:source')

@@ -9,13 +9,13 @@ assembleViewer = (opts) ->
     { input_file_name, inline, markup} = opts
 
     if inline
-        styles  = readLibFile('style.css')
-        scripts = readLibFile('script.js')
+        styles  = readLibFile('activemarkdown.css')
+        scripts = readLibFile('activemarkdown.js')
         styles  = "<style>#{ styles }</style>"
         scripts = "<script>#{ scripts }</script>"
     else
-        styles  = "<link rel='stylesheet' href='style.css'>"
-        scripts = "<script src='script.js'></script>"
+        styles  = "<link rel='stylesheet' href='activemarkdown.css'>"
+        scripts = "<script src='activemarkdown.js'></script>"
 
     compiled_template = readLibFile('template.js')
     template_fn = Function(compiled_template)
@@ -54,7 +54,11 @@ outputCompiledFile = (input_file_name, markup, inline=false) ->
         markup              : markup
 
     if process.stdout.isTTY
-        output_file_path = path.join(CWD, path.basename(input_file_name) + '.html')
+        path_components = input_file_name.split('.')
+        path_components.pop()
+        path_components.push('html')
+        output_file_path = path_components.join('.')
+        output_file_path = path.join(CWD, output_file_path)
         console.log output_file_path
         fs.writeFileSync(output_file_path, html_output, 'utf-8')
     else
