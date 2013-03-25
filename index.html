@@ -1,0 +1,102 @@
+<!DOCTYPE html><html><head><title>Active Markdown</title><meta http-equiv="content-type" content="text/html; charset=utf-8"><link rel='stylesheet' href='viewer/activemarkdown-min.css'>
+<style>.code { border: 1px solid #ccc; border-radius: 2px; font-family: Menlo, 'Courier New', monospace; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; padding: 0 0.5em;} hr { border-top: 1px solid #ccc} body {font-family: Georgia, 'Times New Roman', serif;} div.code {white-space: pre; padding: 0.5em;}</style>
+</head><body><div id="AMDContent">
+
+
+<h1>Active Markdown, v0.1.0</h1>
+
+
+<p>Active Markdown is a tool for making reactive documents using a plain text markdown source, with a special notation for adding interactive controls and variables. The logic is determined by the contents of the code blocks, which are actually executed on-the-fly to update the variables. Think <a href="http://coffeescript.org/#literate">Literate CoffeeScript</a> meets <a href="http://worrydream.com/Tangle/">Tangle</a>.</p>
+<h2>For example</h2>
+<p>
+    Click and drag on “500 miles”: <em>I would walk <span class="AMDElement"  data-config="walk_distance: 100..1000 by 10">500. miles</span> and I would walk <span class="AMDElement" data-config="second_walk">500</span> more…</em>
+</p>
+<p>And edit this CoffeeScript to say <code class="code">@walk_distance * 3</code>:</p>
+<pre><code>
+  @second_walk = @walk_distance * 1
+</code></pre>
+
+<p>That was generated from this markdown:</p>
+<div class="code">I would walk [500. miles]{walk_distance: 100..1000 by 10}  
+and I would walk [500]{second_walk} more…
+
+    @second_walk = @walk_distance * 1
+</div>
+
+<h2>Getting Started</h2>
+<p>
+  The <code class="code">activemd</code> command is written in CoffeeScript, and runs using <a href="http://nodejs.org">Node</a>.
+</p>
+  <ol>
+    <li>Install using <a href="http://npmjs.org">npm</a>: <code class="code">$ npm install -g active-markdown</code></li>
+    <li>Generate a sample document using <code class="code">$ activemd --sample</code></li>
+    <li>Compile <code class="code">sample.md</code> file into <code class="code">sample.html</code>: <code class="code">$ activemd sample.md</code></li>
+    <li>View <code class="code">sample.html</code> in your favorite browser: <code class="code">$ open sample.html</code></li>
+
+  </ol>
+
+<p>
+    View the source and hack away, file issues, and suggest notation improvements on <a href="https://github.com/alecperkins/active-markdown">GitHub</a>.
+</p>
+
+
+<h2>Example file</h2>
+<p>
+A sample raw Active Markdown file looks like this:
+</p>
+<div class="code">
+    # St Ives
+
+    An old riddle.
+
+    > As [I]{travelers: we or I} [was]{verb} going to *St Ives*  
+    > I met a man with [7 wives]{wives: 1..10}  
+    > Every wife had [7 sacks]{sacks: 1..10}  
+    > Every sack had [7 cats]{cats: 1..10}  
+    > Every cat had [7 kits]{kits: 1..10}  
+    > Kits, cats, sacks, wives  
+    > How many were going to St Ives?
+
+        total_sacks = @wives * @sacks
+        total_cats  = total_sacks * @cats
+        total_kits  = total_cats * @kits
+        man         = 1
+
+        if @travelers
+            narrator = 2
+            @verb = 'were'
+        else
+            narrator = 1
+            @verb = 'was'
+
+    The first guess is often [2753]{first_guess}…
+
+        @first_guess = man + @wives + total_cats + total_kits + narrator
+
+    …but the correct answer is **[1]{answer}**.
+
+        @answer = narrator
+</div>
+<p>
+which the <code class="code">activemd</code> command turns into:
+</p>
+<iframe src="st-ives.html" style="width: 100%;height: 820px; border: 0"></iframe>
+<hr />
+
+<p>By <a href="http://alecperkins.net">Alec Perkins</a></p>
+
+</div><script src='viewer/activemarkdown-min.js'></script>
+<script type="text/javascript">
+  var _gauges = _gauges || [];
+  (function() {
+    var t   = document.createElement('script');
+    t.type  = 'text/javascript';
+    t.async = true;
+    t.id    = 'gauges-tracker';
+    t.setAttribute('data-site-id', '514fef49108d7b531c000024');
+    t.src = '//secure.gaug.es/track.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(t, s);
+  })();
+</script>
+</body></html>
