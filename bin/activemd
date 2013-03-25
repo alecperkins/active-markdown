@@ -17,7 +17,7 @@ cli.enable('status')
  
 cli.parse({
     local   : ['l', 'Create local copies of the asset files'],
-    inline  : ['g', 'Send to gist or load from gist'],
+    inline  : ['i', 'Inline asset files into output HTML'],
     sample  : ['', 'Generate a sample Active Markdown file'],
 });
  

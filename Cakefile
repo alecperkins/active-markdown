@@ -1,17 +1,4 @@
 
-###
-Compile style to:
-
-    activemarkdown.org/viewer/activemarkdown-0.1.0-min.css
-
-and script to:
-
-    activemarkdown.org/viewer/activemarkdown-0.1.0-min.js
-
-write activemarkdown.org to ./CNAME
-###
-
-
 fs              = require 'fs-extra'
 path            = require 'path'
 sys             = require 'sys'
@@ -36,15 +23,15 @@ Active Markdown viewer script assets
 http://activemarkdown.org
 
 Includes:
-    - Zepto                         MIT License     http://zeptojs.com/
-    - Underscore                    MIT License     http://underscorejs.org/
-    - Underscore.string             MIT License     http://epeli.github.com/underscore.string/
-    - Backbone                      MIT License     http://backbonejs.org/
-    - Backbone.NamedView            Unlicensed      https://github.com/alecperkins/backbone.namedview
-    - CodeMirror                    MIT License     http://codemirror.net/
-    - CodeMirror CoffeeScript mode  MIT License     https://github.com/pickhardt/coffeescript-codemirror-mode
-    - CoffeeScript                  MIT License     http://coffeescript.org
-    - Active Markdown               Unlicensed      http://activemarkdown.org
+- Zepto                         MIT License     http://zeptojs.com/
+- Underscore                    MIT License     http://underscorejs.org/
+- Underscore.string             MIT License     http://epeli.github.com/underscore.string/
+- Backbone                      MIT License     http://backbonejs.org/
+- Backbone.NamedView            Unlicensed      https://github.com/alecperkins/backbone.namedview
+- CodeMirror                    MIT License     http://codemirror.net/
+- CodeMirror CoffeeScript mode  MIT License     https://github.com/pickhardt/coffeescript-codemirror-mode
+- CoffeeScript                  MIT License     http://coffeescript.org
+- Active Markdown               Unlicensed      http://activemarkdown.org
 */\n"""
 
     style_header: """/*
@@ -52,9 +39,9 @@ Active Markdown viewer style assets
 http://activemarkdown.org
 
 Includes:
-    - CodeMirror                    MIT License     http://codemirror.net/
-    - CodeMirror solarized theme    MIT License     http://ethanschoonover.com/solarized
-    - Active Markdown               Unlicensed      http://activemarkdown.org
+- CodeMirror                    MIT License     http://codemirror.net/
+- CodeMirror solarized theme    MIT License     http://ethanschoonover.com/solarized
+- Active Markdown               Unlicensed      http://activemarkdown.org
 */\n"""
 
     lib_scripts: [

@@ -1,12 +1,9 @@
 {
-  "name": "activemd",
+  "name": "active-markdown",
   "version": "0.1.0",
   "description": "",
   "preferGlobal": true,
   "main": "bin/activemd",
-  "scripts": {
-    "test": ""
-  },
   "engines": {
     "node": "0.8.x",
     "npm":  "1.2.x"
