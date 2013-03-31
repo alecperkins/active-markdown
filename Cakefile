@@ -109,18 +109,28 @@ minifyJS = (js_script_code) ->
 
 
 
-option '-m', '--minify', 'Minify JavaScript and CSS'
-
 task 'build', 'Compile all the things', (options) ->
 
     if not fs.existsSync(LIB_PATH)
         fs.mkdirSync(LIB_PATH)
 
-    [ style_name , style_code ] = compileViewerStyles(options.minify)
+    # Build the minified versions
+    [ style_name , style_code ] = compileViewerStyles(true)
     fs.writeFile path.join(LIB_PATH, style_name), style_code,
         encoding: 'utf-8'
 
-    [ script_name , script_code ] = compileViewerScripts(options.minify)
+    # Build the minified versions
+    [ script_name , script_code ] = compileViewerScripts(true)
+    fs.writeFile path.join(LIB_PATH, script_name), script_code,
+        encoding: 'utf-8'
+
+    # Unminified
+    [ style_name , style_code ] = compileViewerStyles(false)
+    fs.writeFile path.join(LIB_PATH, style_name), style_code,
+        encoding: 'utf-8'
+
+    # Unminified
+    [ script_name , script_code ] = compileViewerScripts(false)
     fs.writeFile path.join(LIB_PATH, script_name), script_code,
         encoding: 'utf-8'
 
@@ -131,6 +141,7 @@ task 'build', 'Compile all the things', (options) ->
     [ command_name , command_code ] = compileCommand()
     fs.writeFile path.join(LIB_PATH, command_name), command_code,
         encoding: 'utf-8'
+
     input = path.join(SOURCE_PATH, 'sample.md')
     output = path.join(LIB_PATH, 'sample.md')
     fs.copy(input, output)
