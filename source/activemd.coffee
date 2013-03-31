@@ -1,6 +1,7 @@
 fs          = require 'fs-extra'
 path        = require 'path'
 Showdown    = require 'showdown'
+
 sys         = require 'sys'
 
 
@@ -107,7 +108,8 @@ processMarkdown = (markdown_source) ->
 
         return span
 
-    converter = new Showdown.converter()
+    converter = new Showdown.converter
+        extensions: ['github', 'table']
     markup = converter.makeHtml(pure_markdown)
     return markup
 

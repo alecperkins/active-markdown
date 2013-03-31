@@ -51,7 +51,7 @@ The code blocks have access to these variables under the top-level `this` object
 
 This is still experimental, and very rough around the edges. For more information, see the [initial writeup](http://activemarkdown.org/an-experiment.html).
 
-
+Active Markdown uses [Showdown](https://github.com/coreyti/showdown) for markdown–HTML conversion, with the `github` and `table` extensions enabled.
 
 ## 0–60 (getting started)
 
