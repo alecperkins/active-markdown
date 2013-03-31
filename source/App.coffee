@@ -43,4 +43,17 @@ $('.AMDElement').each (i, el) ->
         # TODO: inline error feedback
         console.error 'Unable to make element for', $el
 
+# Add section links to each heading, updating the ids with a counter if
+# necessary to ensure each one is unique.
+heading_counts = {}
+$('h1, h2, h3, h4, h5, h6').each (i, el) ->
+    heading_counts[el.id] ?= 0
+    heading_counts[el.id] += 1
 
+    if heading_counts[el.id] > 1
+        el.id = "#{el.id}-#{heading_counts[el.id]}"
+
+    $el = $(el)
+    $el.prepend """
+        <a class="section-link" href="##{el.id}">#</a>
+    """
