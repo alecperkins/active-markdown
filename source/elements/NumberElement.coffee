@@ -69,19 +69,30 @@ class NumberElement extends BaseElement
 
         [var_name, min, dots, max, step] = config_match[1..5]
         
+        if min
+            min = parseNumber(min)
+        else
+            min = null
+
+        if max
+            max = parseNumber(max)
+        else
+            max = null
+
         if min and max
             val = (max - min) / 2
         else
             val = 0
 
-        return {
+        config = {
             name        : var_name
-            min         : parseNumber(min)
-            max         : parseNumber(max)
+            min         : min
+            max         : max
             inclusive   : parseInclusivity(dots)
             step        : parseStep(step)
             value       : val
         }
+        return config
 
     _ui_map:
         'value': '.value'
