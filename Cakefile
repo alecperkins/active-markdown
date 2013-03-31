@@ -165,7 +165,7 @@ compileViewerStyles = (minify=false) ->
 
     if minify
         css_full_length = css_style_code.length
-        css_style_code = Sqwish.minify(css_style_code, true)
+        css_style_code = Sqwish.minify(css_style_code)
         css_min_length = css_style_code.length
         console.log 'css:', css_full_length, '->', css_min_length, css_min_length / css_full_length
         style_file_name     = 'activemarkdown-min.css'
