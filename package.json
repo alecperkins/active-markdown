@@ -14,6 +14,7 @@
     "showdown": "0.3.1"
   },
   "devDependencies": {
+    "coffee-script": "1.6.x",
     "jade": "0.28.2",
     "sqwish": "0.2.1",
     "stylus": "0.32.1",

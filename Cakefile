@@ -14,6 +14,7 @@ UglifyJS        = require 'uglify-js'
 
 PROJECT_ROOT    = path.dirname(fs.realpathSync(__filename))
 LIB_PATH        = path.join(PROJECT_ROOT, 'lib')
+SOURCE_PATH     = path.join(PROJECT_ROOT, 'source')
 
 
 
@@ -78,14 +79,14 @@ Includes:
 
 
 
-readViewerSource = (name) ->
-    return fs.readFileSync('viewer_src/' + name, 'utf-8').toString()
+readSourceFile = (name) ->
+    return fs.readFileSync(path.join(SOURCE_PATH, name), 'utf-8').toString()
 
 
 concatenateFiles = (file_list, separator='\n') ->
     console.log file_list
     sources = file_list.map (file) ->
-        contents = readViewerSource(file)
+        contents = readSourceFile(file)
         return contents
     return sources.join(separator)
 
@@ -130,7 +131,7 @@ task 'build', 'Compile all the things', (options) ->
     [ command_name , command_code ] = compileCommand()
     fs.writeFile path.join(LIB_PATH, command_name), command_code,
         encoding: 'utf-8'
-    input = path.join(PROJECT_ROOT, 'command_src', 'sample.md')
+    input = path.join(SOURCE_PATH, 'sample.md')
     output = path.join(LIB_PATH, 'sample.md')
     fs.copy(input, output)
 
@@ -138,7 +139,7 @@ task 'build', 'Compile all the things', (options) ->
 
 
 compileCommand = ->
-    command_source_path = path.join(PROJECT_ROOT, 'command_src', 'activemd.coffee')
+    command_source_path = path.join(SOURCE_PATH, 'activemd.coffee')
     command_source = fs.readFileSync(command_source_path, 'utf-8').toString()
     command_js = CoffeeScript.compile(command_source)
     return ['activemd.js', command_js]
@@ -184,8 +185,8 @@ compileViewerScripts = (minify=false) ->
 
 
 compileViewerTemplate = ->
-    compiled_template = readViewerSource('libraries/jaderuntime.js')
-    template_source = readViewerSource('template.jade')
+    compiled_template = readSourceFile('libraries/jaderuntime.js')
+    template_source = readSourceFile('template.jade')
     compiled_template += ';' + Jade.compile template_source,
         debug   : false
         client  : true
