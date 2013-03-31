@@ -64,6 +64,8 @@ outputCompiledFile = (input_file_name, markup, cmd_options) ->
     if process.stdout.isTTY
         path_components = input_file_name.split('.')
         path_components.pop()
+        if path_components.length is 0
+            path_components.push('output')
         path_components.push('html')
         output_file_path = path_components.join('.')
         output_file_path = path.join(CWD, output_file_path)
