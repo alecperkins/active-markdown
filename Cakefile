@@ -1,4 +1,3 @@
-
 fs              = require 'fs-extra'
 path            = require 'path'
 sys             = require 'sys'
@@ -115,18 +114,28 @@ if not fs.existsSync(LIB_PATH)
 
 option '-m', '--minify', 'Minify output, if applicable'
 
-task 'build', 'Compile all the things', (options) ->
-    options.minify = false
-    invoke 'build:style'
-    invoke 'build:script'
+task 'build', 'Run tests and compile all the things', (options) ->
 
-    options.minify = true
-    invoke 'build:style'
-    invoke 'build:script'
+    sys.puts 'Running tests'
+    runTests (failures) ->
+        if failures isnt 0
+            process.exit(failures)
 
-    invoke 'build:markup'
-    invoke 'build:command'
-    invoke 'build:sample'
+        sys.puts 'Compiling unminified'
+        options.minify = false
+        invoke 'build:style'
+        invoke 'build:script'
+
+
+        sys.puts 'Compiling minified'
+        options.minify = true
+        invoke 'build:style'
+        invoke 'build:script'
+
+        sys.puts 'Compiling others'
+        invoke 'build:markup'
+        invoke 'build:command'
+        invoke 'build:sample'
 
 task 'build:style', 'Compile viewer styles', (options) ->
     [ style_name , style_code ] = compileViewerStyles(options.minify)
@@ -167,6 +176,32 @@ task 'build:sample', 'Copy sample file', (options) ->
         throw err if err?
         sys.puts("Copied: sample.md")
 
+
+task 'test', 'Run tests', (options) ->
+    runTests (failures) ->
+        process.exit(failures)
+
+runTests = (cb) ->
+    Mocha = require('mocha')
+    mocha = new Mocha()
+
+    TEST_TMP_PATH = path.join(PROJECT_ROOT, 'test_tmp')
+    TEST_SRC_PATH = path.join(PROJECT_ROOT, 'test')
+
+    if not fs.existsSync(TEST_TMP_PATH)
+        fs.mkdirSync(TEST_TMP_PATH)
+
+    test_sources = fs.readdirSync(path.join(PROJECT_ROOT, 'test'))
+    for f in test_sources
+        in_path = path.join(TEST_SRC_PATH, f)
+        compiled_js = CoffeeScript.compile(fs.readFileSync(in_path).toString())
+        out_path = path.join(TEST_TMP_PATH, f + '.js')
+        fs.writeFileSync(out_path, compiled_js)
+        mocha.addFile(out_path)
+
+    mocha.run (args...) ->
+        fs.removeSync(TEST_TMP_PATH) # fs.remove isn't working?
+        cb(args...)
 
 
 compileCommand = ->

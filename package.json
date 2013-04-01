@@ -16,6 +16,8 @@
   "devDependencies": {
     "coffee-script": "1.6.x",
     "jade": "0.28.2",
+    "mocha": "*",
+    "should": "*",
     "sqwish": "0.2.1",
     "stylus": "0.32.1",
     "uglify-js": "2.2.5",
@@ -23,6 +25,9 @@
   },
   "bin": {
     "activemd": "./bin/activemd"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha --compilers coffee:coffee-script"
   },
   "repository": {
     "type": "git",
