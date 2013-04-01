@@ -10,7 +10,7 @@ parseNumber = (val) ->
     # Check the value for each constant, allowing for just a constant
     # with no coefficient.
     for c in constants
-        r = RegExp("([\\d\\.]*)#{ c }")
+        r = RegExp("([-\\d\\.]*)#{ c }")
         group = val.toUpperCase().match(r)
 
         # If the number matches a constant, generate the equivalent
