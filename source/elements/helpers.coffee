@@ -46,3 +46,9 @@ parseInclusivity = (dots) ->
     return dots.length is 2
 
 
+
+# Right now, just used for testing purposes.
+if exports?
+    exports.parseNumber         = parseNumber
+    exports.parseStep           = parseStep
+    exports.parseInclusivity    = parseInclusivity
