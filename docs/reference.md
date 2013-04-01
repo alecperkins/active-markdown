@@ -45,7 +45,7 @@ Numbers MAY use the constants in [`Math`](https://developer.mozilla.org/en-US/do
 
 #### Examples
 
-##### Number, specifying step
+##### Specifying step
 
 [20. calories]{calories: 10..100 by 10} - `[20. calories]{calories: 10..100 by 10}`
 
@@ -59,7 +59,7 @@ Numbers MAY use the constants in [`Math`](https://developer.mozilla.org/en-US/do
 | display precision     | `1`                               |
 | display format        | `"#{value.toFixed(0)} calories"`  |
 
-##### Number, fractional step, precision
+##### Fractional step, precision
 
 [20.0 calories]{calories_2: 10..100 by 0.1} - `[20.0 calories]{calories_2: 10..100 by 0.1}`
 
@@ -73,7 +73,21 @@ Numbers MAY use the constants in [`Math`](https://developer.mozilla.org/en-US/do
 | display precision     | `0.1`                             |
 | display format        | `"#{value.toFixed(1)} calories"`  |
 
-##### Number, unbounded
+##### With constants
+
+[period 0.00]{period: 0..2pi by 0.25pi} - `[period 0.00]{period: 0..2pi by 0.25pi}`
+
+| property              | value                             |
+|=======================|===================================|
+| name                  | `period`                          |
+| value                 | []{period}                        |
+| interval              | `[0,2pi]`                         |
+| step                  | `0.25pi`                          |
+| default               | `0`                               |
+| display precision     | `0.01`                            |
+| display format        | `"#{value.toFixed(2)} period"`    |
+
+##### Unbounded
 
 [20 calories]{calories_3: ..} - `[20 calories]{calories_3: ..}`
 
@@ -87,16 +101,16 @@ Numbers MAY use the constants in [`Math`](https://developer.mozilla.org/en-US/do
 | display precision     | `undefined`                       |
 | display format        | `"#{value} calories"`             |
 
-##### Number, unbounded right, before text
+##### Unbounded right, before text
 
-[over 200 calories]{calories_4: 1..} - `[over 200 calories]{calories_4: 1..}`
+[over 200 calories]{calories_4: 1..} - `[over 200 calories]{calories_4: 1.. by 2}`
 
 | property              | value                             |
 |=======================|===================================|
 | name                  | `calories_4`                      |
 | value                 | []{calories_4}                    |
 | interval              | `[1,∞)`                           |
-| step                  | `1`                               |
+| step                  | `2`                               |
 | default               | `200`                             |
 | display precision     | `undefined`                       |
 | display format        | `"over #{value} calories"`        |
