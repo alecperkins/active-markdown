@@ -114,18 +114,28 @@ if not fs.existsSync(LIB_PATH)
 
 option '-m', '--minify', 'Minify output, if applicable'
 
-task 'build', 'Compile all the things', (options) ->
-    options.minify = false
-    invoke 'build:style'
-    invoke 'build:script'
+task 'build', 'Run tests and compile all the things', (options) ->
 
-    options.minify = true
-    invoke 'build:style'
-    invoke 'build:script'
+    sys.puts 'Running tests'
+    runTests (failures) ->
+        if failures isnt 0
+            process.exit(failures)
 
-    invoke 'build:markup'
-    invoke 'build:command'
-    invoke 'build:sample'
+        sys.puts 'Compiling unminified'
+        options.minify = false
+        invoke 'build:style'
+        invoke 'build:script'
+
+
+        sys.puts 'Compiling minified'
+        options.minify = true
+        invoke 'build:style'
+        invoke 'build:script'
+
+        sys.puts 'Compiling others'
+        invoke 'build:markup'
+        invoke 'build:command'
+        invoke 'build:sample'
 
 task 'build:style', 'Compile viewer styles', (options) ->
     [ style_name , style_code ] = compileViewerStyles(options.minify)
