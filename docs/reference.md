@@ -31,7 +31,7 @@ A read-only output of the current value of the specified variable `<var_name>`. 
 
 ### NumberElement
 
-A number adjustable by slider. The number MAY have a display precision specified. The slider MAY be constrained to a minimum and/or maximum, and MAY have a step value. The text is parsed, and the first number in the text becomes the output value. The remaining text is added to the template, allowing for units and other descriptive text to be included in the control.
+A number adjustable by dragging. The number MAY have a display precision specified. The slider MAY be constrained to a minimum and/or maximum, and MAY have a step value. The text is parsed, and the first number in the text becomes the output value. The remaining text is added to the template, allowing for units and other descriptive text to be included in the control.
 
 A range MUST be specified, but MAY be infinite in both directions. The range’s interval is specified using the [CoffeeScript-style range dots](http://coffeescript.org/#loops), where `..` is inclusive and `...` excludes the end. ie, `1..4` covers the interval `1 <= n <= 4`, while `1...4` covers `1 <= n < 4`. The range MUST be ascending. The range’s step is specified using the `by` keyword and a number. The step MAY be omitted (defaulting to `1`), but if specified MUST be positive.
 
