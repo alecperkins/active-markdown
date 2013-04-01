@@ -84,7 +84,6 @@ readSourceFile = (name) ->
 
 
 concatenateFiles = (file_list, separator='\n') ->
-    console.log file_list
     sources = file_list.map (file) ->
         contents = readSourceFile(file)
         return contents
@@ -97,7 +96,9 @@ minifyJS = (js_script_code) ->
     toplevel_ast = UglifyJS.parse(js_script_code)
     toplevel_ast.figure_out_scope()
 
-    compressor = UglifyJS.Compressor()
+    compressor = UglifyJS.Compressor
+        drop_debugger   : true
+        warnings        : false
     compressed_ast = toplevel_ast.transform(compressor)
 
     min_code = compressed_ast.print_to_string()
@@ -108,44 +109,63 @@ minifyJS = (js_script_code) ->
 # task 'updatepages', 'Update the gh-pages branch', (options) ->
 
 
+if not fs.existsSync(LIB_PATH)
+    fs.mkdirSync(LIB_PATH)
+
+
+option '-m', '--minify', 'Minify output, if applicable'
 
 task 'build', 'Compile all the things', (options) ->
+    options.minify = false
+    invoke 'build:style'
+    invoke 'build:script'
 
-    if not fs.existsSync(LIB_PATH)
-        fs.mkdirSync(LIB_PATH)
+    options.minify = true
+    invoke 'build:style'
+    invoke 'build:script'
 
-    # Build the minified versions
-    [ style_name , style_code ] = compileViewerStyles(true)
+    invoke 'build:markup'
+    invoke 'build:command'
+    invoke 'build:sample'
+
+task 'build:style', 'Compile viewer styles', (options) ->
+    [ style_name , style_code ] = compileViewerStyles(options.minify)
     fs.writeFile path.join(LIB_PATH, style_name), style_code,
         encoding: 'utf-8'
+    , (err) ->
+        throw err if err?
+        sys.puts("Compiled: #{ style_name }")
 
-    # Build the minified versions
-    [ script_name , script_code ] = compileViewerScripts(true)
+task 'build:script', 'Compile viewer scripts', (options) ->
+    [ script_name , script_code ] = compileViewerScripts(options.minify)
     fs.writeFile path.join(LIB_PATH, script_name), script_code,
         encoding: 'utf-8'
+    , (err) ->
+        throw err if err?
+        sys.puts("Compiled: #{ script_name }")
 
-    # Unminified
-    [ style_name , style_code ] = compileViewerStyles(false)
-    fs.writeFile path.join(LIB_PATH, style_name), style_code,
-        encoding: 'utf-8'
-
-    # Unminified
-    [ script_name , script_code ] = compileViewerScripts(false)
-    fs.writeFile path.join(LIB_PATH, script_name), script_code,
-        encoding: 'utf-8'
-
+task 'build:markup', 'Compile viewer template to template.js', (options) ->
     [ markup_name , markup_code ] = compileViewerTemplate()
     fs.writeFile path.join(LIB_PATH, markup_name), markup_code,
         encoding: 'utf-8'
+    , (err) ->
+        throw err if err?
+        sys.puts("Compiled: #{ markup_name }")
 
+task 'build:command', 'Compile command-line script', (options) ->
     [ command_name , command_code ] = compileCommand()
     fs.writeFile path.join(LIB_PATH, command_name), command_code,
         encoding: 'utf-8'
+    , (err) ->
+        throw err if err?
+        sys.puts("Compiled: #{ command_name }")
 
+task 'build:sample', 'Copy sample file', (options) ->
     input = path.join(SOURCE_PATH, 'sample.md')
     output = path.join(LIB_PATH, 'sample.md')
-    fs.copy(input, output)
-
+    fs.copy input, output, (err) ->
+        throw err if err?
+        sys.puts("Copied: sample.md")
 
 
 
@@ -164,14 +184,11 @@ compileViewerStyles = (minify=false) ->
         css_style_code += '\n' + css
 
     if minify
-        css_full_length = css_style_code.length
         css_style_code = Sqwish.minify(css_style_code)
-        css_min_length = css_style_code.length
-        console.log 'css:', css_full_length, '->', css_min_length, css_min_length / css_full_length
-        style_file_name     = 'activemarkdown-min.css'
+        style_file_name = 'activemarkdown-min.css'
     else
         
-        style_file_name     = 'activemarkdown.css'
+        style_file_name = 'activemarkdown.css'
 
     css_style_code = viewer_files.style_header + css_style_code
     return [style_file_name, css_style_code]
@@ -183,13 +200,10 @@ compileViewerScripts = (minify=false) ->
     js_script_code += '\n' + CoffeeScript.compile(coffee_script_code,)
 
     if minify
-        js_full_length = js_script_code.length
         js_script_code = minifyJS(js_script_code)
-        js_min_length = js_script_code.length
-        console.log 'js:', js_full_length, '->', js_min_length, js_min_length / js_full_length
-        script_file_name    = 'activemarkdown-min.js'
+        script_file_name = 'activemarkdown-min.js'
     else
-        script_file_name    = 'activemarkdown.js'
+        script_file_name = 'activemarkdown.js'
 
     js_script_code = viewer_files.script_header + js_script_code
     return [script_file_name, js_script_code]
