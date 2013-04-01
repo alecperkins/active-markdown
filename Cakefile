@@ -1,4 +1,3 @@
-
 fs              = require 'fs-extra'
 path            = require 'path'
 sys             = require 'sys'
@@ -167,6 +166,32 @@ task 'build:sample', 'Copy sample file', (options) ->
         throw err if err?
         sys.puts("Copied: sample.md")
 
+
+task 'test', 'Run tests', (options) ->
+    runTests (failures) ->
+        process.exit(failures)
+
+runTests = (cb) ->
+    Mocha = require('mocha')
+    mocha = new Mocha()
+
+    TEST_TMP_PATH = path.join(PROJECT_ROOT, 'test_tmp')
+    TEST_SRC_PATH = path.join(PROJECT_ROOT, 'test')
+
+    if not fs.existsSync(TEST_TMP_PATH)
+        fs.mkdirSync(TEST_TMP_PATH)
+
+    test_sources = fs.readdirSync(path.join(PROJECT_ROOT, 'test'))
+    for f in test_sources
+        in_path = path.join(TEST_SRC_PATH, f)
+        compiled_js = CoffeeScript.compile(fs.readFileSync(in_path).toString())
+        out_path = path.join(TEST_TMP_PATH, f + '.js')
+        fs.writeFileSync(out_path, compiled_js)
+        mocha.addFile(out_path)
+
+    mocha.run (args...) ->
+        fs.removeSync(TEST_TMP_PATH) # fs.remove isn't working?
+        cb(args...)
 
 
 compileCommand = ->
