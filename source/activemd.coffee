@@ -158,6 +158,8 @@ exports.run = (args, options) ->
     if options.sample
         doGenerateSample()
     else
+        if args.length is 0
+            throw 'Must specify a file'
         doCompileFile(options, args)
 
 
