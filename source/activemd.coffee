@@ -12,7 +12,7 @@ STYLE_FILE_NAME = 'activemarkdown-min.css'
 SCRIPT_FILE_NAME = 'activemarkdown-min.js'
 
 assembleViewer = (opts) ->
-    { input_file_name, inline, markup, local} = opts
+    { input_file_name, inline, markup, local, page_title } = opts
 
 
 
@@ -39,7 +39,7 @@ assembleViewer = (opts) ->
         """
 
     markup_output += template_fn.call
-        page_title  : input_file_name
+        page_title  : page_title
         styles      : styles
         script      : scripts
         markup      : markup
@@ -59,6 +59,7 @@ outputCompiledFile = (input_file_name, markup, cmd_options) ->
         input_file_name     : input_file_name
         inline              : cmd_options.inline
         local               : cmd_options.local
+        page_title          : cmd_options.title or input_file_name
         markup              : markup
 
     if process.stdout.isTTY

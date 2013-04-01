@@ -86,17 +86,20 @@ The basic usage is `activemd FILE`. This will compile a markdown file with the A
 
 Options:
 
-*   `-l  --local FILE(S)`
+*   `-l  --local`
     Create local copies of the asset files, relative to the specified source
     file(s). By default, the assets used are remote, specifically:
 
         http://activemarkdown.org/viewer/activemarkdown-X.Y.Z-min.css
         http://activemarkdown.org/viewer/activemarkdown-X.Y.Z-min.js
 
-*   `-i  --inline FILE(S)`
+*   `-i  --inline`
     Inline the asset files in the template. Similar to `--local`, but includes
     the content of the assets in the actual output file, creating a single,
     self-contained Active Markdown viewer file.
+
+*   `    --title TITLE`
+    Use the specified string as the title of the compiled HTML file.
 
 *   `    --sample`
     Generate a sample file that contains all of the possible controls in
