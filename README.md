@@ -1,4 +1,4 @@
-# Active Markdown, v0.1.0
+# Active Markdown, v0.2.0
 
 [Active Markdown](http://activemarkdown.org) is a tool for making reactive documents — in the vein of [Tangle](http://worrydream.com/Tangle) — using a plain text markdown source, with a special notation for adding interactive controls and variables. The logic is determined by the contents of the code blocks, which is actually executed on-the-fly to update the variables.
 
@@ -52,6 +52,8 @@ The code blocks have access to these variables under the top-level `this` object
 This is still experimental, and very rough around the edges. For more information, see the [initial writeup](http://activemarkdown.org/an-experiment.html).
 
 Active Markdown uses [Showdown](https://github.com/coreyti/showdown) for markdown–HTML conversion, with the `github` and `table` extensions enabled.
+
+
 
 ## 0–60 (getting started)
 
@@ -108,74 +110,11 @@ Options:
 
 ## Notation
 
+The notation for specifying elements is similar to the regular Markdown syntax for links and images, generally following this format:
 
-### String
+`[text content]{variable_name: configuration}`
 
-A read-only output of the current value of the specified variable `<var_name>`. The text is the default value, though it will be replaced when the HTML version loads.
-
-`[<default text>]{<var_name>}`
-
-* String
-
-    `[text content]{var_name}`
-
-
-### Numbers
-
-A number adjustable by slider. The number MAY have a display precision specified. The slider can be set to a minimum and/or maximum, and have a step value. The text is parsed, and the first number in the text becomes the output value. The remaining text is added to the template, allowing for units and other descriptive text to be included in the control.
-
-A range MUST be specified, but MAY be infinite in both directions. The range is specified using the CoffeeScript-style dots, where `..` is inclusive and `...` excludes the end. ie, `1..4` is the range `1 <= n <= 4`, while `1...4` is `1 <= n < 4`. Infinite is expressed by omitting the number, so `1...` is from 1 to infinity, and `...` is from -infinity to infinity.
-
-Specifying a display precision MAY be done using the default number value in the text. `200.` formats to `0` decimal places. `200.000` formats to `3` decimals. If not specified, the value is unformatted.
-
-Numbers MAY use the constants in `Math` and combine them with a coefficient, eg `2pi` or `0.5pi`, which is treated as `n * Math.PI`. This can be done in the range min or max, or in the step. The constants MUST be one of `e`, `pi`, `ln2`, `ln10`, `log2e`, `log10e`, `sqrt1_2`, `sqrt2`, (uppercase or lowercase).
-
-`[* <number>.<decimal*> *]{<var_name>: <min>..<exclusive><max> by <step>}`
-
-The default value MAY contradict any min or max set by the range. However, upon first interaction, the value will be brought within the range.
-
-* Number, precision of 1, slider step by 10, "#{value.toFixed(0)} calories"
-
-    `[200. calories]{calories: 10..100 by 10}`
-
-* Number, precision of 0.1, slider step by 0.1, not inclusive, "#{value.toFixed(1)} calories"
-
-    `[80.0 calories]{calories: 10...100 by 0.1}`
-
-* Number, no precision, slider step by 1, no slider max, "#{value} calories"
-
-    `[50 calories]{calories: 0..}`
-
-* Number, precision of 0.0001, slider step by 0.01, "#{value.toFixed(4)}"
-
-    `[4.0000]{num: pi..2pi by 0.01}`
-
-* Number, precision of 0.01, slider step by 1, no min/max, "over $#{value.toFixed(2)} per day"
-
-    `[over $200.00 per day]{payment: ..}`
-
-
-### Boolean
-
-A boolean flag that has a value of `true`, `false`, or `undefined`. The true and false values can be labeled. If the label is present in the text, that value becomes the default value. Otherwise, the value is `undefined`.
-
-`[* <true_label or false_label or *> *]{<var_name> <true_label> or <false_label>}`
-
-* Boolean,"#{value}", default = undefined
-
-    `[pick one]{some_flag: true or false}`
-
-* Boolean,"when #{value}", default = true
-
-    `[when true]{some_flag: true or false}`
-
-* Boolean, true label = "on", false label = "off", "#{label} deck"
-
-    `[on deck]{some_flag: on or off}`
-
-
-*Note: graphs, visualizations, and math helpers are in the works.*
-
+See [activemarkdown.org/reference.html](http://activemarkdown.org/reference.html) for a complete reference of the elements and their configuration.
 
 
 ## Authors
