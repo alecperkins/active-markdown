@@ -12,7 +12,6 @@ class Executor
         {name} = attrs
         if @_variables[name]
             variable_model = @_variables[name]
-            delete attrs.value
         else
             variable_model = new Backbone.Model(name)
             @_variables[name] = variable_model

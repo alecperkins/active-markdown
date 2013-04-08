@@ -10,7 +10,7 @@ parseNumber = (val) ->
     # Check the value for each constant, allowing for just a constant
     # with no coefficient.
     for c in constants
-        r = RegExp("(\\d)*#{ c }")
+        r = RegExp("([-\\d\\.]*)#{ c }")
         group = val.toUpperCase().match(r)
 
         # If the number matches a constant, generate the equivalent
@@ -46,3 +46,9 @@ parseInclusivity = (dots) ->
     return dots.length is 2
 
 
+
+# Right now, just used for testing purposes.
+if exports?
+    exports.parseNumber         = parseNumber
+    exports.parseStep           = parseStep
+    exports.parseInclusivity    = parseInclusivity

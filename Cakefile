@@ -1,4 +1,3 @@
-
 fs              = require 'fs-extra'
 path            = require 'path'
 sys             = require 'sys'
@@ -14,6 +13,7 @@ UglifyJS        = require 'uglify-js'
 
 PROJECT_ROOT    = path.dirname(fs.realpathSync(__filename))
 LIB_PATH        = path.join(PROJECT_ROOT, 'lib')
+SOURCE_PATH     = path.join(PROJECT_ROOT, 'source')
 
 
 
@@ -78,14 +78,13 @@ Includes:
 
 
 
-readViewerSource = (name) ->
-    return fs.readFileSync('viewer_src/' + name, 'utf-8').toString()
+readSourceFile = (name) ->
+    return fs.readFileSync(path.join(SOURCE_PATH, name), 'utf-8').toString()
 
 
 concatenateFiles = (file_list, separator='\n') ->
-    console.log file_list
     sources = file_list.map (file) ->
-        contents = readViewerSource(file)
+        contents = readSourceFile(file)
         return contents
     return sources.join(separator)
 
@@ -96,7 +95,9 @@ minifyJS = (js_script_code) ->
     toplevel_ast = UglifyJS.parse(js_script_code)
     toplevel_ast.figure_out_scope()
 
-    compressor = UglifyJS.Compressor()
+    compressor = UglifyJS.Compressor
+        drop_debugger   : true
+        warnings        : false
     compressed_ast = toplevel_ast.transform(compressor)
 
     min_code = compressed_ast.print_to_string()
@@ -107,38 +108,104 @@ minifyJS = (js_script_code) ->
 # task 'updatepages', 'Update the gh-pages branch', (options) ->
 
 
+if not fs.existsSync(LIB_PATH)
+    fs.mkdirSync(LIB_PATH)
 
-option '-m', '--minify', 'Minify JavaScript and CSS'
 
-task 'build', 'Compile all the things', (options) ->
+option '-m', '--minify', 'Minify output, if applicable'
 
-    if not fs.existsSync(LIB_PATH)
-        fs.mkdirSync(LIB_PATH)
+task 'build', 'Run tests and compile all the things', (options) ->
 
+    sys.puts 'Running tests'
+    runTests (failures) ->
+        if failures isnt 0
+            process.exit(failures)
+
+        sys.puts 'Compiling unminified'
+        options.minify = false
+        invoke 'build:style'
+        invoke 'build:script'
+
+
+        sys.puts 'Compiling minified'
+        options.minify = true
+        invoke 'build:style'
+        invoke 'build:script'
+
+        sys.puts 'Compiling others'
+        invoke 'build:markup'
+        invoke 'build:command'
+        invoke 'build:sample'
+
+task 'build:style', 'Compile viewer styles', (options) ->
     [ style_name , style_code ] = compileViewerStyles(options.minify)
     fs.writeFile path.join(LIB_PATH, style_name), style_code,
         encoding: 'utf-8'
+    , (err) ->
+        throw err if err?
+        sys.puts("Compiled: #{ style_name }")
 
+task 'build:script', 'Compile viewer scripts', (options) ->
     [ script_name , script_code ] = compileViewerScripts(options.minify)
     fs.writeFile path.join(LIB_PATH, script_name), script_code,
         encoding: 'utf-8'
+    , (err) ->
+        throw err if err?
+        sys.puts("Compiled: #{ script_name }")
 
+task 'build:markup', 'Compile viewer template to template.js', (options) ->
     [ markup_name , markup_code ] = compileViewerTemplate()
     fs.writeFile path.join(LIB_PATH, markup_name), markup_code,
         encoding: 'utf-8'
+    , (err) ->
+        throw err if err?
+        sys.puts("Compiled: #{ markup_name }")
 
+task 'build:command', 'Compile command-line script', (options) ->
     [ command_name , command_code ] = compileCommand()
     fs.writeFile path.join(LIB_PATH, command_name), command_code,
         encoding: 'utf-8'
-    input = path.join(PROJECT_ROOT, 'command_src', 'sample.md')
+    , (err) ->
+        throw err if err?
+        sys.puts("Compiled: #{ command_name }")
+
+task 'build:sample', 'Copy sample file', (options) ->
+    input = path.join(SOURCE_PATH, 'sample.md')
     output = path.join(LIB_PATH, 'sample.md')
-    fs.copy(input, output)
+    fs.copy input, output, (err) ->
+        throw err if err?
+        sys.puts("Copied: sample.md")
 
 
+task 'test', 'Run tests', (options) ->
+    runTests (failures) ->
+        process.exit(failures)
+
+runTests = (cb) ->
+    Mocha = require('mocha')
+    mocha = new Mocha()
+
+    TEST_TMP_PATH = path.join(PROJECT_ROOT, 'test_tmp')
+    TEST_SRC_PATH = path.join(PROJECT_ROOT, 'test')
+
+    if not fs.existsSync(TEST_TMP_PATH)
+        fs.mkdirSync(TEST_TMP_PATH)
+
+    test_sources = fs.readdirSync(path.join(PROJECT_ROOT, 'test'))
+    for f in test_sources
+        in_path = path.join(TEST_SRC_PATH, f)
+        compiled_js = CoffeeScript.compile(fs.readFileSync(in_path).toString())
+        out_path = path.join(TEST_TMP_PATH, f + '.js')
+        fs.writeFileSync(out_path, compiled_js)
+        mocha.addFile(out_path)
+
+    mocha.run (args...) ->
+        fs.removeSync(TEST_TMP_PATH) # fs.remove isn't working?
+        cb(args...)
 
 
 compileCommand = ->
-    command_source_path = path.join(PROJECT_ROOT, 'command_src', 'activemd.coffee')
+    command_source_path = path.join(SOURCE_PATH, 'activemd.coffee')
     command_source = fs.readFileSync(command_source_path, 'utf-8').toString()
     command_js = CoffeeScript.compile(command_source)
     return ['activemd.js', command_js]
@@ -152,14 +219,11 @@ compileViewerStyles = (minify=false) ->
         css_style_code += '\n' + css
 
     if minify
-        css_full_length = css_style_code.length
-        css_style_code = Sqwish.minify(css_style_code, true)
-        css_min_length = css_style_code.length
-        console.log 'css:', css_full_length, '->', css_min_length, css_min_length / css_full_length
-        style_file_name     = 'activemarkdown-min.css'
+        css_style_code = Sqwish.minify(css_style_code)
+        style_file_name = 'activemarkdown-min.css'
     else
         
-        style_file_name     = 'activemarkdown.css'
+        style_file_name = 'activemarkdown.css'
 
     css_style_code = viewer_files.style_header + css_style_code
     return [style_file_name, css_style_code]
@@ -171,21 +235,18 @@ compileViewerScripts = (minify=false) ->
     js_script_code += '\n' + CoffeeScript.compile(coffee_script_code,)
 
     if minify
-        js_full_length = js_script_code.length
         js_script_code = minifyJS(js_script_code)
-        js_min_length = js_script_code.length
-        console.log 'js:', js_full_length, '->', js_min_length, js_min_length / js_full_length
-        script_file_name    = 'activemarkdown-min.js'
+        script_file_name = 'activemarkdown-min.js'
     else
-        script_file_name    = 'activemarkdown.js'
+        script_file_name = 'activemarkdown.js'
 
     js_script_code = viewer_files.script_header + js_script_code
     return [script_file_name, js_script_code]
 
 
 compileViewerTemplate = ->
-    compiled_template = readViewerSource('libraries/jaderuntime.js')
-    template_source = readViewerSource('template.jade')
+    compiled_template = readSourceFile('libraries/jaderuntime.js')
+    template_source = readSourceFile('template.jade')
     compiled_template += ';' + Jade.compile template_source,
         debug   : false
         client  : true

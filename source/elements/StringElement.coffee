@@ -10,8 +10,8 @@ class StringElement extends BaseElement
     """
 
     initialize: (parsed_config) ->
+        @_text_content = parsed_config.text_content
         @model = executor.getOrCreateVariable
-            value: undefined
             name: parsed_config.name
         @model.on('change:value', @render)
         @_fadeChange = _.debounce(@_doFade, 1000)
@@ -20,6 +20,15 @@ class StringElement extends BaseElement
     @_parseConfig: (config_match) ->
         return {
             name: config_match[1]
+        }
+
+    _getContext: ->
+        value = @model.get('value')
+        if not value?
+            value = @_text_content
+        return {
+            name: @model.get('name')
+            value: value
         }
 
     _onRender: ->
