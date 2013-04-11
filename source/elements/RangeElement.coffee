@@ -140,3 +140,5 @@ class RangeElement extends BaseElement
 
     stopDragging: ->
         @$el.removeClass('active')
+
+

@@ -10,13 +10,15 @@ VERSION = '0.2.0'
 CWD = process.cwd()
 LIB_PATH = path.dirname(fs.realpathSync(__filename))
 
-STYLE_FILE_NAME = "activemarkdown-#{ VERSION }-min.css"
-SCRIPT_FILE_NAME = "activemarkdown-#{ VERSION }-min.js"
+PINNED_STYLE_FILE_NAME = "activemarkdown-#{ VERSION }-min.css"
+PINNED_SCRIPT_FILE_NAME = "activemarkdown-#{ VERSION }-min.js"
+
+STYLE_FILE_NAME = "activemarkdown-min.css"
+SCRIPT_FILE_NAME = "activemarkdown-min.js"
+
 
 assembleViewer = (opts) ->
     { input_file_name, inline, markup, local, page_title } = opts
-
-
 
     if inline
         styles  = readLibFile(STYLE_FILE_NAME)
@@ -25,8 +27,8 @@ assembleViewer = (opts) ->
         scripts = "<script>#{ scripts }</script>"
     else
         prefix = if local then '' else 'http://activemarkdown.org/viewer/'
-        styles  = "<link rel='stylesheet' href='#{ prefix + STYLE_FILE_NAME }'>"
-        scripts = "<script src='#{ prefix + SCRIPT_FILE_NAME }'></script>"
+        styles  = "<link rel='stylesheet' href='#{ prefix + PINNED_STYLE_FILE_NAME }'>"
+        scripts = "<script src='#{ prefix + PINNED_SCRIPT_FILE_NAME }'></script>"
 
     compiled_template = readLibFile('template.js')
     template_fn = Function(compiled_template)
