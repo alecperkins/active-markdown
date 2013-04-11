@@ -65,7 +65,7 @@ Includes:
             'elements/CodeBlock.coffee'
             'elements/DragManager.coffee'
             'elements/helpers.coffee'
-            'elements/NumberElement.coffee'
+            'elements/RangeElement.coffee'
             'elements/StringElement.coffee'
             'elements/SwitchElement.coffee'
             'Executor.coffee'

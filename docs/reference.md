@@ -5,7 +5,7 @@ The notation for specifying elements is similar to the regular Markdown syntax f
 
 `[text content]{variable_name: configuration}`
 
-The text representation of the element, like the link text or image alt text, goes between the brackets, `[]`. The brackets are followed by braces, `{}`, which contain the variable name, and any configuration. The variable name MUST be followed by a colon, `:`, if there is any configuration present. The configuration is what determines the kind of element, and specifies its behavior. For example, a *NumberElement* can be constrained to a minimum and maximum, and a *SwitchElement* can be given different labels for `true` and `false`.
+The text representation of the element, like the link text or image alt text, goes between the brackets, `[]`. The brackets are followed by braces, `{}`, which contain the variable name, and any configuration. The variable name MUST be followed by a colon, `:`, if there is any configuration present. The configuration is what determines the kind of element, and specifies its behavior. For example, a *RangeElement* can be constrained to a minimum and maximum, and a *SwitchElement* can be given different labels for `true` and `false`.
 
 
 
@@ -29,7 +29,7 @@ A read-only output of the current value of the specified variable `<var_name>`. 
 
 
 
-### NumberElement
+### RangeElement
 
 A number adjustable by dragging. The number MAY have a display precision specified. The slider MAY be constrained to a minimum and/or maximum, and MAY have a step value. The text is parsed, and the first number in the text becomes the output value. The remaining text is added to the template, allowing for units and other descriptive text to be included in the control.
 

@@ -30,7 +30,7 @@ $('.AMDElement').each (i, el) ->
 
     element_classes = [
         SwitchElement
-        NumberElement
+        RangeElement
         StringElement
     ]
 

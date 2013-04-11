@@ -1,5 +1,5 @@
 
-class NumberElement extends BaseElement
+class RangeElement extends BaseElement
     @config_pattern: /([\w\d]+): ([\w\d-]*)([\.]{2,3})([\w\d-]*)( by [\w\d\.-]+)*/
 
     initialize: (parsed_config) ->
