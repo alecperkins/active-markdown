@@ -127,6 +127,9 @@ describe 'ActiveMarkdown', ->
             should.not.exist(output.match(/\<style\>/))
             output.match(/\<script\>/).should.have.length(1)
 
+        it 'should set the title', ->
+            output = AM.parse(SOURCE, title: 'A Title')
+            output.indexOf('<title>A Title</title>').should.be.above(-1)
 
         _checkOption = (in_markup, option_name, option_value) ->
             pattern = /ActiveMarkdown\.setOptions\(([\{\}\s\S]*)\)/
