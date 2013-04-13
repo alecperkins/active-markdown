@@ -12,7 +12,6 @@ LIB_PATH = path.dirname(fs.realpathSync(__filename))
 
 PINNED_STYLE_FILE_NAME = "activemarkdown-#{ VERSION }-min.css"
 PINNED_SCRIPT_FILE_NAME = "activemarkdown-#{ VERSION }-min.js"
-
 STYLE_FILE_NAME = "activemarkdown-min.css"
 SCRIPT_FILE_NAME = "activemarkdown-min.js"
 
@@ -163,6 +162,11 @@ exports.run = (args, options) ->
     if options.sample
         doGenerateSample()
     else
+        if options.debug
+            PINNED_SCRIPT_FILE_NAME = PINNED_SCRIPT_FILE_NAME.replace('-min','')
+            PINNED_STYLE_FILE_NAME = PINNED_STYLE_FILE_NAME.replace('-min','')
+            SCRIPT_FILE_NAME = SCRIPT_FILE_NAME.replace('-min','')
+            STYLE_FILE_NAME = STYLE_FILE_NAME.replace('-min','')
         if args.length is 0
             throw 'Must specify a file'
         doCompileFile(options, args)

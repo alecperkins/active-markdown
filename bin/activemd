@@ -17,9 +17,10 @@ cli.enable('status')
  
 cli.parse({
     local   : ['l', 'Create local copies of the asset files'],
+    debug   : ['',  'Debug mode (unminified files, etc)'],
     inline  : ['i', 'Inline asset files into output HTML'],
-    sample  : ['', 'Generate a sample Active Markdown file'],
-    title   : ['', 'Specify a title for the page(s)', 'string'],
+    sample  : ['',  'Generate a sample Active Markdown file'],
+    title   : ['',  'Specify a title for the page(s)', 'string'],
 });
  
 cli.main(function(args, options) {
