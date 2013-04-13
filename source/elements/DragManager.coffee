@@ -13,6 +13,7 @@ class DragManager
     Returns nothing.
     ###
     _reset: ->
+        @is_dragging = false
         if @_direction?
             @_$body.removeClass("dragging-#{ @_direction }")
         @_dragging_target = null
@@ -47,6 +48,7 @@ class DragManager
     Returns nothing.
     ###
     start: (e, view, direction) ->
+        @is_dragging = true
         { pageX, pageY } = e
         console.log 'start at', pageX, pageY
         @_direction = direction
