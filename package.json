@@ -21,6 +21,7 @@
     "sqwish": "0.2.1",
     "stylus": "0.32.1",
     "uglify-js": "2.2.5",
+    "underscore": "1.4.4",
     "walk": "2.2.1"
   },
   "bin": {

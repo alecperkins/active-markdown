@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <%= styles %>
+    </head>
+    <body>
+        <div id="AMContent">
+            <%= markup %>
+        </div>
+        <%= scripts %>
+        <script>
+            ActiveMarkdown.setOptions(<%= options %>);
+        </script>
+    </body>
+</html>
+
+
