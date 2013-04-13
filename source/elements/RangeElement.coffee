@@ -1,6 +1,6 @@
 
 class RangeElement extends BaseElement
-    @config_pattern: /([\w\d]+): ([\w\d-]*)([\.]{2,3})([\w\d-]*)( by [\w\d\.-]+)*/
+    @config_pattern: /([\w\d]+): ([\w\d\-\.]*)([\.]{2,3})([\w\d\-\.]*)( by [\w\d\.-]+)*/
 
     initialize: (parsed_config) ->
         parsed_config.value = @_parseTextContent(parsed_config)
