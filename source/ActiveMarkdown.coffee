@@ -17,20 +17,30 @@ LIB_PATH    = path.dirname(fs.realpathSync(__filename))
 
 
 _prepareScripts = (options) ->
-    script_file_name = "activemarkdown-#{ VERSION }-min.js"
+    scripts_file_name = "activemarkdown-#{ VERSION }-min.js"
     if options.debug
-        script_file_name = script_file_name.replace('-min', '')
+        scripts_file_name = scripts_file_name.replace('-min', '')
     switch options.libraries
         when 'relative'
-            scripts_html = ''
+            scripts_html = "<script src='#{ scripts_file_name }'></script>"
         when 'inline'
             scripts_html = ''
         else
-            scripts_html = ''
-    return ''
+            scripts_html = "<script src='http://activemarkdown.org/viewer/#{ scripts_file_name }'></script>"
+    return scripts_html
 
 _prepareStyles = (options) ->
-    return ''
+    styles_file_name = "activemarkdown-#{ VERSION }-min.css"
+    if options.debug
+        styles_file_name = styles_file_name.replace('-min', '')
+    switch options.libraries
+        when 'relative'
+            styles_html = "<link rel='stylesheet' href='#{ styles_file_name }'>"
+        when 'inline'
+            styles_html = ''
+        else
+            styles_html = "<link rel='stylesheet' href='http://activemarkdown.org/viewer/#{ styles_file_name }'>"
+    return styles_html
 
 _prepareOptions = (options) ->
     { editable_code, collapsed_code, debug } = options
@@ -56,7 +66,6 @@ _wrapOutput = (markup, options) ->
     else
         before = options.wrap[0] or options.wrap['before']
         after = options.wrap[1] or options.wrap['after']
-
         html_output = "#{ before }#{ markup }#{ after }"
 
     return html_output

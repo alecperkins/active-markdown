@@ -26,14 +26,14 @@ describe 'ActiveMarkdown', ->
             AM.parse(SOURCE, wrap: { before: before, after: after }).should.equal(target)
 
 
-        SCRIPTS_URL_MIN     = "src=\"http://activemarkdown.org/viewer/activemarkdown-#{ AM.VERSION }-min.js\""
-        STYLES_URL_MIN      = "src=\"http://activemarkdown.org/viewer/activemarkdown-#{ AM.VERSION }-min.css\""
-        SCRIPTS_URL         = "src=\"http://activemarkdown.org/viewer/activemarkdown-#{ AM.VERSION }.js\""
-        STYLES_URL          = "src=\"http://activemarkdown.org/viewer/activemarkdown-#{ AM.VERSION }.css\""
-        REL_SCRIPTS_URL_MIN = "src=\"activemarkdown-#{ AM.VERSION }-min.js\""
-        REL_STYLES_URL_MIN  = "src=\"activemarkdown-#{ AM.VERSION }-min.css\""
-        REL_SCRIPTS_URL     = "src=\"activemarkdown-#{ AM.VERSION }.js\""
-        REL_STYLES_URL      = "src=\"activemarkdown-#{ AM.VERSION }.css\""
+        SCRIPTS_URL_MIN     = "src='http://activemarkdown.org/viewer/activemarkdown-#{ AM.VERSION }-min.js'"
+        STYLES_URL_MIN      = "href='http://activemarkdown.org/viewer/activemarkdown-#{ AM.VERSION }-min.css'"
+        SCRIPTS_URL         = "src='http://activemarkdown.org/viewer/activemarkdown-#{ AM.VERSION }.js'"
+        STYLES_URL          = "href='http://activemarkdown.org/viewer/activemarkdown-#{ AM.VERSION }.css'"
+        REL_SCRIPTS_URL_MIN = "src='activemarkdown-#{ AM.VERSION }-min.js'"
+        REL_STYLES_URL_MIN  = "href='activemarkdown-#{ AM.VERSION }-min.css'"
+        REL_SCRIPTS_URL     = "src='activemarkdown-#{ AM.VERSION }.js'"
+        REL_STYLES_URL      = "href='activemarkdown-#{ AM.VERSION }.css'"
 
         it 'should use minified referenced libraries by default', ->
             output = AM.parse(SOURCE)
@@ -51,7 +51,7 @@ describe 'ActiveMarkdown', ->
             output.indexOf(REL_STYLES_URL).should.equal(-1)
 
             # Options only:
-            output.match(/\<style\>/).should.have.length(0)
+            should.not.exist(output.match(/\<style\>/))
             output.match(/\<script\>/).should.have.length(1)
 
         it 'should use unminified libraries in debug mode', ->
@@ -69,7 +69,7 @@ describe 'ActiveMarkdown', ->
             output.indexOf(REL_STYLES_URL).should.equal(-1)
 
             # Options only:
-            output.match(/\<style\>/).should.have.length(0)
+            should.not.exist(output.match(/\<style\>/))
             output.match(/\<script\>/).should.have.length(1)
 
         it 'should use inline libraries', ->
@@ -105,7 +105,7 @@ describe 'ActiveMarkdown', ->
             output.indexOf(REL_STYLES_URL).should.equal(-1)
 
             # Inlined libraries and options:
-            output.match(/\<style\>/).should.have.length(0)
+            should.not.exist(output.match(/\<style\>/))
             output.match(/\<script\>/).should.have.length(1)
 
         it 'should use relative debug libraries', ->
@@ -124,7 +124,7 @@ describe 'ActiveMarkdown', ->
             output.indexOf(REL_STYLES_URL_MIN).should.equal(-1)
 
             # Inlined libraries and options:
-            output.match(/\<style\>/).should.have.length(0)
+            should.not.exist(output.match(/\<style\>/))
             output.match(/\<script\>/).should.have.length(1)
 
 
