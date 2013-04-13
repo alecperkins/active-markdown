@@ -18,7 +18,7 @@ class RangeElement extends BaseElement
     ###
     _parseTextContent: (parsed_config) ->
         { text_content } = parsed_config
-        default_value     = undefined
+        default_value     = parsed_config.value
         @_before_text       = ''
         @_after_text        = ''
         @_display_precision = null
@@ -36,7 +36,7 @@ class RangeElement extends BaseElement
             ]
         ###
         pattern = /([a-zA-Z$ ]*)([\-\d]+)(\.?)(\d*)([a-zA-Z ]*)/
-        match_group = text_content.match(pattern)[1..5]
+        match_group = text_content.match(pattern)
         if match_group
             [
                 @_before_text
@@ -44,7 +44,7 @@ class RangeElement extends BaseElement
                 point
                 decimal
                 @_after_text
-            ] = match_group
+            ] = match_group[1..5]
 
             default_value = parseFloat([value, point, decimal].join(''))
             if point
