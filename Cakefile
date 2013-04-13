@@ -194,10 +194,11 @@ runTests = (cb) ->
     test_sources = fs.readdirSync(path.join(PROJECT_ROOT, 'test'))
     for f in test_sources
         in_path = path.join(TEST_SRC_PATH, f)
-        compiled_js = CoffeeScript.compile(fs.readFileSync(in_path).toString())
-        out_path = path.join(TEST_TMP_PATH, f + '.js')
-        fs.writeFileSync(out_path, compiled_js)
-        mocha.addFile(out_path)
+        if not fs.statSync(in_path).isDirectory()
+            compiled_js = CoffeeScript.compile(fs.readFileSync(in_path, 'utf-8').toString())
+            out_path = path.join(TEST_TMP_PATH, f + '.js')
+            fs.writeFileSync(out_path, compiled_js)
+            mocha.addFile(out_path)
 
     mocha.run (args...) ->
         fs.removeSync(TEST_TMP_PATH) # fs.remove isn't working?
