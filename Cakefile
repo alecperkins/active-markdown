@@ -25,7 +25,7 @@ http://activemarkdown.org
 Includes:
 - Zepto                         MIT License     http://zeptojs.com/
 - Underscore                    MIT License     http://underscorejs.org/
-- Underscore.string             MIT License     http://epeli.github.com/underscore.string/
+- Underscore.string             MIT License     http://epeli.github.io/underscore.string/
 - Backbone                      MIT License     http://backbonejs.org/
 - Backbone.NamedView            Unlicensed      https://github.com/alecperkins/backbone.namedview
 - CodeMirror                    MIT License     http://codemirror.net/
