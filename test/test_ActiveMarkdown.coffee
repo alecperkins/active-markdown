@@ -52,7 +52,7 @@ describe 'ActiveMarkdown', ->
 
             # Options only:
             should.not.exist(output.match(/\<style\>/))
-            output.match(/\<script\>/).should.have.length(1)
+            output.match(/\<\/script\>/g).should.have.length(2)
 
         it 'should use unminified libraries in debug mode', ->
             output = AM.parse(SOURCE, debug: true)
@@ -70,9 +70,9 @@ describe 'ActiveMarkdown', ->
 
             # Options only:
             should.not.exist(output.match(/\<style\>/))
-            output.match(/\<script\>/).should.have.length(1)
+            output.match(/\<\/script\>/g).should.have.length(2)
 
-        it.skip 'should use inline libraries', ->
+        it 'should use inline libraries', ->
             output = AM.parse(SOURCE, libraries: 'inline')
 
             # Don't include:
@@ -86,8 +86,8 @@ describe 'ActiveMarkdown', ->
             output.indexOf(REL_STYLES_URL).should.equal(-1)
 
             # Inlined libraries and options:
-            output.match(/\<style\>/).should.have.length(1)
-            output.match(/\<script\>/).should.have.length(2)
+            output.match(/\<style\>/g).should.have.length(2) # once for the actual page and once for the code
+            output.match(/\<\/script\>/g).should.have.length(2)
 
         it 'should use relative minified libraries', ->
             output = AM.parse(SOURCE, libraries: 'relative')
@@ -106,7 +106,7 @@ describe 'ActiveMarkdown', ->
 
             # Inlined libraries and options:
             should.not.exist(output.match(/\<style\>/))
-            output.match(/\<script\>/).should.have.length(1)
+            output.match(/\<\/script\>/g).should.have.length(2)
 
         it 'should use relative debug libraries', ->
             output = AM.parse(SOURCE, libraries: 'relative', debug: true)
@@ -125,7 +125,7 @@ describe 'ActiveMarkdown', ->
 
             # Inlined libraries and options:
             should.not.exist(output.match(/\<style\>/))
-            output.match(/\<script\>/).should.have.length(1)
+            output.match(/\<\/script\>/g).should.have.length(2)
 
         it 'should set the title', ->
             output = AM.parse(SOURCE, title: 'A Title')

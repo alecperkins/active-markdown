@@ -1,10 +1,19 @@
 _                   = require 'underscore'
-fs                  = require 'fs'
-path                = require 'path'
 
 parseMarkdown       = require './parser'
 
 viewerTemplate      = require './misc/template'
+
+
+CWD = process.cwd()
+LIB_PATH = null
+
+# Only try to figure out the paths if operating on the server. Browserify's
+# `process` reports a cwd of /.
+unless CWD is '/'
+    fs          = require 'fs'
+    path        = require 'path'
+    LIB_PATH    = path.join(path.dirname(fs.realpathSync(__filename)),'..','lib')
 
 VERSION = '0.2.0'
 exports.VERSION = VERSION
@@ -27,17 +36,28 @@ options - an Object with the parsing session options
 
 Returns a String of HTML.
 ###
-_prepareScripts = (options) ->
+_prepareScripts = (options, document_options) ->
     scripts_file_name = "activemarkdown-#{ VERSION }-min.js"
     if options.debug
         scripts_file_name = scripts_file_name.replace('-min', '')
+
+    scripts_html = "<script"
     switch options.libraries
         when 'relative'
-            scripts_html = "<script src='#{ scripts_file_name }'></script>"
+            scripts_html += " src='#{ scripts_file_name }'>"
         when 'inline'
-            scripts_html = ''
+            scripts_html += '> ' + fs.readFileSync(path.join(LIB_PATH, scripts_file_name), 'utf-8').toString()
         else
-            scripts_html = "<script src='http://activemarkdown.org/viewer/#{ scripts_file_name }'></script>"
+            scripts_html += " src='http://activemarkdown.org/viewer/#{ scripts_file_name }'>"
+
+    # Need to make sure to avoid using the literal '</script>' in the code,
+    # which will prematurely close the script tag that contains this file.
+    scripts_html += ['</sc','ript>'].join('')
+    scripts_html += """
+            <script>
+                window.ActiveMarkdown.makeActive(#{ document_options });
+        """
+    scripts_html += ['</sc','ript>'].join('')
     return scripts_html
 
 
@@ -58,7 +78,8 @@ _prepareStyles = (options) ->
         when 'relative'
             styles_html = "<link rel='stylesheet' href='#{ styles_file_name }'>"
         when 'inline'
-            styles_html = ''
+            styles_html = fs.readFileSync(path.join(LIB_PATH, styles_file_name), 'utf-8').toString()
+            styles_html = "<style>#{ styles_html }</style>"
         else
             styles_html = "<link rel='stylesheet' href='http://activemarkdown.org/viewer/#{ styles_file_name }'>"
     return styles_html
@@ -93,7 +114,7 @@ Returns the String wrapped result.
 _wrapOutput = (markup, options) ->
     if options.wrap is true
         document_options    = _prepareOptions(options)
-        scripts             = _prepareScripts(options)
+        scripts             = _prepareScripts(options, document_options)
         styles              = _prepareStyles(options)
 
         html_output = viewerTemplate
@@ -102,7 +123,6 @@ _wrapOutput = (markup, options) ->
             scripts : scripts
             styles  : styles
             markup  : markup
-            options : document_options
             VERSION : VERSION
             input_file_name: options.input_file_name
     else
@@ -160,6 +180,9 @@ exports.parse = (markdown_source, kwargs={}) ->
 
     if not options.title
         options.title = options.input_file_name
+
+    if not LIB_PATH
+        options.libraries = 'reference'
 
     html_output = parseMarkdown(markdown_source)
 
