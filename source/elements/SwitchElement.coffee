@@ -88,6 +88,7 @@ class SwitchElement extends BaseElement
                 {{ false_label }}
             </span>
             {{ after_text }}
+        </span>
         <span class="name">{{ name }}</span>
     """
 
