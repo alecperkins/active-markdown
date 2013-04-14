@@ -206,10 +206,10 @@ runTests = (cb) ->
 
 
 compileCommand = ->
-    command_source_path = path.join(SOURCE_PATH, 'activemd.coffee')
+    command_source_path = path.join(SOURCE_PATH, 'command.coffee')
     command_source = fs.readFileSync(command_source_path, 'utf-8').toString()
     command_js = CoffeeScript.compile(command_source)
-    return ['activemd.js', command_js]
+    return ['command.js', command_js]
 
 
 compileViewerStyles = (minify=false) ->
