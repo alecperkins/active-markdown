@@ -72,7 +72,7 @@ describe 'ActiveMarkdown', ->
             should.not.exist(output.match(/\<style\>/))
             output.match(/\<script\>/).should.have.length(1)
 
-        it 'should use inline libraries', ->
+        it.skip 'should use inline libraries', ->
             output = AM.parse(SOURCE, libraries: 'inline')
 
             # Don't include:
