@@ -18,38 +18,12 @@ SOURCE_PATH     = path.join(PROJECT_ROOT, 'source')
 
 { VERSION }     = require './source/ActiveMarkdown'
 
-viewer_files =
-
-
-    style_header: """/*
-Active Markdown viewer style assets
-http://activemarkdown.org
-
-Includes:
-- CodeMirror                    MIT License     http://codemirror.net/
-- CodeMirror solarized theme    MIT License     http://ethanschoonover.com/solarized
-- Active Markdown               Unlicensed      http://activemarkdown.org
-*/\n"""
-
-
-    lib_styles: [
-            'libraries/codemirror-2.36.0/codemirror.css'
-            'libraries/codemirror-2.36.0/solarized.css'
-        ]
-
-
-
-    styles: [
-            'style.styl'
-        ]
 
 
 
 
 
 
-
-# task 'updatepages', 'Update the gh-pages branch', (options) ->
 
 
 if not fs.existsSync(LIB_PATH)
@@ -58,38 +32,8 @@ if not fs.existsSync(LIB_PATH)
 
 option '-m', '--minify', 'Minify output, if applicable'
 
-task 'build', 'Run tests and compile all the things', (options) ->
-
-    sys.puts 'Running tests'
-    runTests (failures) ->
-        if failures isnt 0
-            process.exit(failures)
-
-        sys.puts 'Compiling unminified'
-        options.minify = false
-        invoke 'build:style'
-        invoke 'build:script'
 
 
-        sys.puts 'Compiling minified'
-        options.minify = true
-        invoke 'build:style'
-        invoke 'build:script'
-
-        sys.puts 'Compiling others'
-        invoke 'build:command'
-        invoke 'build:sample'
-
-
-task 'build:command', 'Compile command-line script', (options) ->
-    compileCommand(options)
-
-task 'build:sample', 'Copy sample file', (options) ->
-    input = path.join(SOURCE_PATH, 'sample.md')
-    output = path.join(LIB_PATH, 'sample.md')
-    fs.copy input, output, (err) ->
-        throw err if err?
-        sys.puts("Copied: sample.md")
 
 
 task 'test', 'Run tests', (options) ->
@@ -120,7 +64,7 @@ runTests = (cb) ->
         cb(args...)
 
 
-compileCommand = (options) ->
+task 'build:command', 'Compile command-line script', (options) ->
 
     LIB_MISC_PATH = path.join(LIB_PATH, 'misc')
     if not fs.existsSync(LIB_MISC_PATH)
@@ -141,7 +85,7 @@ compileCommand = (options) ->
         input_path = path.join(SOURCE_PATH, f + '.coffee')
         output_path = path.join(LIB_PATH, f + '.js')
 
-        sys.puts('Compiling ' + f) if options.verbose
+        sys.puts 'Compiling: ' + f
 
 
         coffee_input = fs.readFileSync(input_path, 'utf-8').toString()
@@ -161,7 +105,7 @@ compileCommand = (options) ->
         fs.copy(input_path, output_path)
 
 
-task 'build:script', 'Compile viewer scripts', ({ minify, verbose }) ->
+task 'build:scripts', 'Compile viewer scripts', ({ minify }) ->
 
     BUILD_TMP_PATH = path.join(PROJECT_ROOT, 'build_tmp')
     if not fs.existsSync(BUILD_TMP_PATH)
@@ -242,7 +186,7 @@ task 'build:script', 'Compile viewer scripts', ({ minify, verbose }) ->
             pack_file_name = "activemarkdown-#{ VERSION }.js"
         
 
-        script_header = """/*
+        header = """/*
             Active Markdown, v#{ VERSION }, viewer script assets
             http://activemarkdown.org
 
@@ -259,7 +203,7 @@ task 'build:script', 'Compile viewer scripts', ({ minify, verbose }) ->
             */\n
         """
 
-        pack_str = script_header + pack_str
+        pack_str = header + pack_str
 
         fs.writeFileSync(path.join(LIB_PATH, pack_file_name), pack_str, 'utf-8')
         fs.removeSync(BUILD_TMP_PATH)
@@ -281,3 +225,53 @@ minifyJS = (js_script_code) ->
 
 
 
+task 'build:styles', 'Compile viewer styles', ({ minify }) ->
+
+    header = """/*
+        Active Markdown viewer style assets
+        http://activemarkdown.org
+
+        Includes:
+        - CodeMirror                    MIT License     http://codemirror.net/
+        - CodeMirror solarized theme    MIT License     http://ethanschoonover.com/solarized
+        - Active Markdown               Unlicensed      http://activemarkdown.org
+        */\n
+    """
+
+
+    lib_styles = [
+            'node_modules/codemirror/lib/codemirror.css'
+            'node_modules/codemirror/theme/solarized.css'
+        ]
+
+    pack = lib_styles.map (f) ->
+        sys.puts 'Packing: ' + f
+        return fs.readFileSync(path.join(PROJECT_ROOT, f), 'utf-8')
+
+    sys.puts 'Compiling: misc/style.styl'
+    styl_input = fs.readFileSync(path.join(SOURCE_PATH, 'misc', 'style.styl')).toString()
+
+    # Not actually async, just bonkers.
+    Stylus.render styl_input, (err, css) ->
+        pack.push(css)
+
+    pack_str = pack.join('')
+
+
+    if minify
+        sys.puts 'Minifying...'
+        orig_length = pack_str.length
+        pack_str = Sqwish.minify(pack_str)
+        percent = (pack_str.length / orig_length * 100).toFixed(0)
+        sys.puts "Minified: #{ orig_length } -> #{ pack_str.length } (#{ percent }%)"
+
+
+    if minify
+        pack_file_name = "activemarkdown-#{ VERSION }-min.css"
+    else
+        pack_file_name = "activemarkdown-#{ VERSION }.css"
+
+    pack_str = header + pack_str
+
+    fs.writeFileSync(path.join(LIB_PATH, pack_file_name), pack_str, 'utf-8')
+    sys.puts '>>> ' + LIB_PATH.replace(PROJECT_ROOT, '').substring(1) + '/' + pack_file_name
