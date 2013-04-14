@@ -81,9 +81,9 @@ Returns a String of JSON.
 _prepareOptions = (options) ->
     { editable_code, collapsed_code, debug } = options
     return JSON.stringify
-        editable_code   : editable_code
-        collapsed_code  : collapsed_code
-        debug           : debug
+        editable_code   : editable_code or true
+        collapsed_code  : collapsed_code or false
+        debug           : debug or false
 
 
 
