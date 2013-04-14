@@ -62,6 +62,9 @@ _getInput = (args, cb) ->
     console.log 'getting input'
     if process.stdin.isTTY
         input_file_name = args[1]
+        if not input_file_name?
+            sys.puts 'A filename must be specified: activmd FILE'
+            process.exit(1)
         console.log 'input_file_name', input_file_name, CWD
         source_file = path.join(CWD, input_file_name)
         fs.readFile source_file, 'utf-8', (err, markdown_source) ->
