@@ -59,13 +59,13 @@ _compileFile = (options, input_file_name, input_content) ->
 
 
 _getInput = (args, cb) ->
-    console.log 'getting input'
+
     if process.stdin.isTTY
-        input_file_name = args[1]
+        input_file_name = args[args.length - 1]
         if not input_file_name?
             sys.puts 'A filename must be specified: activmd FILE'
             process.exit(1)
-        console.log 'input_file_name', input_file_name, CWD
+
         source_file = path.join(CWD, input_file_name)
         fs.readFile source_file, 'utf-8', (err, markdown_source) ->
             throw err if err?
@@ -120,7 +120,6 @@ cli.parse
 
  
 cli.main (args, options) ->
-    console.log args, options
 
     if options.sample
         output_obj = _generateSample()

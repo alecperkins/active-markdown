@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "description": "A tool for generating reactive documents from markdown source.",
   "preferGlobal": true,
-  "main": "bin/activemd",
+  "main": "lib/ActiveMarkdown",
   "engines": {
     "node": "0.8.x",
     "npm":  "1.2.x"
@@ -28,7 +28,7 @@
     "zepto": "git://github.com/madrobby/zepto.git#v1.0"
   },
   "bin": {
-    "activemd": "./bin/activemd"
+    "activemd": "./lib/command.js"
   },
   "scripts": {
     "test": "node_modules/.bin/mocha --compilers coffee:coffee-script"

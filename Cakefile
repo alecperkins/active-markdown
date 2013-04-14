@@ -113,6 +113,7 @@ if not fs.existsSync(LIB_PATH)
 
 
 option '-m', '--minify', 'Minify output, if applicable'
+option '-v', '--verbose', 'Verbose operation'
 
 task 'build', 'Run tests and compile all the things', (options) ->
 
@@ -162,12 +163,7 @@ task 'build:markup', 'Compile viewer template to template.js', (options) ->
         sys.puts("Compiled: #{ markup_name }")
 
 task 'build:command', 'Compile command-line script', (options) ->
-    [ command_name , command_code ] = compileCommand()
-    fs.writeFile path.join(LIB_PATH, command_name), command_code,
-        encoding: 'utf-8'
-    , (err) ->
-        throw err if err?
-        sys.puts("Compiled: #{ command_name }")
+    compileCommand(options)
 
 task 'build:sample', 'Copy sample file', (options) ->
     input = path.join(SOURCE_PATH, 'sample.md')
@@ -205,11 +201,47 @@ runTests = (cb) ->
         cb(args...)
 
 
-compileCommand = ->
-    command_source_path = path.join(SOURCE_PATH, 'command.coffee')
-    command_source = fs.readFileSync(command_source_path, 'utf-8').toString()
-    command_js = CoffeeScript.compile(command_source)
-    return ['command.js', command_js]
+compileCommand = (options) ->
+
+    if not fs.existsSync(LIB_PATH)
+        fs.mkdirSync(LIB_PATH)
+    LIB_MISC_PATH = path.join(LIB_PATH, 'misc')
+    if not fs.existsSync(LIB_MISC_PATH)
+        fs.mkdirSync(LIB_MISC_PATH)
+
+    source_manifest = [
+        'ActiveMarkdown'
+        'parser'
+        'helpers'
+        'command'
+    ]
+    misc_manifest = [
+        'am_sample.md'
+        'template.html._'
+    ]
+
+    source_manifest.forEach (f) ->
+        input_path = path.join(SOURCE_PATH, f + '.coffee')
+        output_path = path.join(LIB_PATH, f + '.js')
+
+        sys.puts('Compiling ' + f) if options.verbose
+
+
+        coffee_input = fs.readFileSync(input_path, 'utf-8').toString()
+        js_output = CoffeeScript.compile(coffee_input)
+
+        if f is 'command'
+            js_output = '#!/usr/bin/env node\n\n' + js_output
+
+        fs.writeFileSync(output_path, js_output, 'utf-8')
+
+        if f is 'command'
+            fs.chmodSync(output_path, '755')
+
+    misc_manifest.forEach (f) ->
+        input_path = path.join(SOURCE_PATH, 'misc', f)
+        output_path = path.join(LIB_MISC_PATH, f)
+        fs.copy(input_path, output_path)
 
 
 compileViewerStyles = (minify=false) ->
