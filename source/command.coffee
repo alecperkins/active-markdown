@@ -18,7 +18,7 @@ LIB_PATH    = path.dirname(fs.realpathSync(__filename))
 
 _generateSample = ->
     SAMPLE_FILE_NAME = 'am_sample.md'
-    sample_content = readLibFile('am_sample.md')
+    sample_content = fs.readFileSync(path.join(LIB_PATH, 'misc','am_sample.md'))
     return {
         name        : SAMPLE_FILE_NAME
         content     : sample_content
