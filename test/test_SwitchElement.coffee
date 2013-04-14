@@ -45,7 +45,7 @@ invalid_configs = [
 
 
 describe 'SwitchElement', ->
-    { SwitchElement } = require '../source/elements/SwitchElement'
+    SwitchElement = require '../source/elements/SwitchElement'
 
     describe '.parseConfig', ->
 

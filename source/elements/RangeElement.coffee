@@ -1,4 +1,4 @@
-{ BaseElement } = require './BaseElement'
+BaseElement = require './BaseElement'
 
 {
     parseNumber
@@ -175,4 +175,4 @@ class RangeElement extends BaseElement
         @$el.removeClass('active')
 
 
-exports.RangeElement = RangeElement
+module.exports = RangeElement

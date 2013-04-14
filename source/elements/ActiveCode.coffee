@@ -20,4 +20,4 @@ class ActiveCode extends View
         @_editor.setOption('firstLineNumber', line_number_start)
         return @_editor.getValue()
 
-exports.ActiveCode = ActiveCode
+module.exports = ActiveCode

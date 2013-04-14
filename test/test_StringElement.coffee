@@ -47,7 +47,7 @@ invalid_configs = [
 
 
 describe 'StringElement', ->
-    { StringElement } = require '../source/elements/StringElement'
+    StringElement = require '../source/elements/StringElement'
 
     describe '.parseConfig', ->
 

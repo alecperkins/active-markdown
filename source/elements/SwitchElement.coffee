@@ -1,4 +1,4 @@
-{ BaseElement } = require './BaseElement'
+BaseElement = require './BaseElement'
 
 
 class SwitchElement extends BaseElement
@@ -111,4 +111,4 @@ class SwitchElement extends BaseElement
             text_content: @_text_content
 
 
-exports.SwitchElement = SwitchElement
+module.exports = SwitchElement

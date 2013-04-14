@@ -115,7 +115,7 @@ invalid_configs = [
 
 
 describe 'RangeElement', ->
-    { RangeElement } = require '../source/elements/RangeElement'
+    RangeElement = require '../source/elements/RangeElement'
 
     describe '.parseConfig', ->
 

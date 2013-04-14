@@ -50,4 +50,4 @@ class BaseElement extends View
 
     @_parseConfig: ->
 
-exports.BaseElement = BaseElement
+module.exports = BaseElement

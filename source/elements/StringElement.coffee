@@ -1,4 +1,4 @@
-{ BaseElement } = require './BaseElement'
+BaseElement = require './BaseElement'
 
 
 
@@ -50,4 +50,4 @@ class StringElement extends BaseElement
         @$el.removeClass('changed')
 
 
-exports.StringElement = StringElement
+module.exports = StringElement
