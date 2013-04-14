@@ -76,4 +76,4 @@ class DragManager
             @_reset()
 
 
-exports.DragManager = DragManager
+module.exports = DragManager

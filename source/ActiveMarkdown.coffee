@@ -10,11 +10,6 @@ VERSION = '0.2.0'
 exports.VERSION = VERSION
 
 
-# Figure out where we are, for reading in the templates and style files.
-CWD         = process.cwd()
-LIB_PATH    = path.dirname(fs.realpathSync(__filename))
-
-
 
 # Switch the Underscore templating to a less nutty syntax (in this case `{{ interpolate }}` and `{% evaluate %}`).
 

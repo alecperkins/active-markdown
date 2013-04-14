@@ -1,7 +1,8 @@
 _               = require 'underscore'
-CoffeeScript    = require 'coffee-script'
 { Model }       = require 'backbone'
 
+# Loaded in page separately
+# CoffeeScript    = require 'coffee-script'
 
 
 class Executor
