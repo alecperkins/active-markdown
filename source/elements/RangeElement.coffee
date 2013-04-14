@@ -7,6 +7,8 @@ BaseElement = require './BaseElement'
 } = require '../helpers'
 
 class RangeElement extends BaseElement
+    @_name: 'RangeElement'
+
     @config_pattern: ///
             ^(                      # Variable
               [\w\d]+               # - name

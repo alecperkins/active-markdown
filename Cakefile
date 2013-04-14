@@ -219,6 +219,8 @@ minifyJS = (js_script_code) ->
         drop_debugger   : true
         warnings        : false
     compressed_ast = toplevel_ast.transform(compressor)
+    compressed_ast.figure_out_scope()
+    compressed_ast.mangle_names()
 
     min_code = compressed_ast.print_to_string()
     return min_code

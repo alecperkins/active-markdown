@@ -3,6 +3,7 @@ BaseElement = require './BaseElement'
 
 
 class SwitchElement extends BaseElement
+    @_name: 'SwitchElement'
     @config_pattern: ///
             ^(                      # Variable
               [\w\d]+               # - name

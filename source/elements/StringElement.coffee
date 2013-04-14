@@ -4,6 +4,8 @@ BaseElement = require './BaseElement'
 
 
 class StringElement extends BaseElement
+    @_name: 'StringElement'
+
     @config_pattern: ///
             (^
                 [\w\d]+
