@@ -39,7 +39,7 @@ one paragraph.</p>
 
 <p>Paragraphs can contain inline <em>emphasis</em>, <strong>strong</strong>, and <code>code</code> elements. The <em>alternate</em> forms <strong>work</strong>, but are ugly. In-word underscores for things like variable_names are ignored, per GFM. URLs are specified using a simple <a href="http://example.com">notation</a>. Images use a similar notation, but with a bang: <img src="http://placekitten.com/300/200/" alt="Cats" title="" />.</p>
 
-<p>However, ChartElements use a similar notation but do not become images.  <span class="AMDElement" data-graph="true" data-config="line=someFunction: 0..100 by 5">y vs x</span></p>
+<p>However, ChartElements use a similar notation but do not become images.  <span class="AMElement" data-graph="true" data-config="line=someFunction: 0..100 by 5">y vs x</span></p>
 
 <blockquote>
   <p>This is a blockquote. It should be wrapped in <code>&lt;blockquote&gt;</code> tags.
@@ -47,10 +47,10 @@ one paragraph.</p>
   formatting like <em>emphasis</em> and <strong>strong</strong>.</p>
 </blockquote>
 
-<p>Active content can be added into paragraphs:  <span class="AMDElement"  data-config="value1: 0..1 by 0.1">1.0</span>.</p>
+<p>Active content can be added into paragraphs:  <span class="AMElement"  data-config="value1: 0..1 by 0.1">1.0</span>.</p>
 
 <blockquote>
-  <p>And it can be added to blockquotes:  <span class="AMDElement"  data-config="value2">output value</span>.</p>
+  <p>And it can be added to blockquotes:  <span class="AMElement"  data-config="value2">output value</span>.</p>
 </blockquote>
 
 <pre><code># This is a code block that will become active.
@@ -72,11 +72,11 @@ def howManyArgs(*args):
 print howManyArgs(1,2,3,4,5,6)
 </code></pre>
 
-<pre><code class="markdown">This is a code block with  &lt;span class="AMDElement"  data-config="value1: 1..10"&gt;active content&lt;/span&gt;
+<pre><code class="markdown">This is a code block with  &lt;span class="AMElement"  data-config="value1: 1..10"&gt;active content&lt;/span&gt;
 that is ignored because it’s in code.
 </code></pre>
 
-<p>Active Markdown in <code>[inline code]{inline: yes or no}</code>  <span class="AMDElement"  data-config="ignored: is or isnt">is</span> ignored by the parser. It would be difficult to talk about Active Markdown using itself, otherwise.</p>
+<p>Active Markdown in <code>[inline code]{inline: yes or no}</code>  <span class="AMElement"  data-config="ignored: is or isnt">is</span> ignored by the parser. It would be difficult to talk about Active Markdown using itself, otherwise.</p>
 
 <ul>
 <li>unordered</li>
@@ -122,7 +122,7 @@ that is ignored because it’s in code.
 <ul>
 <li>this</li>
 <li>list</li>
-<li>contains  <span class="AMDElement"  data-config="value2: 1..10">active content</span></li>
+<li>contains  <span class="AMElement"  data-config="value2: 1..10">active content</span></li>
 </ul>
 
 <hr />

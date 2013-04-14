@@ -20,7 +20,7 @@ parseMarkdown = (markdown_source) ->
         else
             graph_flag = ''
 
-        span = """ <span class="AMDElement" #{graph_flag} data-config="#{script_config}">#{text_content}</span>"""
+        span = """ <span class="AMElement" #{graph_flag} data-config="#{script_config}">#{text_content}</span>"""
 
         return span
 
