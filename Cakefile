@@ -159,6 +159,7 @@ task 'build:scripts', 'Compile viewer scripts', ({ minify }) ->
             'node_modules/zepto/src/detect.js'
             'node_modules/zepto/src/event.js'
             'node_modules/codemirror/lib/codemirror.js'
+            'node_modules/codemirror/mode/coffeescript/coffeescript.js'
 
             # TODO: Pull this down externally?
             # https://raw.github.com/jashkenas/coffee-script/1.6.2/extras/coffee-script.js
@@ -243,7 +244,7 @@ task 'build:styles', 'Compile viewer styles', ({ minify }) ->
 
     lib_styles = [
             'node_modules/codemirror/lib/codemirror.css'
-            'node_modules/codemirror/theme/solarized.css'
+            'source/libraries/solarized.css'
         ]
 
     pack = lib_styles.map (f) ->
