@@ -134,7 +134,6 @@ task 'build', 'Run tests and compile all the things', (options) ->
         invoke 'build:script'
 
         sys.puts 'Compiling others'
-        invoke 'build:markup'
         invoke 'build:command'
         invoke 'build:sample'
 
@@ -153,14 +152,6 @@ task 'build:script', 'Compile viewer scripts', (options) ->
     , (err) ->
         throw err if err?
         sys.puts("Compiled: #{ script_name }")
-
-task 'build:markup', 'Compile viewer template to template.js', (options) ->
-    [ markup_name , markup_code ] = compileViewerTemplate()
-    fs.writeFile path.join(LIB_PATH, markup_name), markup_code,
-        encoding: 'utf-8'
-    , (err) ->
-        throw err if err?
-        sys.puts("Compiled: #{ markup_name }")
 
 task 'build:command', 'Compile command-line script', (options) ->
     compileCommand(options)
