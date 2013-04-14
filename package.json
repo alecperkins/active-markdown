@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "backbone": "1.0.x",
+    "browserify": "2.12.x",
     "codemirror": "3.11.x",
     "coffee-script": "1.6.x",
     "mocha": "*",
