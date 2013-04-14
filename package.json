@@ -17,7 +17,6 @@
     "backbone": "1.0.x",
     "codemirror": "3.11.x",
     "coffee-script": "1.6.x",
-    "jade": "0.28.x",
     "mocha": "*",
     "should": "*",
     "sqwish": "0.2.x",

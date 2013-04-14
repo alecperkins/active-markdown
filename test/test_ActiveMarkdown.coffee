@@ -132,7 +132,7 @@ describe 'ActiveMarkdown', ->
             output.indexOf('<title>A Title</title>').should.be.above(-1)
 
         _checkOption = (in_markup, option_name, option_value) ->
-            pattern = /ActiveMarkdown\.setOptions\(([\{\}\s\S]*)\)/
+            pattern = /ActiveMarkdown\.makeActive\(([\{\}\s\S]*)\)/
             option_match = in_markup.match(pattern)
             should.exist(option_match)
             option_data = JSON.parse(option_match[1])
