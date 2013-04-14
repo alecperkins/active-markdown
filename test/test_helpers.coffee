@@ -8,7 +8,7 @@ testValueMap = (fn, value_map) ->
 
 
 describe 'parseNumber', ->
-    { parseNumber } = require '../source/elements/helpers'
+    { parseNumber } = require '../source/helpers'
 
     it 'should handle ints', ->
         testValueMap parseNumber,
@@ -34,3 +34,41 @@ describe 'parseNumber', ->
             '-5.2pi'    : -5.2 * Math.PI
 
 
+describe 'parseStep', ->
+    { parseStep } = require '../source/helpers'
+
+    it 'should default to 1', ->
+        parseStep('').should.equal(1)
+
+    it 'should handle ints', ->
+        testValueMap parseStep,
+            ' by 1'     : 1
+            ' by 0'     : 0
+            ' by -1'    : -1
+
+    it 'should handle floats', ->
+        testValueMap parseStep,
+            ' by 1.1'   : 1.1
+            ' by 1.0'   : 1.0
+            ' by 0.6'   : 0.6
+            ' by 0.0'   : 0.0
+            ' by -0.6'  : -0.6
+            ' by -1.0'  : -1.0
+            ' by -1.1'  : -1.1
+
+    it 'should handle constants', ->
+        testValueMap parseStep,
+            ' by 1.1pi'     : 1.1 * Math.PI
+            ' by pi'        : Math.PI
+            ' by 0pi'       : 0 * Math.PI
+            ' by -5.2pi'    : -5.2 * Math.PI
+
+describe 'parseInclusivity', ->
+    { parseInclusivity } = require '../source/helpers'
+
+    it 'should detect inclusive', ->
+        parseInclusivity('..').should.be.true
+
+    it 'should detect exclusive', ->
+        parseInclusivity('...').should.be.false
+    
