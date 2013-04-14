@@ -148,4 +148,4 @@ tableExtension = null
 `
 
 
-exports.parseMarkdown = parseMarkdown
+module.exports = parseMarkdown

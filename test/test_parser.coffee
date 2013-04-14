@@ -4,7 +4,7 @@ fs = require 'fs'
 
 
 describe 'parseMarkdown', ->
-    { parseMarkdown } = require '../source/parser'
+    parseMarkdown = require '../source/parser'
 
     it 'should parse Active Markdown into html', ->
         

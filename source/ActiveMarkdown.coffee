@@ -2,8 +2,7 @@ _                   = require 'underscore'
 fs                  = require 'fs'
 path                = require 'path'
 
-{ parseMarkdown }   = require './parser'
-
+parseMarkdown       = require './parser'
 
 
 VERSION = '0.2.0'
