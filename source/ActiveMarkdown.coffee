@@ -4,6 +4,7 @@ path                = require 'path'
 
 parseMarkdown       = require './parser'
 
+viewerTemplate      = require './misc/template'
 
 VERSION = '0.2.0'
 exports.VERSION = VERSION
@@ -80,9 +81,9 @@ Returns a String of JSON.
 _prepareOptions = (options) ->
     { editable_code, collapsed_code, debug } = options
     return JSON.stringify
-        editable_code   : editable_code or true
-        collapsed_code  : collapsed_code or false
-        debug           : debug or false
+        editable_code   : editable_code
+        collapsed_code  : collapsed_code
+        debug           : debug
 
 
 
@@ -96,15 +97,11 @@ Returns the String wrapped result.
 ###
 _wrapOutput = (markup, options) ->
     if options.wrap is true
-        template = fs.readFileSync(
-                path.join(LIB_PATH,'misc','template.html._')
-            ).toString()
-
         document_options    = _prepareOptions(options)
         scripts             = _prepareScripts(options)
         styles              = _prepareStyles(options)
 
-        html_output = _.template template,
+        html_output = viewerTemplate
             now     : (new Date()).toISOString()
             title   : options.title or ''
             scripts : scripts
@@ -133,11 +130,6 @@ kwargs          - (={}) an Object with default overrides
                         * false
                         * ["<before>", "<after>"]
                         * { before: "<before>", after: "<after>" }
-    libraries       - (='reference') A String indicating how to include the
-                      script and style libraries in the output. One of:
-                        * 'reference'   - reference to hosted libs
-                        * 'relative'    - reference to relative libs
-                        * 'inline'      - inlined into output
     editable_code   - (=true) A Boolean flag indicating if active code blocks
                       are editable by the reader.
     collapsed_code  - (=false) A Boolean flag indicating if active code blocks
@@ -148,17 +140,26 @@ kwargs          - (={}) an Object with default overrides
     input_file_name - (=undefined) A String name of the source file, if any,
                       for informational purposes. (Included in header comment,
                       and used as title if none specified.)
+    libraries       - (='reference') A String indicating how to include the
+                      script and style libraries in the output. One of:
+                        * 'reference'   - reference to hosted libs
+                        * 'relative'    - reference to relative libs
+                        * 'inline'      - inlined into output
+                      Note: this option has no effect when in-browser.
 Returns a String of HTML.
 ###
 exports.parse = (markdown_source, kwargs={}) ->
     defaults =
         wrap                : true
-        libraries           : 'reference'
         editable_code       : true
         collapsed_code      : false
         title               : undefined
         debug               : false
         input_file_name     : undefined
+
+        # No effect when used in-browser
+        libraries           : 'reference'
+
 
     options = _.extend({}, defaults, kwargs)
 

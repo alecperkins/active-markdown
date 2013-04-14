@@ -188,7 +188,7 @@ runTests = (cb) ->
             mocha.addFile(out_path)
 
     mocha.run (args...) ->
-        fs.removeSync(TEST_TMP_PATH) # fs.remove isn't working?
+        fs.removeSync(TEST_TMP_PATH)
         cb(args...)
 
 
@@ -205,10 +205,10 @@ compileCommand = (options) ->
         'parser'
         'helpers'
         'command'
+        'misc/template'
     ]
     misc_manifest = [
         'am_sample.md'
-        'template.html._'
     ]
 
     source_manifest.forEach (f) ->
