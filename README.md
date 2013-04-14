@@ -69,7 +69,7 @@ Active Markdown uses [Showdown](https://github.com/coreyti/showdown) for markdow
     The command can generate a sample file for you to use and examine.
 
         $ activemd --sample
-        Generating sample: sample.md
+        Generating sample: am_sample.md
 
         $ activemd --sample > some_name.md
         Generating sample
