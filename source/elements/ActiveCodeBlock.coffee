@@ -1,6 +1,6 @@
 { View } = require 'backbone'
 
-class ActiveCode extends View
+class ActiveCodeBlock extends View
     initialize: ({ @source }) ->
         @render()
 
@@ -20,4 +20,4 @@ class ActiveCode extends View
         @_editor.setOption('firstLineNumber', line_number_start)
         return @_editor.getValue()
 
-module.exports = ActiveCode
+module.exports = ActiveCodeBlock
