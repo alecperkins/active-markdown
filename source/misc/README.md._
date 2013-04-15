@@ -109,6 +109,11 @@ Options:
     Generate a sample file that contains all of the possible controls in
     various configurations.
 
+*   `    --debug`
+    Set the debug flag when compiling, using unminified versions of the viewer
+    asset files.
+
+
 
 ## Notation
 
@@ -128,6 +133,7 @@ Thanks to [J Voight](https://github.com/joyrexus), [Alex Cabrera](http://alexcab
 The concept and controls are heavily influenced by [Bret Victor’s](http://worrydream.com) [Tangle](http://worrydream.com/Tangle) library for creating reactive documents.
 
 * [You?](https://github.com/alecperkins/active-markdown/issues) - Active Markdown is still very experimental, and input on the notation, bugs, use cases, control elements, and anything else is very welcome.
+
 
 ## License
 
