@@ -1,12 +1,13 @@
+{ View } = require 'backbone'
 
-class CodeBlock extends Backbone.NamedView
+class ActiveCodeBlock extends View
     initialize: ({ @source }) ->
         @render()
 
     render: ->
         @_editor = CodeMirror @el,
             value           : @source
-            mode            :  'coffeescript'
+            mode            : 'coffeescript'
             onBlur          : @_update
             lineNumbers     : true
             viewportMargin  : Infinity
@@ -18,3 +19,5 @@ class CodeBlock extends Backbone.NamedView
     getSource: (line_number_start) ->
         @_editor.setOption('firstLineNumber', line_number_start)
         return @_editor.getValue()
+
+module.exports = ActiveCodeBlock

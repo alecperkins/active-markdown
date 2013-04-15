@@ -1,6 +1,16 @@
+_ = require 'underscore'
+BaseElement = require './BaseElement'
+
+
 
 class StringElement extends BaseElement
-    @config_pattern: /(^[\w\d_]+$)/
+    @_name: 'StringElement'
+
+    @config_pattern: ///
+            (^
+                [\w\d]+
+            $)
+        ///
 
     readonly: true
 
@@ -41,3 +51,6 @@ class StringElement extends BaseElement
     _doFade: =>
         @$el.removeClass('no-transition')
         @$el.removeClass('changed')
+
+
+module.exports = StringElement

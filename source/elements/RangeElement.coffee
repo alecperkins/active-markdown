@@ -1,6 +1,42 @@
+BaseElement = require './BaseElement'
+
+{
+    parseNumber
+    parseStep
+    parseInclusivity
+} = require '../helpers'
 
 class RangeElement extends BaseElement
-    @config_pattern: /([\w\d]+): ([\w\d\-\.]*)([\.]{2,3})([\w\d\-\.]*)( by [\w\d\.-]+)*/
+    @_name: 'RangeElement'
+
+    @config_pattern: ///
+            ^(                      # Variable
+              [\w\d]+               # - name
+            )
+
+              :\s                   # Delimiter
+
+            (                       # Range min, if any:
+              [+|-]?                # - sign, if any
+              (?:[\d]*[\.]?[\d])?   # - coefficient, if any
+              [\w]*                 # - constant, if any
+            )
+
+            (                       # Inclusivity
+              [\.]{2,3}             # - dots
+            )
+
+            (                       # Range max, if any:
+              [+|-]?                # - sign, if any
+              (?:[\d]*[\.]?[\d])?   # - coefficient, if any
+              [\w]*                 # - constant, if any
+            )
+
+            (                       # Step, if any:
+              \sby\s                # - by keyword
+              [\w\d\.-]+            # - step value
+            )*
+        ///
 
     initialize: (parsed_config) ->
         parsed_config.value = @_parseTextContent(parsed_config)
@@ -53,7 +89,6 @@ class RangeElement extends BaseElement
 
 
     @_parseConfig: (config_match) ->
-        console.log config_match
         ###
         [
             "calories: 10..100 by 10",
@@ -142,3 +177,4 @@ class RangeElement extends BaseElement
         @$el.removeClass('active')
 
 
+module.exports = RangeElement

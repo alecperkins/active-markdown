@@ -1,3 +1,10 @@
+_               = require 'underscore'
+{ Model }       = require 'backbone'
+
+# Loaded in page separately
+# CoffeeScript    = require 'coffee-script'
+
+
 class Executor
 
     constructor: ->
@@ -13,14 +20,11 @@ class Executor
         if @_variables[name]
             variable_model = @_variables[name]
         else
-            variable_model = new Backbone.Model(name)
+            variable_model = new Model(name)
             @_variables[name] = variable_model
             variable_model.on('change:value', @_deferredExecute)
         variable_model.set(attrs)
         return variable_model
-
-    _updateLineNumbers: (line_count) ->
-
 
     _prepareState: ->
         state = {}
@@ -62,3 +66,6 @@ class Executor
         for k, v of state
             @_variables[k]?.set
                 value: v
+
+
+module.exports = Executor

@@ -1,7 +1,8 @@
 node_modules
 _scratch
 .DS_store
-viewer_src
-command_src
+source
 docs
 Cakefile
+test_tmp
+build_tmp

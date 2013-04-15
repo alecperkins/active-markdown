@@ -1,3 +1,5 @@
+_   = require 'underscore'
+_s  = require 'underscore.string'
 
 
 
@@ -23,9 +25,10 @@ parseNumber = (val) ->
     # If the value is still null, the number didn't have any constants, so
     # just parse it as a regular Number.
     if not parsed_val?
-        parsed_val = new Number(val)
+        parsed_val = parseFloat(val)
 
     return parsed_val
+
 
 
 # The step of a range defaults to 1, but can be specified using the `by` keyword after the min/max. The step is an Active Markdown Number, and can include the constants described above.
@@ -34,9 +37,8 @@ parseNumber = (val) ->
 
 parseStep = (val) ->
     if val
-        return parseNumber(_.string.lstrip(val, ' by '))
+        return parseNumber(_s.lstrip(val, ' by '))
     return 1
-
 
 
 
@@ -47,8 +49,8 @@ parseInclusivity = (dots) ->
 
 
 
-# Right now, just used for testing purposes.
-if exports?
-    exports.parseNumber         = parseNumber
-    exports.parseStep           = parseStep
-    exports.parseInclusivity    = parseInclusivity
+exports.parseNumber         = parseNumber
+exports.parseStep           = parseStep
+exports.parseInclusivity    = parseInclusivity
+
+

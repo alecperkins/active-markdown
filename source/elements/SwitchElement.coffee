@@ -1,15 +1,33 @@
+_ = require 'underscore'
+BaseElement = require './BaseElement'
+
 
 class SwitchElement extends BaseElement
-    @config_pattern: /([\w\d]+): ([\w]+) or ([\w]+)/
+    @_name: 'SwitchElement'
+    @config_pattern: ///
+            ^(                      # Variable
+              [\w\d]+               # - name
+            )
+
+            :\s                   # Delimiter
+
+            (                       # true_label
+                [\w]+
+            )
+
+            \sor\s                  # or keyword
+
+            (                       # false_label
+                [\w]+
+            )
+        ///
 
     initialize: (parsed_config) ->
         parsed_config.value = @_parseTextContent(parsed_config)
         delete parsed_config.text_content
-        console.log parsed_config
         @model = executor.getOrCreateVariable(parsed_config)
 
     @_parseConfig: (config_match) ->
-        console.log 'BooleanElement', config_match
         ###
             [
                 "some_flag: on or off",
@@ -72,6 +90,7 @@ class SwitchElement extends BaseElement
                 {{ false_label }}
             </span>
             {{ after_text }}
+        </span>
         <span class="name">{{ name }}</span>
     """
 
@@ -94,3 +113,5 @@ class SwitchElement extends BaseElement
             after_text: @_after_text
             text_content: @_text_content
 
+
+module.exports = SwitchElement
