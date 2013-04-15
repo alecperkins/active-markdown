@@ -30,13 +30,16 @@ buildAll = (options, run_tests=true, cb=->) ->
         buildCommand(options, false)
         buildScripts options, false, ->
             buildStyles(options, false)
-            options.minify = true
+            # Toggle minify (instead of just set true or false, in case build
+            # is being run repeatedly.)
+            options.minify = not options.minify
             buildScripts options, false, ->
                 buildStyles(options, false)
                 cb()
 
     if options.firstrun
         options.firstrun = false
+        # Need to prime the asset packs so the tests can run.
         buildAll options, false, ->
             buildAll(options, true)
     else if run_tests
