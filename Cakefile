@@ -21,18 +21,22 @@ SOURCE_PATH     = path.join(PROJECT_ROOT, 'source')
 
 
 
-
-
-
-
-
 if not fs.existsSync(LIB_PATH)
     fs.mkdirSync(LIB_PATH)
 
 
-option '-m', '--minify', 'Minify output, if applicable'
 
+buildAll = (options) ->
+    runTests (failures) ->
+        if failures isnt 0
+            process.exit(failures)
 
+        buildCommand(options, false)
+        buildScripts(options, false)
+        buildStyles(options, false)
+        options.minify = true
+        buildScripts(options, false)
+        buildStyles(options, false)
 
 
 
@@ -64,8 +68,7 @@ runTests = (cb) ->
         cb(args...)
 
 
-task 'build:command', 'Compile command-line script', (options) ->
-
+buildCommand = (options, verbose=true) ->
     LIB_MISC_PATH = path.join(LIB_PATH, 'misc')
     if not fs.existsSync(LIB_MISC_PATH)
         fs.mkdirSync(LIB_MISC_PATH)
@@ -85,7 +88,7 @@ task 'build:command', 'Compile command-line script', (options) ->
         input_path = path.join(SOURCE_PATH, f + '.coffee')
         output_path = path.join(LIB_PATH, f + '.js')
 
-        sys.puts 'Compiling: ' + f
+        sys.puts('Compiling: ' + f) if verbose
 
 
         coffee_input = fs.readFileSync(input_path, 'utf-8').toString()
@@ -105,8 +108,8 @@ task 'build:command', 'Compile command-line script', (options) ->
         fs.copy(input_path, output_path)
 
 
-task 'build:scripts', 'Compile viewer scripts', ({ minify }) ->
 
+buildScripts = ({ minify }, verbose=true) ->
     BUILD_TMP_PATH = path.join(PROJECT_ROOT, 'build_tmp')
     if not fs.existsSync(BUILD_TMP_PATH)
         fs.mkdirSync(BUILD_TMP_PATH)
@@ -134,7 +137,7 @@ task 'build:scripts', 'Compile viewer scripts', ({ minify }) ->
         input_path = path.join(SOURCE_PATH, f + '.coffee')
         output_path = path.join(BUILD_TMP_PATH, f + '.js')
 
-        sys.puts 'Compiling: ' + f
+        sys.puts('Compiling: ' + f) if verbose
 
         coffee_input = fs.readFileSync(input_path, 'utf-8').toString()
         js_output = CoffeeScript.compile(coffee_input)
@@ -167,18 +170,18 @@ task 'build:scripts', 'Compile viewer scripts', ({ minify }) ->
         ]
 
         pack = additional_scripts.map (f) ->
-            sys.puts 'Packing additional: ' + f
+            sys.puts('Packing additional: ' + f) if verbose
             return fs.readFileSync(path.join(PROJECT_ROOT, f), 'utf-8')
         pack.push(src)
 
         pack_str = pack.join(';')
 
         if minify
-            sys.puts 'Minifying...'
+            sys.puts('Minifying...') if verbose
             orig_length = pack_str.length
             pack_str = minifyJS(pack_str)
             percent = (pack_str.length / orig_length * 100).toFixed(0)
-            sys.puts "Minified: #{ orig_length } -> #{ pack_str.length } (#{ percent }%)"
+            sys.puts("Minified: #{ orig_length } -> #{ pack_str.length } (#{ percent }%)") if verbose
 
 
         if minify
@@ -210,6 +213,8 @@ task 'build:scripts', 'Compile viewer scripts', ({ minify }) ->
         fs.removeSync(BUILD_TMP_PATH)
         sys.puts '>>> ' + LIB_PATH.replace(PROJECT_ROOT, '').substring(1) + '/' + pack_file_name
 
+
+
 # Minify but don't mangle - NamedView doesn't work.
 # TODO: Make it possible to mangle the code.
 minifyJS = (js_script_code) ->
@@ -227,9 +232,7 @@ minifyJS = (js_script_code) ->
     return min_code
 
 
-
-task 'build:styles', 'Compile viewer styles', ({ minify }) ->
-
+buildStyles = ({ minify }, verbose=true) ->
     header = """/*
         Active Markdown viewer style assets
         http://activemarkdown.org
@@ -248,10 +251,10 @@ task 'build:styles', 'Compile viewer styles', ({ minify }) ->
         ]
 
     pack = lib_styles.map (f) ->
-        sys.puts 'Packing: ' + f
+        sys.puts('Packing: ' + f) if verbose
         return fs.readFileSync(path.join(PROJECT_ROOT, f), 'utf-8')
 
-    sys.puts 'Compiling: misc/style.styl'
+    sys.puts('Compiling: misc/style.styl') if verbose
     styl_input = fs.readFileSync(path.join(SOURCE_PATH, 'misc', 'style.styl')).toString()
 
     # Not actually async, just bonkers.
@@ -262,11 +265,11 @@ task 'build:styles', 'Compile viewer styles', ({ minify }) ->
 
 
     if minify
-        sys.puts 'Minifying...'
+        sys.puts('Minifying...') if verbose
         orig_length = pack_str.length
         pack_str = Sqwish.minify(pack_str)
         percent = (pack_str.length / orig_length * 100).toFixed(0)
-        sys.puts "Minified: #{ orig_length } -> #{ pack_str.length } (#{ percent }%)"
+        sys.puts("Minified: #{ orig_length } -> #{ pack_str.length } (#{ percent }%)") if verbose
 
 
     if minify
@@ -278,3 +281,10 @@ task 'build:styles', 'Compile viewer styles', ({ minify }) ->
 
     fs.writeFileSync(path.join(LIB_PATH, pack_file_name), pack_str, 'utf-8')
     sys.puts '>>> ' + LIB_PATH.replace(PROJECT_ROOT, '').substring(1) + '/' + pack_file_name
+
+
+option '-m', '--minify', 'Minify output, if applicable'
+task 'build', 'Run tests and build everything', buildAll
+task 'build:command', 'Compile command-line script', buildCommand
+task 'build:scripts', 'Compile viewer scripts', buildScripts
+task 'build:styles', 'Compile viewer styles', buildStyles
