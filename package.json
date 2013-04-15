@@ -11,7 +11,7 @@
   "dependencies": {
     "cli": "0.4.4-2",
     "fs-extra": "0.6.x",
-    "showdown": "0.3.x"
+    "showdown": "git://github.com/alecperkins/showdown.git#4d04b7855d5ed327ebbe5a917c9e9607a4188f77"
   },
   "devDependencies": {
     "backbone": "1.0.x",
