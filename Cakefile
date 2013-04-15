@@ -1,11 +1,9 @@
 fs              = require 'fs-extra'
 path            = require 'path'
 sys             = require 'sys'
-walk            = require 'walk'
 
 browserify      = require 'browserify'
 CoffeeScript    = require 'coffee-script'
-Jade            = require 'jade'
 Sqwish          = require 'sqwish'
 Stylus          = require 'stylus'
 UglifyJS        = require 'uglify-js'
