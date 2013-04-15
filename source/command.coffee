@@ -4,7 +4,7 @@ Command-specific functionality.
 
 ###
 
-fs      = require 'fs'
+fs      = require 'fs-extra'
 path    = require 'path'
 sys     = require 'sys'
 AM      = require './ActiveMarkdown'
@@ -94,19 +94,23 @@ _emitOutput = ({ name, content, forceful }) ->
         process.stdout.write(content)
 
 
-_copyLibFilesTo = (target_directory) ->
-            #         if cmd_options.local
-            # output_folder   = path.dirname(output_file_path)
-            # style_source    = path.join(LIB_PATH, STYLE_FILE_NAME)
-            # script_source   = path.join(LIB_PATH, SCRIPT_FILE_NAME)
-            # style_output    = path.join(output_folder, STYLE_FILE_NAME)
-            # script_output   = path.join(output_folder, SCRIPT_FILE_NAME)
-            # if style_source isnt style_output
-            #     fs.copy style_source, style_output, (err) ->
-            #         console.log err
-            # if script_source isnt script_output
-            #     fs.copy script_source, script_output, (err) ->
-            #         console.log err
+_copyLibFilesTo = (output_folder, debug=false) ->
+    STYLE_FILE_NAME = "activemarkdown-#{ AM.VERSION }-min.css"
+    SCRIPT_FILE_NAME = "activemarkdown-#{ AM.VERSION }-min.js"
+    if debug
+        STYLE_FILE_NAME = STYLE_FILE_NAME.replace('-min', '')
+        SCRIPT_FILE_NAME = SCRIPT_FILE_NAME.replace('-min', '')
+
+    style_source    = path.join(LIB_PATH, STYLE_FILE_NAME)
+    script_source   = path.join(LIB_PATH, SCRIPT_FILE_NAME)
+    style_output    = path.join(output_folder, STYLE_FILE_NAME)
+    script_output   = path.join(output_folder, SCRIPT_FILE_NAME)
+    if style_source isnt style_output
+        fs.copy style_source, style_output, (err) ->
+            throw err if err
+    if script_source isnt script_output
+        fs.copy script_source, script_output, (err) ->
+            throw err if err
 
  
 cli  = require 'cli'
@@ -130,6 +134,6 @@ cli.main (args, options) ->
             _emitOutput(output_obj)
 
             if options.local
-                _copyLibFilesTo(CWD)
+                _copyLibFilesTo(CWD, options.debug)
 
 
