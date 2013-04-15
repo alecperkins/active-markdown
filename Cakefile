@@ -15,6 +15,7 @@ UglifyJS        = require 'uglify-js'
 PROJECT_ROOT    = path.dirname(fs.realpathSync(__filename))
 LIB_PATH        = path.join(PROJECT_ROOT, 'lib')
 SOURCE_PATH     = path.join(PROJECT_ROOT, 'source')
+BUILD_TMP_PATH  = path.join(PROJECT_ROOT, 'build_tmp')
 
 { VERSION }     = require './source/ActiveMarkdown'
 
@@ -26,17 +27,23 @@ if not fs.existsSync(LIB_PATH)
 
 
 
-buildAll = (options) ->
-    runTests (failures) ->
-        if failures isnt 0
-            process.exit(failures)
-
+buildAll = (options, run_tests=true, cb=->) ->
+    _doBuild = ->
         buildCommand(options, false)
-        buildScripts(options, false)
-        buildStyles(options, false)
-        options.minify = true
-        buildScripts(options, false)
-        buildStyles(options, false)
+        buildScripts options, false, ->
+            buildStyles(options, false)
+            options.minify = true
+            buildScripts options, false, ->
+                buildStyles(options, false)
+                cb()
+
+    if run_tests
+        runTests (failures) ->
+            if failures isnt 0
+                process.exit(failures)
+            _doBuild()
+    else
+        _doBuild()
 
 
 
@@ -109,14 +116,12 @@ buildCommand = (options, verbose=true) ->
 
 
 
-buildScripts = ({ minify }, verbose=true) ->
-    BUILD_TMP_PATH = path.join(PROJECT_ROOT, 'build_tmp')
-    if not fs.existsSync(BUILD_TMP_PATH)
-        fs.mkdirSync(BUILD_TMP_PATH)
-    if not fs.existsSync(path.join(BUILD_TMP_PATH, 'elements'))
-        fs.mkdirSync(path.join(BUILD_TMP_PATH, 'elements'))
-    if not fs.existsSync(path.join(BUILD_TMP_PATH, 'misc'))
-        fs.mkdirSync(path.join(BUILD_TMP_PATH, 'misc'))
+buildScripts = ({ minify }, verbose=true, cb=->) ->
+
+    fs.removeSync(BUILD_TMP_PATH)
+    fs.mkdirSync(BUILD_TMP_PATH)
+    fs.mkdirSync(path.join(BUILD_TMP_PATH, 'elements'))
+    fs.mkdirSync(path.join(BUILD_TMP_PATH, 'misc'))
 
     script_sources = [
         'ActiveMarkdown'
@@ -179,7 +184,7 @@ buildScripts = ({ minify }, verbose=true) ->
         if minify
             sys.puts('Minifying...') if verbose
             orig_length = pack_str.length
-            pack_str = minifyJS(pack_str)
+            pack_str = _minifyJS(pack_str)
             percent = (pack_str.length / orig_length * 100).toFixed(0)
             sys.puts("Minified: #{ orig_length } -> #{ pack_str.length } (#{ percent }%)") if verbose
 
@@ -213,11 +218,11 @@ buildScripts = ({ minify }, verbose=true) ->
         fs.removeSync(BUILD_TMP_PATH)
         sys.puts '>>> ' + LIB_PATH.replace(PROJECT_ROOT, '').substring(1) + '/' + pack_file_name
 
+        cb()
 
 
-# Minify but don't mangle - NamedView doesn't work.
-# TODO: Make it possible to mangle the code.
-minifyJS = (js_script_code) ->
+
+_minifyJS = (js_script_code) ->
     toplevel_ast = UglifyJS.parse(js_script_code)
     toplevel_ast.figure_out_scope()
 
@@ -230,6 +235,7 @@ minifyJS = (js_script_code) ->
 
     min_code = compressed_ast.print_to_string()
     return min_code
+
 
 
 buildStyles = ({ minify }, verbose=true) ->
@@ -283,8 +289,58 @@ buildStyles = ({ minify }, verbose=true) ->
     sys.puts '>>> ' + LIB_PATH.replace(PROJECT_ROOT, '').substring(1) + '/' + pack_file_name
 
 
+
+_renderReadme = (version) ->
+    _ = require 'underscore'
+    _.templateSettings =
+      interpolate : /\{\{(.+?)\}\}/g
+      evaluate : /\{\%(.+?)\%\}/g
+
+    readme_source = fs.readFileSync('source/misc/README.md._', 'utf-8').toString()
+
+    now = new Date()
+    readme_content = _.template readme_source,
+        now: "#{ now.getFullYear() }-#{ now.getMonth() + 1 }-#{ now.getDate() }"
+        VERSION: version
+    fs.writeFileSync('README.md', readme_content, 'utf-8')
+
+
+
+cutRelease = (options) ->
+    AM = require './source/ActiveMarkdown'
+    package_json = JSON.parse(fs.readFileSync('package.json', 'utf-8'))
+    if AM.VERSION is package_json.version
+        sys.puts('!!! Module and package.json version match. Update the version in ActiveMarkdown.coffee appropriately. !!!')
+        process.exit(1)
+
+    sys.puts 'Building everything from orbit, just to be sure...'
+
+    fs.removeSync(LIB_PATH)
+    fs.removeSync(BUILD_TMP_PATH)
+    fs.mkdirSync(LIB_PATH)
+
+    # Run buildAll twice, once without tests to ensure the lib files necessary
+    # for the test are generated, then again with the pre-build tests.
+    sys.puts '\nBuilding once...'
+    buildAll options, false, ->
+        sys.puts '\nBuilding twice (but with tests)...'
+        buildAll options, true, ->
+            sys.puts "\nPreparing ActiveMarkdown package v#{ AM.VERSION }..."
+            sys.puts "   * Updating package.json version from #{ package_json.version } to #{ AM.VERSION } "
+            package_json.version = AM.VERSION
+
+            # save package.json
+
+            sys.puts "   * Rendering README.md"
+            _renderReadme(AM.VERSION)
+
+            sys.puts "\n\nv#{ AM.VERSION } ready for liftoff.\n\n  $ npm publish\n\n"
+
+
+
 option '-m', '--minify', 'Minify output, if applicable'
 task 'build', 'Run tests and build everything', buildAll
 task 'build:command', 'Compile command-line script', buildCommand
 task 'build:scripts', 'Compile viewer scripts', buildScripts
 task 'build:styles', 'Compile viewer styles', buildStyles
+task 'cutrelease', 'Do necessary updates for a release', cutRelease
