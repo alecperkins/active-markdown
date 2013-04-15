@@ -35,7 +35,11 @@ buildAll = (options, run_tests=true, cb=->) ->
                 buildStyles(options, false)
                 cb()
 
-    if run_tests
+    if options.firstrun
+        options.firstrun = false
+        buildAll options, false, ->
+            buildAll(options, true)
+    else if run_tests
         runTests (failures) ->
             if failures isnt 0
                 process.exit(failures)
@@ -337,6 +341,7 @@ cutRelease = (options) ->
 
 
 option '-m', '--minify', 'Minify output, if applicable'
+option '', '--firstrun', 'Build without tests (prime asset packs), then build normally'
 task 'build', 'Run tests and build everything', buildAll
 task 'build:command', 'Compile command-line script', buildCommand
 task 'build:scripts', 'Compile viewer scripts', buildScripts
