@@ -20,14 +20,6 @@ exports.VERSION = VERSION
 
 
 
-# Switch the Underscore templating to a less nutty syntax (in this case `{{ interpolate }}` and `{% evaluate %}`).
-
-_.templateSettings =
-  interpolate : /\{\{(.+?)\}\}/g
-  evaluate : /\{\%(.+?)\%\}/g
-
-
-
 ###
 Private: generate the script libraries to be included, either by reference or
          inline.

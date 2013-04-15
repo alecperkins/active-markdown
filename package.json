@@ -11,7 +11,9 @@
   "dependencies": {
     "cli": "0.4.4-2",
     "fs-extra": "0.6.x",
-    "showdown": "git://github.com/alecperkins/showdown.git#4d04b7855d5ed327ebbe5a917c9e9607a4188f77"
+    "showdown": "git://github.com/alecperkins/showdown.git#4d04b7855d5ed327ebbe5a917c9e9607a4188f77",
+    "underscore": "1.4.x",
+    "underscore.string": "2.3.x"
   },
   "devDependencies": {
     "backbone": "1.0.x",
@@ -23,8 +25,6 @@
     "sqwish": "0.2.x",
     "stylus": "0.32.x",
     "uglify-js": "2.2.x",
-    "underscore": "1.4.x",
-    "underscore.string": "2.3.x",
     "zepto": "git://github.com/madrobby/zepto.git#v1.0"
   },
   "bin": {
