@@ -4,3 +4,4 @@ node_modules
 bin
 lib
 test_tmp
+build_tmp

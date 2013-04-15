@@ -13,6 +13,9 @@ RangeElement    = require './elements/RangeElement'
 StringElement   = require './elements/StringElement'
 SwitchElement   = require './elements/SwitchElement'
 
+
+# TODO: Have these listen to events from the elements, instead of needing
+# to be global.
 window.executor = new Executor()
 window.drag_manager = new DragManager()
 
