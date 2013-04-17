@@ -1,4 +1,3 @@
-
 # Development
 
 Active Markdown is written using [CoffeeScript](http://coffeescript.org), and
@@ -9,7 +8,7 @@ the viewer elements make use of [Backbone](http://backbonejs.org) and
 
         $ git clone git://github.com/alecperkins/active-markdown.git
         $ cd active-markdown
-        $ npm install --dev .
+        $ npm install .
 
     This will clone the repo into `./active-markdown` and install the
     `deveDependencies` specified in `package.json` into a local `node_modules`.
