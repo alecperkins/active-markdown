@@ -126,6 +126,7 @@ buildScripts = ({ minify }, verbose=true, cb=->) ->
     fs.removeSync(BUILD_TMP_PATH)
     fs.mkdirSync(BUILD_TMP_PATH)
     fs.mkdirSync(path.join(BUILD_TMP_PATH, 'elements'))
+    fs.mkdirSync(path.join(BUILD_TMP_PATH, 'libraries'))
     fs.mkdirSync(path.join(BUILD_TMP_PATH, 'misc'))
 
     script_sources = [
@@ -140,6 +141,7 @@ buildScripts = ({ minify }, verbose=true, cb=->) ->
         'elements/RangeElement'
         'elements/StringElement'
         'elements/SwitchElement'
+        'libraries/NamedView'
         'misc/template'
     ]
 
