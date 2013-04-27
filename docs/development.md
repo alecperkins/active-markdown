@@ -34,7 +34,7 @@ the viewer elements make use of [Backbone](http://backbonejs.org) and
 
     When working on the viewer scripts,
 
-        $ cake build:script && ./lib/command.coffee -i --debug lib/misc/am_sample.md > am_sample.html
+        $ cake build:script && ./lib/command.coffee -i --debug lib/misc/am_sample.md
     
     is helpful. This updates the script and recompiles the sample to
     `./am_sample.html` in one go.
