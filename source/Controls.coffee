@@ -15,14 +15,20 @@ class Controls extends NamedView
         @$el.html """
                 <a href="http://activemarkdown.org">?</a>
                 <button class="code" title="Toggle active code visibility">{&hellip;}</button>
+                <button class="highlight" title="Toggle highlighting of interactive elements">◀|▶</button>
+                <hr>
                 <button class="raw" title="Show raw source">&lt;/&gt;</button>
                 <a class="download" href="#" title="Download raw source" download="">↓</a>
             """
 
     events:
         'click .code'       : '_toggleCode'
+        'click .highlight'  : '_toggleHighlight'
         'click .raw'        : '_toggleRaw'
         'click .download'   : '_downloadSource'
+
+    _toggleHighlight: ->
+        @_$body.toggleClass('highlighted-elements')
 
     _toggleCode: ->
         @_$body.toggleClass('collapsed-code')

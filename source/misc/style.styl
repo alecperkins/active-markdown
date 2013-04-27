@@ -9,6 +9,7 @@ $tag_bg_color               = rgba(247,230,143,1)
 $tag_border_color           = rgba(96,88,57,1)
 
 $highlight_color            = rgba(247,230,143,0.7)
+$semi_highlight_color       = rgba(247,230,143,0.4)
 
 $link_color                 = rgba(0,113,188,1)
 $blockquote_color           = rgba(0,113,188,0.2)
@@ -127,6 +128,8 @@ p, h1, h2, h3, h4, h5, h6, blockquote
     left: -2px
     top: 46px
     width: 28px
+    hr
+        margin: 5px 5px 5px 6px
     button, a
         width: 28px
         height: 24px
@@ -152,6 +155,11 @@ p, h1, h2, h3, h4, h5, h6, blockquote
 
 body.collapsed-code #AMControls button.code
     @extend .active-button
+
+body.highlighted-elements
+    #AMControls button.highlight
+        @extend .active-button
+
 
 
 #AMRaw
@@ -217,13 +225,21 @@ body.collapsed-code
 
 
 
-
+body.highlighted-elements .BaseElement
+    background-color: $semi_highlight_color
 
 .BaseElement
 
     display         : inline
     border-bottom   : 1px dotted $element_color
     position        : relative
+
+    transition(background-color, 0.5s)
+    background-color: transparent
+    &.no-transition
+        transition(background-color, 0s)
+    &.changed
+        background-color: $highlight_color !important
 
     .name
         position        : absolute
@@ -261,12 +277,6 @@ body.collapsed-code
     cursor: text
     padding: 0 0.2rem
     margin: 0 -0.2rem
-    transition(background-color, 0.5s)
-    background-color: transparent
-    &.no-transition
-        transition(background-color, 0s)
-    &.changed
-        background-color: $highlight_color
 
 
 .RangeElement
