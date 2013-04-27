@@ -138,14 +138,6 @@ describe 'ActiveMarkdown', ->
             option_data = JSON.parse(option_match[1])
             option_data[option_name].should.equal(option_value)
 
-        it 'should set the editable_code option', ->
-
-            output = AM.parse(SOURCE)
-            _checkOption(output, 'editable_code', true)
-
-            output = AM.parse(SOURCE, editable_code: false)
-            _checkOption(output, 'editable_code', false)
-
         it 'should set the collapsed_code option', ->
 
             output = AM.parse(SOURCE)

@@ -158,7 +158,6 @@ Returns a String of HTML.
 exports.parse = (markdown_source, kwargs={}) ->
     defaults =
         wrap                : true
-        editable_code       : true
         collapsed_code      : false
         title               : undefined
         debug               : false
