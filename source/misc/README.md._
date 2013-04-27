@@ -2,7 +2,7 @@
 
 *{{ now }}*
 
-[Active Markdown](http://activemarkdown.org) is a tool for making reactive documents — in the vein of [Tangle](http://worrydream.com/Tangle) — using a plain text markdown source, with a special notation for adding interactive controls and variables. The logic is determined by the contents of the code blocks, which is actually executed on-the-fly to update the variables.
+[Active Markdown](http://activemarkdown.org) is a tool for making reactive documents — in the vein of [Tangle](http://worrydream.com/Tangle) — using a plain text markdown source, with a special notation for adding interactive controls and variables. The logic is determined by the content of the code blocks, which is actually executed on-the-fly to update the variables.
 
 A sample raw Active Markdown file looks like this:
 
@@ -56,7 +56,6 @@ This is still experimental, and very rough around the edges. For more informatio
 Active Markdown uses [Showdown](https://github.com/coreyti/showdown) for markdown–HTML conversion, with the `github` and `table` extensions enabled.
 
 
-
 ## 0–60 (getting started)
 
 1.  Install:
@@ -79,7 +78,6 @@ Active Markdown uses [Showdown](https://github.com/coreyti/showdown) for markdow
 3.  Open the compiled file in your favorite browser:
 
         $ open file.html
-
 
 
 ## Usage
@@ -112,7 +110,6 @@ Options:
 *   `    --debug`
     Set the debug flag when compiling, using unminified versions of the viewer
     asset files.
-
 
 
 ## Notation
