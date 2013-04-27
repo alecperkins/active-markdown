@@ -132,6 +132,7 @@ buildScripts = ({ minify }, verbose=true, cb=->) ->
     script_sources = [
         'ActiveMarkdown'
         'browser'
+        'Controls'
         'DragManager'
         'Executor'
         'helpers'

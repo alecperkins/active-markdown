@@ -1,12 +1,15 @@
-{ View } = require 'backbone'
+NamedView = require '../libraries/NamedView'
 
-class ActiveCodeBlock extends View
-    initialize: ({ @source }) ->
+class ActiveCodeBlock extends NamedView
+    @_name: 'ActiveCodeBlock'
+
+    initialize: ({ source }) ->
+        @_source = source
         @render()
 
     render: ->
         @_editor = CodeMirror @el,
-            value           : @source
+            value           : @_source
             mode            : 'coffeescript'
             onBlur          : @_update
             lineNumbers     : true
@@ -19,5 +22,7 @@ class ActiveCodeBlock extends View
     getSource: (line_number_start) ->
         @_editor.setOption('firstLineNumber', line_number_start)
         return @_editor.getValue()
+
+
 
 module.exports = ActiveCodeBlock

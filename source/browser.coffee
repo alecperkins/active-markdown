@@ -5,6 +5,7 @@ Browser-specific functionality.
 _ = require 'underscore'
 
 ActiveMarkdown  = require './ActiveMarkdown'
+Controls        = require './Controls'
 Executor        = require './Executor'
 DragManager     = require './DragManager'
 
@@ -20,6 +21,12 @@ window.executor = new Executor()
 window.drag_manager = new DragManager()
 
 ActiveMarkdown.makeActive = (options) ->
+    ActiveMarkdown.options = options
+
+    controls = new Controls
+        el: $('#AMControls')
+        collapsed_code: options.collapsed_code
+
     $('pre').each (i, el) ->
         $el = $(el)
         $code = $el.find('code')
@@ -28,8 +35,8 @@ ActiveMarkdown.makeActive = (options) ->
             $new_el = $('<div>')
             $el.replaceWith($new_el)
             executor.addCodeBlock new ActiveCodeBlock
-                el: $new_el
-                source: source
+                el              : $new_el
+                source          : source
 
     $('.AMElement').each (i, el) ->
         $el = $(el)

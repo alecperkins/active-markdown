@@ -167,8 +167,15 @@ exports.parse = (markdown_source, kwargs={}) ->
         # No effect when used in-browser
         libraries           : 'reference'
 
-
-    options = _.extend({}, defaults, kwargs)
+    # Loop instead of _.extend, so that values that are given as undefined or
+    # null get set to the default (for "correctness" more than real
+    # functionality).
+    options = {}
+    for k, v of defaults
+        if kwargs[k]?
+            options[k] = kwargs[k]
+        else
+            options[k] = v
 
     if not options.title
         options.title = options.input_file_name

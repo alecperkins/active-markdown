@@ -48,6 +48,7 @@ _compileFile = (options, input_file_name, input_content) ->
         input_file_name : file_name
         title           : options.title
         debug           : options.debug
+        collapsed_code   : options.collapsed_code
         libraries       : libraries
 
     return {
@@ -116,11 +117,12 @@ _copyLibFilesTo = (output_folder, debug=false) ->
 cli  = require 'cli'
  
 cli.parse
-    local   : ['l', 'Create local copies of the asset files']
-    debug   : ['',  'Debug mode (unminified files, etc)']
-    inline  : ['i', 'Inline asset files into output HTML']
-    sample  : ['',  'Generate a sample Active Markdown file']
-    title   : ['',  'Specify a title for the page(s)', 'string']
+    local           : ['l', 'Create local copies of the asset files']
+    collapsed_code  : ['c', 'Collapse active code blocks by default']
+    debug           : ['',  'Debug mode (unminified files, etc)']
+    inline          : ['i', 'Inline asset files into output HTML']
+    sample          : ['',  'Generate a sample Active Markdown file']
+    title           : ['',  'Specify a title for the page(s)', 'string']
 
  
 cli.main (args, options) ->

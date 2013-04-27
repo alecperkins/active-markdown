@@ -100,6 +100,9 @@ Options:
     the content of the assets in the actual output file, creating a single,
     self-contained Active Markdown viewer file.
 
+*   `-c  --collapsed_code`
+    Collapse the active code blocks by default.
+
 *   `    --title TITLE`
     Use the specified string as the title of the compiled HTML file.
 
