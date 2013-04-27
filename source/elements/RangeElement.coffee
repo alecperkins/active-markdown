@@ -54,7 +54,7 @@ class RangeElement extends BaseElement
     ###
     _parseTextContent: (parsed_config) ->
         { text_content } = parsed_config
-        default_value     = parsed_config.value
+        @_default_value     = parsed_config.value
         @_before_text       = ''
         @_after_text        = ''
         @_display_precision = null
@@ -82,10 +82,10 @@ class RangeElement extends BaseElement
                 @_after_text
             ] = match_group[1..5]
 
-            default_value = parseFloat([value, point, decimal].join(''))
+            @_default_value = parseFloat([value, point, decimal].join(''))
             if point
                 @_display_precision = decimal.length
-        return default_value
+        return @_default_value
 
 
     @_parseConfig: (config_match) ->
@@ -148,7 +148,17 @@ class RangeElement extends BaseElement
 
 
     events:
-        'mousedown'     : '_startDragging'
+        'click'     : '_reset'
+        'mousedown' : '_startDragging'
+
+    _reset: ->
+        now = new Date()
+        if now - @_last_click < 500
+            console.log 'resetting', @_default_value
+            @model.set('value', @_default_value)
+        @_last_click = now
+        return
+
 
     _startDragging: (e) ->
         drag_manager.start(e, this, 'x')
