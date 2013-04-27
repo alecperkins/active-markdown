@@ -17,9 +17,9 @@ class RangeElement extends BaseElement
               :\s                   # Delimiter
 
             (                       # Range min, if any:
-              [+|-]?                # - sign, if any
-              (?:[\d]*[\.]?[\d])?   # - coefficient, if any
-              [\w]*                 # - constant, if any
+              [+|-]?                        # - sign, if any
+              (?:[\d]*[\.]?[\d])?           # - coefficient, if any
+              [102EGILONQPSRT_egilonqpsrt]* # - constant, if any
             )
 
             (                       # Inclusivity
@@ -27,15 +27,21 @@ class RangeElement extends BaseElement
             )
 
             (                       # Range max, if any:
-              [+|-]?                # - sign, if any
-              (?:[\d]*[\.]?[\d])?   # - coefficient, if any
-              [\w]*                 # - constant, if any
+              [+|-]?                        # - sign, if any
+              (?:[\d]*[\.]?[\d])?           # - coefficient, if any
+              [102EGILONQPSRT_egilonqpsrt]* # - constant, if any
             )
 
             (                       # Step, if any:
               \sby\s                # - by keyword
-              [\w\d\.-]+            # - step value
-            )*
+
+                (?:                 # - step value
+                  [+|-]?                        # - sign, if any
+                  (?:[\d]*[\.]?[\d])?           # - coefficient, if any
+                  [102EGILONQPSRT_egilonqpsrt]* # - constant, if any
+                )
+
+            )*$
         ///
 
     initialize: (parsed_config) ->

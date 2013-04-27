@@ -111,6 +111,11 @@ invalid_configs = [
     'var_name: this or that'
     'line=var_name: 10..100'
     'var_name'
+    'var_name: -10e...10ln2 by 0.1pINVALIDi'
+    'var_name: -10e...10lnINVALID2 by 0.1pi'
+    'var_name: -10INVALIDe...10ln2 by 0.1pi'
+    'var_name -10e...10ln2 by 0.1pi'
+    'var_name: -10e...10ln2 by pi0.1'
 ]
 
 

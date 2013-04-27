@@ -19,7 +19,7 @@ class SwitchElement extends BaseElement
 
             (                       # false_label
                 [\w]+
-            )
+            )$
         ///
 
     initialize: (parsed_config) ->
