@@ -176,10 +176,12 @@ buildScripts = ({ minify }, verbose=true, cb=->) ->
             'node_modules/zepto/src/event.js'
             'node_modules/codemirror/lib/codemirror.js'
             'node_modules/codemirror/mode/coffeescript/coffeescript.js'
+            'node_modules/d3/d3.js'
 
             # TODO: Pull this down externally?
             # https://raw.github.com/jashkenas/coffee-script/1.6.2/extras/coffee-script.js
             'source/libraries/coffeescript-1.6.2-min.js'
+            'source/libraries/vega-1.2.0-min.js'
         ]
 
         pack = additional_scripts.map (f) ->
@@ -216,6 +218,8 @@ buildScripts = ({ minify }, verbose=true, cb=->) ->
             - CodeMirror                    MIT License     http://codemirror.net/
             - CodeMirror CoffeeScript mode  MIT License     https://github.com/pickhardt/coffeescript-codemirror-mode
             - CoffeeScript                  MIT License     http://coffeescript.org
+            - D3                            MIT License     http://d3js.org/
+            - Vega                          MIT License     http://trifacta.github.io/vega/
             - Active Markdown               Unlicensed      http://activemarkdown.org
             */\n
         """
