@@ -2,9 +2,10 @@ NamedView = require './libraries/NamedView'
 
 class Controls extends NamedView
     @_name: 'Controls'
-    initialize: ({ collapsed_code }) ->
+    initialize: ({ collapsed_code, filename }) ->
         @render()
         @_$body = $('body')
+        @_filename = filename
         if collapsed_code
             @_toggleCode()
         if window.location.hash is '#raw'
@@ -15,11 +16,13 @@ class Controls extends NamedView
                 <a href="http://activemarkdown.org">?</a>
                 <button class="code" title="Toggle active code visibility">{&hellip;}</button>
                 <button class="raw" title="Show raw source">&lt;/&gt;</button>
+                <a class="download" href="#" title="Download raw source" download="">↓</a>
             """
 
     events:
-        'click .code'   : '_toggleCode'
-        'click .raw'    : '_toggleRaw'
+        'click .code'       : '_toggleCode'
+        'click .raw'        : '_toggleRaw'
+        'click .download'   : '_downloadSource'
 
     _toggleCode: ->
         @_$body.toggleClass('collapsed-code')
@@ -30,5 +33,19 @@ class Controls extends NamedView
             window.location.hash = 'raw'
         else
             window.location.hash = ''
+
+    _downloadSource: ->
+        $link = @$el.find('a.download')
+        if $link.attr('href') is '#'
+            raw_source = $('#AMRaw').text()
+
+            file = new Blob [raw_source],
+                type:'text/markdown'
+
+            $link.attr
+                href: URL.createObjectURL(file)
+                download: @_filename
+
+
 
 module.exports = Controls

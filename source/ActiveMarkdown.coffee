@@ -87,11 +87,12 @@ options - an Object with the parsing session options
 Returns a String of JSON.
 ###
 _prepareOptions = (options) ->
-    { editable_code, collapsed_code, debug } = options
+    { editable_code, collapsed_code, debug, input_file_name } = options
     return JSON.stringify
         editable_code   : editable_code
         collapsed_code  : collapsed_code
         debug           : debug
+        filename        : input_file_name
 
 
 

@@ -24,8 +24,9 @@ ActiveMarkdown.makeActive = (options) ->
     ActiveMarkdown.options = options
 
     controls = new Controls
-        el: $('#AMControls')
-        collapsed_code: options.collapsed_code
+        el              : $('#AMControls')
+        collapsed_code  : options.collapsed_code
+        filename        : options.filename
 
     $('pre').each (i, el) ->
         $el = $(el)
