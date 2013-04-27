@@ -126,29 +126,29 @@ p, h1, h2, h3, h4, h5, h6, blockquote
 
 
 #AMControls
-    position: fixed
-    left: -2px
-    top: 46px
-    width: 28px
+    position    : fixed
+    left        : -2px
+    top         : 46px
+    width       : 28px
     hr
         margin: 5px 5px 5px 6px
     button, a
-        width: 28px
-        height: 24px
-        display: inline-block
-        text-align: center
-        font-family: $monospace
-        cursor: pointer
-        border: 0
-        background: transparent
-        font-weight: bold
-        color: $link_color
+        width       : 28px
+        height      : 24px
+        display     : inline-block
+        text-align  : center
+        font-family : $monospace
+        cursor      : pointer
+        border      : 0
+        background  : transparent
+        font-weight : bold
+        color       : $link_color
         &:hover
             text-decoration: none
     button
-        padding: 2px 2px 2px 3px
-        border-radius: 4px
-        margin-bottom: 2px
+        padding         : 2px 2px 2px 3px
+        border-radius   : 4px
+        margin-bottom   : 2px
         &:active, &.active
             background-color: $light_border_color
 
@@ -165,11 +165,11 @@ body.highlighted-elements
 
 
 #AMRaw
-    display: none
-    font-family: $monospace
-    margin-top: 1em
-    white-space: pre
-    overflow: scroll
+    display     : none
+    font-family : $monospace
+    margin-top  : 1em
+    white-space : pre
+    overflow    : scroll
 
 body.display-raw
     #AMControls button.raw
@@ -185,22 +185,22 @@ body.display-raw
 body.collapsed-code
 
     .ActiveCodeBlock
-        height: 2.4rem
-        overflow: hidden
+        height      : 2.4rem
+        overflow    : hidden
         &::after
-            position: absolute
-            top: 0
-            left: 0
-            right: 0
-            bottom: 0
-            content: ""
-            display: block
-            z-index: 4
-            background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(250,250,248,1) 100%) /* FF3.6+ */
-            background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(250,250,248,1) 100%) /* Chrome10+,Safari5.1+ */
-            background: -o-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(250,250,248,1) 100%) /* Opera 11.10+ */
-            background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(250,250,248,1) 100%) /* IE10+ */
-            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(250,250,248,1) 100%) /* W3C */
+            position    : absolute
+            top         : 0
+            left        : 0
+            right       : 0
+            bottom      : 0
+            content     : ""
+            display     : block
+            z-index     : 4
+            background  : -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(250,250,248,1) 100%) /* FF3.6+ */
+            background  : -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(250,250,248,1) 100%) /* Chrome10+,Safari5.1+ */
+            background  : -o-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(250,250,248,1) 100%) /* Opera 11.10+ */
+            background  : -ms-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(250,250,248,1) 100%) /* IE10+ */
+            background  : linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(250,250,248,1) 100%) /* W3C */
 
 
 .ActiveCodeBlock
@@ -226,22 +226,22 @@ body.collapsed-code
     overflow-x  : auto
 
 .AMElement.error
-    background: $light_error_color
-    position: relative
-    z-index: 4
+    background  : $light_error_color
+    position    : relative
+    z-index     : 4
     .error-feedback
-        z-index: 5
-        display: none
-        position: absolute
-        left: 100%
-        top: 0
-        width: 200px
-        margin-left: 2px
-        font-family: $sans_serif
-        font-style: normal
-        background: white
-        padding: 0.25em
-        border: 1px solid $error_color
+        z-index     : 5
+        display     : none
+        position    : absolute
+        left        : 100%
+        top         : 0
+        width       : 200px
+        margin-left : 2px
+        font-family : $sans_serif
+        font-style  : normal
+        background  : white
+        padding     : 0.25em
+        border      : 1px solid $error_color
         .config-string
             font-family: $monospace
     &:hover .error-feedback
@@ -296,9 +296,9 @@ body.highlighted-elements .BaseElement
 
 
 .StringElement
-    cursor: text
-    padding: 0 0.2rem
-    margin: 0 -0.2rem
+    cursor  : text
+    padding : 0 0.2rem
+    margin  : 0 -0.2rem
 
 
 .RangeElement
@@ -342,8 +342,8 @@ body.highlighted-elements .BaseElement
 
 .GraphElement
     .graph-canvas
-        width: 100%
-        height: 300px
+        width   : 100%
+        height  : 300px
 
 
 
