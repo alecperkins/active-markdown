@@ -55,8 +55,15 @@ ActiveMarkdown.makeActive = (options) ->
         if element_class?
             element_class.make($el, config_str)
         else
-            # TODO: inline error feedback
             console.error 'Unable to make element for', $el
+            if options.debug
+                $el.addClass('error')
+                $el.append """
+                        <span class="error-feedback">
+                            Unable to make element:<br><span class="config-string">{#{ config_str }}</span>
+                        </span>
+                    """
+            
 
 # Add section links to each heading, updating the ids with a counter if
 # necessary to ensure each one is unique.

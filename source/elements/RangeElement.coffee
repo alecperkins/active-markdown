@@ -154,7 +154,6 @@ class RangeElement extends BaseElement
     _reset: ->
         now = new Date()
         if now - @_last_click < 500
-            console.log 'resetting', @_default_value
             @model.set('value', @_default_value)
         @_last_click = now
         return

@@ -10,6 +10,8 @@ $tag_border_color           = rgba(96,88,57,1)
 
 $highlight_color            = rgba(247,230,143,0.7)
 $semi_highlight_color       = rgba(247,230,143,0.4)
+$error_color                = rgba(190,30,45,1)
+$light_error_color          = rgba(190,30,45,0.4)
 
 $link_color                 = rgba(0,113,188,1)
 $blockquote_color           = rgba(0,113,188,0.2)
@@ -223,7 +225,25 @@ body.collapsed-code
     overflow-y  : hidden
     overflow-x  : auto
 
-
+.AMElement.error
+    background: $light_error_color
+    position: relative
+    .error-feedback
+        display: none
+        position: absolute
+        left: 100%
+        top: 0
+        width: 200px
+        margin-left: 2px
+        font-family: $sans_serif
+        font-style: normal
+        background: white
+        padding: 0.25em
+        border: 1px solid $error_color
+        .config-string
+            font-family: $monospace
+    &:hover .error-feedback
+        display: block
 
 body.highlighted-elements .BaseElement
     background-color: $semi_highlight_color

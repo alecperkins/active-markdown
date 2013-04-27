@@ -37,8 +37,6 @@ class BaseElement extends NamedView
         return null
 
     @make: ($el) ->
-        console.log 'Making', @_name
-
         config_match = $el.data('config').match(@config_pattern)
 
         parsed_config = @_parseConfig(config_match)
