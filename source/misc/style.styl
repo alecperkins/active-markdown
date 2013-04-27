@@ -147,8 +147,26 @@ p, h1, h2, h3, h4, h5, h6, blockquote
         &:active, &.active
             background-color: $light_border_color
 
-body.collapsed-code #AMControls button.code
+.active-button
     background-color: $light_border_color
+
+body.collapsed-code #AMControls button.code
+    @extend .active-button
+
+
+#AMRaw
+    display: none
+    font-family: $monospace
+    white-space: pre
+    overflow: scroll
+
+body.display-raw
+    #AMControls button.raw
+        @extend .active-button
+    #AMContent
+        display: none
+    #AMRaw
+        display: block
 
 
 // Elements

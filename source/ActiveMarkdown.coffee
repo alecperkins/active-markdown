@@ -98,12 +98,13 @@ _prepareOptions = (options) ->
 ###
 Private: wrap the specified markup according to the options.
 
+raw     - a String of the original markdown
 markup  - a String of HTML to be wrapped
 options - an Object with the parsing session options
 
 Returns the String wrapped result.
 ###
-_wrapOutput = (markup, options) ->
+_wrapOutput = (raw, markup, options) ->
     if options.wrap is true
         document_options    = _prepareOptions(options)
         scripts             = _prepareScripts(options, document_options)
@@ -115,6 +116,7 @@ _wrapOutput = (markup, options) ->
             scripts : scripts
             styles  : styles
             markup  : markup
+            raw     : raw
             VERSION : VERSION
             input_file_name: options.input_file_name
     else
@@ -185,7 +187,7 @@ exports.parse = (markdown_source, kwargs={}) ->
     html_output = parseMarkdown(markdown_source)
 
     if options.wrap
-        html_output = _wrapOutput(html_output, options)
+        html_output = _wrapOutput(markdown_source, html_output, options)
 
     return html_output
 
