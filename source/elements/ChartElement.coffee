@@ -1,5 +1,7 @@
 BaseElement = require './BaseElement'
 
+_s = require 'underscore.string'
+
 {
     parseNumber
     parseStep
@@ -53,53 +55,35 @@ class ChartElement extends BaseElement
         ///
 
     initialize: (parsed_config) ->
-        parsed_config.value = @_parseTextContent(parsed_config)
+        { x_label, y_label } = @_parseTextContent(parsed_config.text_content)
+        @_x_label = x_label
+        @_y_label = y_label
+
         delete parsed_config.text_content
         @model = executor.getOrCreateVariable(parsed_config)
         @model.on('change', @render)
 
+    # TODO: This could be cleaned up across elements, particularly so it's
+    # more testable.
     ###
-    Private: parse the text content of the element for default value, display
-             precision, and additional text.
+    Private: parse the text content of the element for axes labels.
 
     text_content - the String text version of the element
 
-    Return the default value for the variable.
+    Returns an Object with the x and y labels.
     ###
-    _parseTextContent: (parsed_config) ->
-        { text_content } = parsed_config
-        @_default_value     = parsed_config.value
-        @_before_text       = ''
-        @_after_text        = ''
-        @_display_precision = null
+    @_parseTextContent: (text_content) ->
+        label_config =
+            y_label: null
+            x_label: null
+        pattern = /([ \-_\w\d]+\s)(vs|over|per|by)(\s[ \-_\w\d]+)/
+        matched = text_content.match(pattern)?[1..3]
+        if matched
+            label_config.y_label = _s.trim(matched[0])
+            label_config.x_label = _s.trim(matched[2])
+        return label_config
 
-        ###
-            [
-              '$200.0 per day',
-              '$',
-              '200',
-              '.',
-              '0',
-              ' per day',
-              index: 0,
-              input: '$200.0 per day'
-            ]
-        ###
-        pattern = /([a-zA-Z$ ]*)([\-\d]+)(\.?)(\d*)([a-zA-Z ]*)/
-        match_group = text_content.match(pattern)
-        if match_group
-            [
-                @_before_text
-                value
-                point
-                decimal
-                @_after_text
-            ] = match_group[1..5]
-
-            @_default_value = parseFloat([value, point, decimal].join(''))
-            if point
-                @_display_precision = decimal.length
-        return @_default_value
+       
 
 
     @_parseConfig: (config_match) ->

@@ -135,23 +135,45 @@ invalid_configs = [
 valid_text_labels = [
     {
         raw: 'y vs x'
-        y_axis: 'y'
-        x_axis: 'x'
+        labels:
+            y_label: 'y'
+            x_label: 'x'
     }
     {
         raw: 'money vs time'
-        y_axis: 'money'
-        x_axis: 'time'
+        labels:
+            y_label: 'money'
+            x_label: 'time'
     }
     {
         raw: 'whimsical thoughts over time'
-        y_axis: 'whimsical thoughts'
-        x_axis: 'time'
+        labels:
+            y_label: 'whimsical thoughts'
+            x_label: 'time'
+    }
+    {
+        raw: 'whimsical thoughts per day dream'
+        labels:
+            y_label: 'whimsical thoughts'
+            x_label: 'day dream'
+    }
+    {
+        raw: 'pirates by hour'
+        labels:
+            y_label: 'pirates'
+            x_label: 'hour'
     }
     {
         raw: 'global temperature'
-        y_axis: null
-        x_axis: null
+        labels:
+            y_label: null
+            x_label: null
+    }
+    {
+        raw: 'global temperature by'
+        labels:
+            y_label: null
+            x_label: null
     }
 ]
 
@@ -180,6 +202,8 @@ describe 'ChartElement', ->
         describe 'text labels', ->
             backbone = require 'backbone'
             valid_text_labels.forEach (label) ->
-                it 'should match config ' + label.raw, ->
+                it 'should parse config: ' + label.raw, ->
+                    config = ChartElement._parseTextContent(label.raw)
+                    config.should.eql(label.labels)
 
 
