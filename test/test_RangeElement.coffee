@@ -104,6 +104,15 @@ valid_configs = [
             step: 0.1 * Math.PI
             inclusive: false
     }
+    {
+        raw: 'period: 0.25..4 by 0.25'
+        conf:
+            name: 'period'
+            min: 0.25
+            max: 4
+            step: 0.25
+            inclusive: true
+    }
 ]
 
 invalid_configs = [

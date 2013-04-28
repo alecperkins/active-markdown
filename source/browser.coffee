@@ -10,6 +10,7 @@ Executor        = require './Executor'
 DragManager     = require './DragManager'
 
 ActiveCodeBlock = require './elements/ActiveCodeBlock'
+ChartElement    = require './elements/ChartElement'
 RangeElement    = require './elements/RangeElement'
 StringElement   = require './elements/StringElement'
 SwitchElement   = require './elements/SwitchElement'
@@ -42,15 +43,17 @@ ActiveMarkdown.makeActive = (options) ->
     $('.AMElement').each (i, el) ->
         $el = $(el)
         config_str = $el.data('config')
+        embed_flag = $el.data('embed')
 
         element_classes = [
+            ChartElement
             SwitchElement
             RangeElement
             StringElement
         ]
 
         element_class = _.find element_classes, (cls) ->
-            return cls.config_pattern.test(config_str)
+            return cls.config_pattern.test(config_str) and cls.is_embed is embed_flag
 
         if element_class?
             element_class.make($el, config_str)

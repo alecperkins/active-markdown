@@ -7,6 +7,7 @@ NamedView = require '../libraries/NamedView'
 #         most of the boilerplate
 class BaseElement extends NamedView
     @_name: 'BaseElement'
+    @is_embed: false
 
     ui: {}
     render: =>

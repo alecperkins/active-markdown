@@ -52,7 +52,6 @@ class DragManager
     start: (e, view, direction) ->
         @is_dragging = true
         { pageX, pageY } = e
-        console.log 'start at', pageX, pageY
         @_direction = direction
         @_drag_start_x = pageX
         @_drag_start_y = pageY
