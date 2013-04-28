@@ -26,7 +26,7 @@ The first guess is often [2753]{first_guess}…
 
     @first_guess = man + @wives + total_cats + total_kits + narrator
 
-…but the correct answer is **[1]{answer}**.
+…but the correct answer is [1]{answer}.
 
     @answer = narrator
 
