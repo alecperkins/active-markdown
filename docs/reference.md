@@ -215,7 +215,7 @@ function defined in an *ActiveCodeBlock*.
 
 `![y vs x]{scatter=scatterFn: -10..10}`
 
-[Offset 0.]{scatter_offset: 0..100}
+[Offset: 0.]{scatter_offset: 0..100}
 
     @scatterFn = (x) =>
         return x + Math.random() * @scatter_offset
@@ -258,7 +258,7 @@ function defined in an *ActiveCodeBlock*.
 
 `![money by year]{bar=barFn: 1983..2013}`
 
-[Threshold 5.]{threshold: 1..20}
+[Threshold: 5.]{threshold: 1..20}
 
     @barFn = (x) =>
         return x % @threshold

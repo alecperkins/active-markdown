@@ -77,7 +77,7 @@ class RangeElement extends BaseElement
               input: '$200.0 per day'
             ]
         ###
-        pattern = /([a-zA-Z$ ]*)([\-\d]+)(\.?)(\d*)([a-zA-Z ]*)/
+        pattern = /([a-zA-Z=:$ ]*)([\-\d]+)(\.?)(\d*)([a-zA-Z=: ]*)/
         match_group = text_content.match(pattern)
         if match_group
             [
