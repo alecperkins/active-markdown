@@ -139,6 +139,7 @@ buildScripts = ({ minify }, verbose=true, cb=->) ->
         'parser'
         'elements/ActiveCodeBlock'
         'elements/BaseElement'
+        'elements/ChartElement'
         'elements/RangeElement'
         'elements/StringElement'
         'elements/SwitchElement'
