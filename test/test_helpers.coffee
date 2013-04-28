@@ -29,8 +29,11 @@ describe 'parseNumber', ->
     it 'should handle constants', ->
         testValueMap parseNumber,
             '1.1pi'     : 1.1 * Math.PI
+            '+1.1pi'    : 1.1 * Math.PI
+            '+pi'       : Math.PI
             'pi'        : Math.PI
             '0pi'       : 0 * Math.PI
+            '-pi'       : -1 * Math.PI
             '-5.2pi'    : -5.2 * Math.PI
 
 

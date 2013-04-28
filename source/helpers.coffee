@@ -12,14 +12,15 @@ parseNumber = (val) ->
     # Check the value for each constant, allowing for just a constant
     # with no coefficient.
     for c in constants
-        r = RegExp("([-\\d\\.]*)#{ c }")
+        r = RegExp("([+-]?)([\\d\\.]*)#{ c }")
         group = val.toUpperCase().match(r)
 
         # If the number matches a constant, generate the equivalent
         # expression and calculate the actual value of the number.
         if group
-            mult = if group[1] then (new Number(group[1])) else 1
-            parsed_val = mult * Math[c]
+            sign = if group[1] is '-' then -1 else 1
+            mult = if group[2] then (new Number(group[2])) else 1
+            parsed_val = sign * mult * Math[c]
             break
 
     # If the value is still null, the number didn't have any constants, so
