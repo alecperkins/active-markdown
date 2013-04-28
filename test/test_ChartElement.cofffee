@@ -1,0 +1,209 @@
+should = require 'should'
+
+fs = require 'fs'
+
+
+
+valid_configs = [
+    {
+        raw: 'line=fn: ..100 by 10'
+        conf:
+            name: 'fn'
+            min: null
+            max: 100
+            step: 10
+            inclusive: true
+            type: 'line'
+    }
+    {
+        raw: 'line=fn: 0..'
+        conf:
+            name: 'fn'
+            min: 0
+            max: null
+            step: 1
+            inclusive: true
+            type: 'line'
+    }
+    {
+        raw: 'line=fn: .. by 10'
+        conf:
+            name: 'fn'
+            min: null
+            max: null
+            step: 10
+            inclusive: true
+            type: 'line'
+    }
+    {
+        raw: 'scatter=fn: ..'
+        conf:
+            name: 'fn'
+            min: null
+            max: null
+            step: 1
+            inclusive: true
+            type: 'scatter'
+    }
+    {
+        raw: 'scatter=fn: ... by 10'
+        conf:
+            name: 'fn'
+            min: null
+            max: null
+            step: 10
+            inclusive: false
+            type: 'scatter'
+    }
+    {
+        raw: 'scatter=fn: 10..100 by 10'
+        conf:
+            name: 'fn'
+            min: 10
+            max: 100
+            step: 10
+            inclusive: true
+            type: 'scatter'
+    }
+    {
+        raw: 'scatter=fn_name: -10..10 by 1'
+        conf:
+            name: 'fn_name'
+            min: -10
+            max: 10
+            step: 1
+            inclusive: true
+            type: 'scatter'
+    }
+    {
+        raw: 'scatter=fn_name: -10..10'
+        conf:
+            name: 'fn_name'
+            min: -10
+            max: 10
+            step: 1
+            inclusive: true
+            type: 'scatter'
+    }
+    {
+        raw: 'scatter=fn_name: -10..10 by 0.1'
+        conf:
+            name: 'fn_name'
+            min: -10
+            max: 10
+            step: 0.1
+            inclusive: true
+            type: 'scatter'
+    }
+    {
+        raw: 'scatter=fnName: -10e..10ln2 by 0.1pi'
+        conf:
+            name: 'fnName'
+            min: -10 * Math.E
+            max: 10 * Math.LN2
+            step: 0.1 * Math.PI
+            inclusive: true
+            type: 'scatter'
+    }
+    {
+        raw: 'bar=fnName: -10e...10ln2 by 0.1pi'
+        conf:
+            name: 'fnName'
+            min: -10 * Math.E
+            max: 10 * Math.LN2
+            step: 0.1 * Math.PI
+            inclusive: false
+            type: 'bar'
+    }
+]
+
+invalid_configs = [
+    'var_name: true or false'
+    'var_name: this or that'
+    'var_name'
+    'var_name: -10e...10ln2 by 0.1pi'
+    'var_name: -10e...10ln2'
+    'var_name: -10e...10ln2 by 0.1'
+    'scINVALID=var_name: -10e...10ln2 by 0.1'
+    'line=var_name: -10e...10ln2 by 0.1pINVALIDi'
+    'line=var_name: -10e...10lnINVALID2 by 0.1pi'
+    'line=var_name: -10INVALIDe...10ln2 by 0.1pi'
+    'line=var_name -10e...10ln2 by 0.1pi'
+    'line=var_name: -10e...10ln2 by pi0.1'
+]
+
+valid_text_labels = [
+    {
+        raw: 'y vs x'
+        labels:
+            y_label: 'y'
+            x_label: 'x'
+    }
+    {
+        raw: 'money vs time'
+        labels:
+            y_label: 'money'
+            x_label: 'time'
+    }
+    {
+        raw: 'whimsical thoughts over time'
+        labels:
+            y_label: 'whimsical thoughts'
+            x_label: 'time'
+    }
+    {
+        raw: 'whimsical thoughts per day dream'
+        labels:
+            y_label: 'whimsical thoughts'
+            x_label: 'day dream'
+    }
+    {
+        raw: 'pirates by hour'
+        labels:
+            y_label: 'pirates'
+            x_label: 'hour'
+    }
+    {
+        raw: 'global temperature'
+        labels:
+            y_label: null
+            x_label: null
+    }
+    {
+        raw: 'global temperature by'
+        labels:
+            y_label: null
+            x_label: null
+    }
+]
+
+
+describe 'ChartElement', ->
+    ChartElement = require '../source/elements/ChartElement'
+
+    describe '.parseConfig', ->
+
+        describe 'valid', ->
+            valid_configs.forEach (config) ->
+                it 'should match config ' + config.raw, ->
+                    parsed = ChartElement.matchConfig(config.raw)
+                    for k, v of config.conf
+                        if v?
+                            v.should.eql(parsed[k])
+                        else
+                            should.not.exist(parsed[k])
+
+        describe 'invalid', ->
+            invalid_configs.forEach (config_str) ->
+                it 'should not match config ' + config_str, ->
+                    parsed = ChartElement.matchConfig(config_str)
+                    should.not.exist(parsed)
+
+        describe 'text labels', ->
+            backbone = require 'backbone'
+            valid_text_labels.forEach (label) ->
+                it 'should parse config: ' + label.raw, ->
+                    config = ChartElement._parseTextContent(label.raw)
+                    config.should.eql(label.labels)
+
+

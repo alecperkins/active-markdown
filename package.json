@@ -5,7 +5,7 @@
   "preferGlobal": true,
   "main": "lib/ActiveMarkdown",
   "engines": {
-    "node": "0.8.x",
+    "node": "0.10.x",
     "npm":  "1.2.x"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "browserify": "2.12.x",
     "codemirror": "3.11.x",
     "coffee-script": "1.6.x",
+    "d3": "3.1.5",
     "mocha": "*",
     "should": "*",
     "sqwish": "0.2.x",

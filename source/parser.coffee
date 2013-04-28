@@ -8,20 +8,17 @@ parseMarkdown = (markdown_source) ->
     pure_markdown = markdown_source.replace AMD_PATTERN, (args...) ->
         [
             code_flag
-            graph_flag
+            embed_flag
             text_content
             script_config
         ] = args[1..4]
 
         if code_flag
-            return "`#{ graph_flag }[#{ text_content }]{#{ script_config }}"
+            return "`#{ embed_flag }[#{ text_content }]{#{ script_config }}"
 
-        if graph_flag is '!'
-            graph_flag = 'data-graph="true"'
-        else
-            graph_flag = ''
+        embed_flag = (embed_flag is '!')
 
-        span = """ <span class="AMElement" #{graph_flag} data-config="#{script_config}">#{text_content}</span>"""
+        span = """ <span class="AMElement" data-embed="#{embed_flag}" data-config="#{script_config}">#{text_content}</span>"""
 
         return span
 
