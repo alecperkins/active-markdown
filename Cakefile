@@ -328,8 +328,12 @@ cutRelease = (options) ->
 
     sys.puts 'Building everything from orbit, just to be sure...'
 
+    sys.puts "Removing #{ LIB_PATH }"
     fs.removeSync(LIB_PATH)
+
+    sys.puts "Removing #{ BUILD_TMP_PATH }"
     fs.removeSync(BUILD_TMP_PATH)
+
     fs.mkdirSync(LIB_PATH)
 
     # Run buildAll twice, once without tests to ensure the lib files necessary
