@@ -2,7 +2,8 @@
 Browser-specific functionality.
 ###
 
-_ = require 'underscore'
+_   = require 'underscore'
+_s  = require 'underscore.string'
 
 ActiveMarkdown  = require './ActiveMarkdown'
 Controls        = require './Controls'
@@ -72,15 +73,18 @@ ActiveMarkdown.makeActive = (options) ->
 # necessary to ensure each one is unique.
 heading_counts = {}
 $('h1, h2, h3, h4, h5, h6').each (i, el) ->
-    heading_counts[el.id] ?= 0
-    heading_counts[el.id] += 1
-
-    if heading_counts[el.id] > 1
-        el.id = "#{el.id}-#{heading_counts[el.id]}"
-
     $el = $(el)
+
+    id = _s.slugify(_s.words(el.innerText).join('-'))
+    heading_counts[id] ?= 0
+    heading_counts[id] += 1
+
+    if heading_counts[id] > 1
+        id = "#{id}-#{heading_counts[id]}"
+
+    el.id = id
     $el.prepend """
-        <a class="section-link" href="##{el.id}">#</a>
+        <a class="section-link" href="##{id}">#</a>
     """
 
 window.ActiveMarkdown = ActiveMarkdown
