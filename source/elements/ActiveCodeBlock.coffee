@@ -11,10 +11,11 @@ class ActiveCodeBlock extends NamedView
         @_editor = CodeMirror @el,
             value           : @_source
             mode            : 'coffeescript'
-            onBlur          : @_update
             lineNumbers     : true
             viewportMargin  : Infinity
             theme           : 'solarized'
+
+        @_editor.on('blur', @_update)
 
     _update: =>
         @trigger('change:source')
