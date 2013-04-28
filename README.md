@@ -1,6 +1,12 @@
-# Active Markdown, v0.2.0
+# Active Markdown, v0.3.0
 
-[Active Markdown](http://activemarkdown.org) is a tool for making reactive documents — in the vein of [Tangle](http://worrydream.com/Tangle) — using a plain text markdown source, with a special notation for adding interactive controls and variables. The logic is determined by the contents of the code blocks, which is actually executed on-the-fly to update the variables.
+*2013-4-28*
+
+[Active Markdown](http://activemarkdown.org) is a tool for making reactive
+documents — in the vein of [Tangle](http://worrydream.com/Tangle) — using a
+plain text markdown source, with a special notation for adding interactive
+controls and variables. The logic is determined by the content of the code
+blocks, which is actually executed on-the-fly to update the variables.
 
 A sample raw Active Markdown file looks like this:
 
@@ -39,20 +45,33 @@ A sample raw Active Markdown file looks like this:
 
 ([rendered form &raquo;](http://activemarkdown.org/st-ives.html))
 
-…where the `[7]{wives: 1..10}` gets replaced with a slider from `1` to `10`, defaulting at `7`. Whenever the value of one of the variables is changed, the code in the given code block is executed using the current state of all the variables. Then, the variables are updated with the new state.
+…where the `[7]{wives: 1..10}` gets replaced with a slider from `1` to `10`,
+defaulting at `7`. Whenever the value of one of the variables is changed, the
+code in the given code block is executed using the current state of all the
+variables. Then, the variables are updated with the new state.
 
-The notation is similar to the syntax for images and links, but when combined with some UI code by the rendering command, creates a rich, interactive and reactive document. Inspired by [literate CoffeeScript](http://coffeescript.org/#literate) and [Tangle](http://worrydream.com/Tangle/), the goal is a lightweight format for specifying interaction without requiring the creation of a webapp. Also, the document exposes its logic directly, and allows for easy modification and experimentation.
+The notation is similar to the syntax for images and links, but when combined
+with some UI code by the rendering command, creates a rich, interactive and
+reactive document. Inspired by [literate CoffeeScript](http://coffeescript.org/#literate)
+and [Tangle](http://worrydream.com/Tangle/), the goal is a lightweight format
+for specifying interaction without requiring the creation of a webapp. Also,
+the document exposes its logic directly, and allows for easy modification and
+experimentation.
 
     [text value]{var_name}                  - interpolated variable (readonly)
     [5]{var_name: 1..10}                    - slider from 1 to 10, default 5
     [this]{var_name: this or that}          - toggle switch between `this` or `that`
 
-The code blocks have access to these variables under the top-level `this` object. Also, the code blocks are *editable*, and recompiled for every execution, allowing for additional interactivity. (Note: the code in the code blocks MUST be [CoffeeScript](http://coffeescript.org).)
+The code blocks have access to these variables under the top-level `this`
+object. Also, the code blocks are *editable*, and recompiled for every execution,
+allowing for additional interactivity. (Note: the code in the code blocks MUST
+be [CoffeeScript](http://coffeescript.org).)
 
-This is still experimental, and very rough around the edges. For more information, see the [initial writeup](http://activemarkdown.org/an-experiment.html).
+This is still experimental, and very rough around the edges. For more
+information, see the [initial writeup](http://activemarkdown.org/an-experiment.html).
 
-Active Markdown uses [Showdown](https://github.com/coreyti/showdown) for markdown–HTML conversion, with the `github` and `table` extensions enabled.
-
+Active Markdown uses [Showdown](https://github.com/coreyti/showdown) for
+markdown–HTML conversion, with the `github` and `table` extensions enabled.
 
 
 ## 0–60 (getting started)
@@ -79,10 +98,10 @@ Active Markdown uses [Showdown](https://github.com/coreyti/showdown) for markdow
         $ open file.html
 
 
-
 ## Usage
 
-The basic usage is `activemd FILE`. This will compile a markdown file with the Active Markdown notation into an HTML file
+The basic usage is `activemd FILE`. This will compile a markdown file with the
+Active Markdown notation into an HTML file
 
     activemd [options] FILE(S)
 
@@ -92,8 +111,8 @@ Options:
     Create local copies of the asset files, relative to the specified source
     file(s). By default, the assets used are remote, specifically:
 
-        http://activemarkdown.org/viewer/activemarkdown-X.Y.Z-min.css
-        http://activemarkdown.org/viewer/activemarkdown-X.Y.Z-min.js
+        http://activemarkdown.org/viewer/activemarkdown-0.3.0-min.css
+        http://activemarkdown.org/viewer/activemarkdown-0.3.0-min.js
 
 *   `-i  --inline`
     Inline the asset files in the template. Similar to `--local`, but includes
@@ -101,7 +120,7 @@ Options:
     self-contained Active Markdown viewer file.
 
 *   `-c  --collapsed_code`
-    Collapse the active code blocks by default.
+    Collapse the code blocks by default.
 
 *   `    --title TITLE`
     Use the specified string as the title of the compiled HTML file.
@@ -110,28 +129,52 @@ Options:
     Generate a sample file that contains all of the possible controls in
     various configurations.
 
+*   `    --debug`
+    Set the debug flag when compiling, using unminified versions of the viewer
+    asset files and providing error feedback.
+
 
 ## Notation
 
-The notation for specifying elements is similar to the regular Markdown syntax for links and images, generally following this format:
+The notation for specifying elements is similar to the regular Markdown syntax
+for links and images, generally following this format:
 
 `[text content]{variable_name: configuration}`
 
-See [activemarkdown.org/reference.html](http://activemarkdown.org/reference.html) for a complete reference of the elements and their configuration.
+See [docs/reference.html](http://activemarkdown.org/reference.html) for a
+complete reference of the elements and their configuration.
+
+
+## API
+
+The `ActiveMarkdown` module allows for programmatic parsing of Active Markdown,
+in Node via `require 'active-markdown'`, or in the browser by including the
+[script asset file](http://activemarkdown.org/viewer/activemarkdown-0.3.0-min.js).
+
+See [docs/api.html](http://activemarkdown.org/api.html) for details.
 
 
 ## Authors
 
 * [Alec Perkins](https://github.com/alecperkins) ([Droptype Inc](http://droptype.com))
 
-Thanks to [J Voight](https://github.com/joyrexus), [Alex Cabrera](http://alexcabrera.me/), [John Debs](http://johndebs.com/), and [Supriyo Sinha](http://supriyosinha.com) for help with the notation.
+Thanks to [J Voight](https://github.com/joyrexus), [Alex
+Cabrera](http://alexcabrera.me/), [John Debs](http://johndebs.com/), and
+[Supriyo Sinha](http://supriyosinha.com) for help with the notation.
 
-The concept and controls are heavily influenced by [Bret Victor’s](http://worrydream.com) [Tangle](http://worrydream.com/Tangle) library for creating reactive documents.
+The concept and controls are heavily influenced by [Bret
+Victor’s](http://worrydream.com) [Tangle](http://worrydream.com/Tangle)
+library for creating reactive documents.
 
-* [You?](https://github.com/alecperkins/active-markdown/issues) - Active Markdown is still very experimental, and input on the notation, bugs, use cases, control elements, and anything else is very welcome.
+* [You?](https://github.com/alecperkins/active-markdown/issues) - Active
+Markdown is still very experimental, and input on the notation, bugs, use
+cases, control elements, and anything else is very welcome.
+
 
 ## License
 
-Unless otherwise noted, this software is Unlicensed, aka Public Domain. See [/UNLICENSE](https://github.com/alecperkins/active-markdown/blob/master/UNLICENSE) for more information.
+Unless otherwise noted, this software is Unlicensed, aka Public Domain. See
+[/UNLICENSE](https://github.com/alecperkins/active-markdown/blob/master/UNLICENSE)
+for more information.
 
 
