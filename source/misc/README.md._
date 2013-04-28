@@ -131,7 +131,7 @@ Options:
 
 *   `    --debug`
     Set the debug flag when compiling, using unminified versions of the viewer
-    asset files.
+    asset files and providing error feedback.
 
 
 ## Notation
@@ -143,6 +143,15 @@ for links and images, generally following this format:
 
 See [docs/reference.html](http://activemarkdown.org/reference.html) for a
 complete reference of the elements and their configuration.
+
+
+## API
+
+The `ActiveMarkdown` module allows for programmatic parsing of Active Markdown,
+in Node via `require 'active-markdown'`, or in the browser by including the
+[script asset file](http://activemarkdown.org/viewer/activemarkdown-{{ VERSION }}-min.js).
+
+See [docs/api.html](http://activemarkdown.org/api.html) for details.
 
 
 ## Authors
