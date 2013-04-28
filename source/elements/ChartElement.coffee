@@ -63,6 +63,10 @@ class ChartElement extends BaseElement
         delete parsed_config.text_content
         @model = executor.getOrCreateVariable(parsed_config)
         @model.on('change', @render)
+        throttled_render = _.debounce =>
+            @_onRender(true)
+        , 250
+        $(window).on('resize', throttled_render)
 
     # TODO: This could be cleaned up across elements, particularly so it's
     # more testable.
@@ -141,19 +145,20 @@ class ChartElement extends BaseElement
         @_onRender()
         return @el
 
-    _onRender: ->
-        if not @_chart?
+    _onRender: (force=false) ->
+        if not @_chart? or force
             @$el.css
-                height: 500
+                height: @$el.width()
         fn = @model.get('value')
         if _.isFunction(fn)
-            console.log 'step =', @model.get('step')
             range = (x for x in [@model.get('min')..@model.get('max')] by @model.get('step'))
             points = _.map range, (x) ->
                 return {
                     x: x
                     y: fn(x)
                 }
+
+            # TODO: add axes titles when Vega hits 1.3.0
             spec = generateChartSpec(@$el.width(), @$el.height(), @model.get('type'), points)
             vg.parse.spec spec, (chart) =>
                 @_chart = chart(el: @el)
