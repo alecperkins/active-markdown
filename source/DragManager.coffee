@@ -1,3 +1,5 @@
+
+
 ###
 Handles drag operations- done globally to enable sliding action that starts on an element but continues across the window
 ###
@@ -13,6 +15,7 @@ class DragManager
     Returns nothing.
     ###
     _reset: ->
+        @is_dragging = false
         if @_direction?
             @_$body.removeClass("dragging-#{ @_direction }")
         @_dragging_target = null
@@ -47,27 +50,29 @@ class DragManager
     Returns nothing.
     ###
     start: (e, view, direction) ->
+        @is_dragging = true
         { pageX, pageY } = e
-        console.log 'start at', pageX, pageY
         @_direction = direction
         @_drag_start_x = pageX
         @_drag_start_y = pageY
         @_dragging_target = view
-        @_$window.on('mousemove', @drag)
-        @_$window.on('mouseup', @stop)
+        @_$window.on('mousemove', @_drag)
+        @_$window.on('mouseup', @_stop)
         @_$body.addClass("dragging-#{ @_direction }")
 
-    drag: (e) =>
+    _drag: (e) =>
         { pageX, pageY } = e
         ui = @_assembleUI(pageX, pageY)
         @_dragging_target.onDrag?(ui)
 
-    stop: (e) =>
-        @_$window.off('mousemove', @drag)
-        @_$window.off('mouseup', @stop)
+    _stop: (e) =>
+        @_$window.off('mousemove', @_drag)
+        @_$window.off('mouseup', @_stop)
         if @_dragging_target?
             { pageX, pageY } = e
             ui = @_assembleUI(pageX, pageY)
             @_dragging_target.stopDragging?(ui)
             @_reset()
 
+
+module.exports = DragManager

@@ -1,4 +1,7 @@
 .DS_Store
 _scratch
 node_modules
+bin
 lib
+test_tmp
+build_tmp

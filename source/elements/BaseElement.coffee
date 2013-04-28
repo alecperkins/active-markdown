@@ -1,8 +1,14 @@
+_ = require 'underscore'
+NamedView = require '../libraries/NamedView'
+
 
 
 # Public: the base View for all of the active elements in the page. It handles
 #         most of the boilerplate
-class BaseElement extends Backbone.NamedView
+class BaseElement extends NamedView
+    @_name: 'BaseElement'
+    @is_embed: false
+
     ui: {}
     render: =>
         if @readonly
@@ -25,9 +31,13 @@ class BaseElement extends Backbone.NamedView
 
     _getContext: -> @model.toJSON()
 
-    @make: ($el) ->
-        console.log 'Making', @name
+    @matchConfig: (config_str) ->
+        matched = config_str.match(@config_pattern)
+        if matched
+            return @_parseConfig(matched)
+        return null
 
+    @make: ($el) ->
         config_match = $el.data('config').match(@config_pattern)
 
         parsed_config = @_parseConfig(config_match)
@@ -38,3 +48,5 @@ class BaseElement extends Backbone.NamedView
         $el.replaceWith(view.render())
 
     @_parseConfig: ->
+
+module.exports = BaseElement

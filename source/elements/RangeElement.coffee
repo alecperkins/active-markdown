@@ -1,6 +1,48 @@
+BaseElement = require './BaseElement'
 
-class NumberElement extends BaseElement
-    @config_pattern: /([\w\d]+): ([\w\d-]*)([\.]{2,3})([\w\d-]*)( by [\w\d\.-]+)*/
+{
+    parseNumber
+    parseStep
+    parseInclusivity
+} = require '../helpers'
+
+class RangeElement extends BaseElement
+    @_name: 'RangeElement'
+
+    @config_pattern: ///
+            ^(                      # Variable
+              [\w\d]+               # - name
+            )
+
+              :\s                   # Delimiter
+
+            (                       # Range min, if any:
+              [+|-]?                        # - sign, if any
+              (?:[\d]*[\.]?[\d]+)?          # - coefficient, if any
+              [102EGILONQPSRT_egilonqpsrt]* # - constant, if any
+            )
+
+            (                       # Inclusivity
+              [\.]{2,3}             # - dots
+            )
+
+            (                       # Range max, if any:
+              [+|-]?                        # - sign, if any
+              (?:[\d]*[\.]?[\d]+)?          # - coefficient, if any
+              [102EGILONQPSRT_egilonqpsrt]* # - constant, if any
+            )
+
+            (                       # Step, if any:
+              \sby\s                # - by keyword
+
+                (?:                 # - step value
+                  [+|-]?                        # - sign, if any
+                  (?:[\d]*[\.]?[\d]+)?          # - coefficient, if any
+                  [102EGILONQPSRT_egilonqpsrt]* # - constant, if any
+                )
+
+            )*$
+        ///
 
     initialize: (parsed_config) ->
         parsed_config.value = @_parseTextContent(parsed_config)
@@ -18,7 +60,7 @@ class NumberElement extends BaseElement
     ###
     _parseTextContent: (parsed_config) ->
         { text_content } = parsed_config
-        default_value     = undefined
+        @_default_value     = parsed_config.value
         @_before_text       = ''
         @_after_text        = ''
         @_display_precision = null
@@ -35,8 +77,8 @@ class NumberElement extends BaseElement
               input: '$200.0 per day'
             ]
         ###
-        pattern = /([a-zA-Z$ ]*)([\-\d]+)(\.?)(\d*)([a-zA-Z ]*)/
-        match_group = text_content.match(pattern)[1..5]
+        pattern = /([a-zA-Z=:$ ]*)([\-\d]+)(\.?)(\d*)([a-zA-Z=: ]*)/
+        match_group = text_content.match(pattern)
         if match_group
             [
                 @_before_text
@@ -44,16 +86,15 @@ class NumberElement extends BaseElement
                 point
                 decimal
                 @_after_text
-            ] = match_group
+            ] = match_group[1..5]
 
-            default_value = parseFloat([value, point, decimal].join(''))
+            @_default_value = parseFloat([value, point, decimal].join(''))
             if point
                 @_display_precision = decimal.length
-        return default_value
+        return @_default_value
 
 
     @_parseConfig: (config_match) ->
-        console.log config_match
         ###
         [
             "calories: 10..100 by 10",
@@ -113,7 +154,16 @@ class NumberElement extends BaseElement
 
 
     events:
-        'mousedown'     : '_startDragging'
+        'click'     : '_reset'
+        'mousedown' : '_startDragging'
+
+    _reset: ->
+        now = new Date()
+        if now - @_last_click < 500
+            @model.set('value', @_default_value)
+        @_last_click = now
+        return
+
 
     _startDragging: (e) ->
         drag_manager.start(e, this, 'x')
@@ -140,3 +190,6 @@ class NumberElement extends BaseElement
 
     stopDragging: ->
         @$el.removeClass('active')
+
+
+module.exports = RangeElement

@@ -26,9 +26,20 @@ The first guess is often [2753]{first_guess}…
 
     @first_guess = man + @wives + total_cats + total_kits + narrator
 
-…but the correct answer is **[1]{answer}**.
+…but the correct answer is [1]{answer}.
 
     @answer = narrator
+
+- - -
+
+# Adjacent over Hypotenuse
+
+    @p = (x) =>
+        return Math.cos(x + @offset)
+
+[Offset: 1.00]{offset: -pi..pi by 0.0625pi}
+
+![cos(x)]{line=p: 0..2pi by 0.001}
 
 - - -
 
