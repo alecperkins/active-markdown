@@ -18,7 +18,7 @@ class RangeElement extends BaseElement
 
             (                       # Range min, if any:
               [+|-]?                        # - sign, if any
-              (?:[\d]*[\.]?[\d])?           # - coefficient, if any
+              (?:[\d]*[\.]?[\d]+)?          # - coefficient, if any
               [102EGILONQPSRT_egilonqpsrt]* # - constant, if any
             )
 
@@ -28,7 +28,7 @@ class RangeElement extends BaseElement
 
             (                       # Range max, if any:
               [+|-]?                        # - sign, if any
-              (?:[\d]*[\.]?[\d])?           # - coefficient, if any
+              (?:[\d]*[\.]?[\d]+)?          # - coefficient, if any
               [102EGILONQPSRT_egilonqpsrt]* # - constant, if any
             )
 
@@ -37,7 +37,7 @@ class RangeElement extends BaseElement
 
                 (?:                 # - step value
                   [+|-]?                        # - sign, if any
-                  (?:[\d]*[\.]?[\d])?           # - coefficient, if any
+                  (?:[\d]*[\.]?[\d]+)?          # - coefficient, if any
                   [102EGILONQPSRT_egilonqpsrt]* # - constant, if any
                 )
 
