@@ -165,3 +165,76 @@ A boolean flag that has a value of `true`, `false`, or `undefined`. The true and
 | display format        | `"#{label} deck"`                 |
 
 
+
+
+
+### ChartElement
+
+An embedded chart, of type scatter, line, or bar. The chart is driven by the specified function over the specified range. The *ChartElement* notation is similar to the *RangeElement*, but with the addition of the `type`, and the leading `!`. Also, the chart interval MUST be finite. Charts MUST have a function defined in an *ActiveCodeBlock*.
+
+`![<x_label> <delimiter> <y_label>]{<type>=<fn_name>: <bound>..<exclusive><bound> by <step>}`
+
+#### Examples
+
+##### Scatter, basic
+
+`![y vs x]{scatter=scatterFn: -10..10}`
+
+[Offset 0.]{scatter_offset: 0..100}
+
+    @scatterFn = (x) =>
+        return x + Math.random() * @scatter_offset
+
+![y vs x]{scatter=scatterFn: -10..10}
+
+| property              | value                             |
+|=======================|===================================|
+| name                  | `scatterFn`                       |
+| type                  | `scatter`                         |
+| x label               | `"x"`                             |
+| y label               | `"y"`                             |
+| interval              | `[-10,10]`                        |
+| step                  | `1`                               |
+
+
+##### Line, basic
+
+`![sin(x)]{line=lineFn: 0..2pi by 0.001}`
+
+[Period 1.00]{period: 0.25..4 by 0.25}
+
+    b = 2 * Math.PI / @period
+    @lineFn = (x) =>
+        return Math.sin(b * x)
+
+![sin(x)]{line=lineFn: 0..2pi by 0.001}
+
+| property              | value                             |
+|=======================|===================================|
+| name                  | `lineFn`                          |
+| type                  | `line`                            |
+| x label               | `null`                            |
+| y label               | `null`                            |
+| interval              | `[0,2pi]`                         |
+| step                  | `0.001`                           |
+
+
+##### Bar, basic
+
+`![money by year]{bar=barFn: 1983..2013}`
+
+[Threshold 5.]{threshold: 1..20}
+
+    @barFn = (x) =>
+        return x % @threshold
+
+![money by year]{bar=barFn: 1983..2013}
+
+| property              | value                             |
+|=======================|===================================|
+| name                  | `barFn`                           |
+| type                  | `bar`                             |
+| x label               | `"year"`                          |
+| y label               | `"money"`                         |
+| interval              | `[1983,2013]`                     |
+| step                  | `1`                               |
