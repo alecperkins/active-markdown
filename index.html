@@ -1,15 +1,15 @@
-<!DOCTYPE html><html><head><title>Active Markdown</title><meta http-equiv="content-type" content="text/html; charset=utf-8"><link rel='stylesheet' href='viewer/activemarkdown.css'>
+<!DOCTYPE html><html><head><title>Active Markdown</title><meta http-equiv="content-type" content="text/html; charset=utf-8"><link rel='stylesheet' href='viewer/activemarkdown-0.3.0-min.css'>
 <style>.code { border: 1px solid #ccc; border-radius: 2px; font-family: Menlo, 'Courier New', monospace; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; padding: 0 0.5em;} hr { border-top: 1px solid #ccc} body {font-family: Georgia, 'Times New Roman', serif;} div.code {white-space: pre; padding: 0.5em;}</style>
-</head><body><div id="AMDContent">
+</head><body><div id="AMContent">
 
 
-<h1>Active Markdown, v0.2.0</h1>
+<h1>Active Markdown, v0.3.0</h1>
 
 
 <p>Active Markdown is a tool for making reactive documents using a plain text markdown source, with a special notation for adding interactive controls and variables. The logic is determined by the contents of the code blocks, which are actually executed on-the-fly to update the variables. Think <a href="http://coffeescript.org/#literate">Literate CoffeeScript</a> meets <a href="http://worrydream.com/Tangle/">Tangle</a>.</p>
 <h2>For example</h2>
 <p>
-    Click and drag on “500 miles”: <em>I would walk <span class="AMDElement"  data-config="walk_distance: 100..1000 by 10">500. miles</span> and I would walk <span class="AMDElement" data-config="second_walk">500</span> more…</em>
+    Click and drag on “500 miles”: <em>I would walk <span class="AMElement" data-embed="false" data-config="walk_distance: 100..1000 by 10">500. miles</span> and I would walk <span class="AMElement" data-embed="false" data-config="second_walk">500</span> more…</em>
 </p>
 <p>And edit this CoffeeScript to say <code class="code">@walk_distance * 3</code>:</p>
 <pre><code>
@@ -42,6 +42,11 @@ and I would walk [500]{second_walk} more…
 <h2>Reference</h2>
 
 <p>See the <a href="reference.html">reference</a> for a thorough breakdown of the possible elements and their configurations. (<a href="reference.md">Raw markdown source</a>, naturally.)</p>
+
+<h2>API</h2>
+
+<p>See the <a href="api.html">API docs</a> for information about using the <code class="code">ActiveMarkdown</code> module for programmatic parsing on the server and in the browser.</p>
+
 
 <h2>Example file</h2>
 <p>
@@ -88,8 +93,9 @@ which the <code class="code">activemd</code> command turns into:
 
 <p>By <a href="http://alecperkins.net">Alec Perkins</a></p>
 
-</div><script src='viewer/activemarkdown-min.js'></script>
-<script type="text/javascript">
+</div><script src='viewer/activemarkdown-0.3.0-min.js'></script><script>
+    window.ActiveMarkdown.makeActive({"collapsed_code":false,"debug":false,"filename":null});</script>
+<script>
   var _gauges = _gauges || [];
   (function() {
     var t   = document.createElement('script');
