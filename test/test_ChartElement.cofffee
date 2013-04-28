@@ -106,14 +106,14 @@ valid_configs = [
             type: 'scatter'
     }
     {
-        raw: 'scatter=fnName: -10e...10ln2 by 0.1pi'
+        raw: 'bar=fnName: -10e...10ln2 by 0.1pi'
         conf:
             name: 'fnName'
             min: -10 * Math.E
             max: 10 * Math.LN2
             step: 0.1 * Math.PI
             inclusive: false
-            type: 'scatter'
+            type: 'bar'
     }
 ]
 

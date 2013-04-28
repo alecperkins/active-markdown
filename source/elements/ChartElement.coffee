@@ -1,6 +1,7 @@
 BaseElement = require './BaseElement'
 
-_s = require 'underscore.string'
+_   = require 'underscore'
+_s  = require 'underscore.string'
 
 {
     parseNumber
@@ -15,7 +16,7 @@ class ChartElement extends BaseElement
     @config_pattern: ///
             ^
             (                      # Chart
-              [line|scatter]+        # - type
+              [line|scatter|bar]+   # - type
             )
 
               =
@@ -55,7 +56,7 @@ class ChartElement extends BaseElement
         ///
 
     initialize: (parsed_config) ->
-        { x_label, y_label } = @_parseTextContent(parsed_config.text_content)
+        { x_label, y_label } = @constructor._parseTextContent(parsed_config.text_content)
         @_x_label = x_label
         @_y_label = y_label
 
@@ -82,8 +83,6 @@ class ChartElement extends BaseElement
             label_config.y_label = _s.trim(matched[0])
             label_config.x_label = _s.trim(matched[2])
         return label_config
-
-       
 
 
     @_parseConfig: (config_match) ->
@@ -136,14 +135,257 @@ class ChartElement extends BaseElement
         <span class="name">{{ name }}</span>
     """
 
-    _getContext: ->
-        display_val = @model.get('value')
-        if @_display_precision?
-            display_val = display_val.toFixed(@_display_precision)
-        return {
-            value: "#{@_before_text}#{display_val}#{@_after_text}"
-            name: @model.get('name')
-        }
+    render: ->
+        if not @_chart?
+            return super()
+        @_onRender()
+        return @el
+
+    _onRender: ->
+        if not @_chart?
+            @$el.css
+                height: 500
+        fn = @model.get('value')
+        if _.isFunction(fn)
+            console.log 'step =', @model.get('step')
+            range = (x for x in [@model.get('min')..@model.get('max')] by @model.get('step'))
+            points = _.map range, (x) ->
+                return {
+                    x: x
+                    y: fn(x)
+                }
+            spec = generateChartSpec(@$el.width(), @$el.height(), @model.get('type'), points)
+            vg.parse.spec spec, (chart) =>
+                @_chart = chart(el: @el)
+                @_chart.update()
+        return
+
+
+
+# TODO: DRY this up
+generateChartSpec = (width, height, type, points) ->
+    switch type
+        when 'line'
+            return {
+              "width": width - 100,
+              "height": height - 100,
+              "padding": {"top":50, "left":50, "bottom":50, "right":50},
+              "data": [
+                {
+                  "name": "points",
+                  "values": points
+                }
+              ],
+              "scales": [
+                {
+                  "name": "x",
+                  "nice": true,
+                  "range": "width",
+                  "domain": {"data": "points", "field": "data.x"}
+                },
+                {
+                  "name": "y",
+                  "nice": true,
+                  "range": "height",
+                  "domain": {"data": "points", "field": "data.y"}
+                }
+              ],
+              "axes": [
+                   {
+                     "type": "x",
+                     "scale": "x",
+                     "properties": {
+                       "ticks": {
+                         "stroke": {"value": "steelblue"}
+                       },
+                       "majorTicks": {
+                         "strokeWidth": {"value": 2}
+                       },
+                       "labels": {
+                         "fill": {"value": "steelblue"},
+                         "angle": {"value": 50},
+                         "fontSize": {"value": 14},
+                         "align": {"value": "left"},
+                         "baseline": {"value": "middle"},
+                         "dx": {"value": 3}
+                       },
+                       "axis": {
+                         "stroke": {"value": "#333"},
+                         "strokeWidth": {"value": 1.5}
+                       }
+                     }
+                   },
+                {
+                    "type": "y",
+                    "scale": "y",
+                    "properties": {
+                        "labels": {
+                             "fill": {"value": "steelblue"},
+                             "angle": {"value": 50},
+                             "fontSize": {"value": 14},
+                             "align": {"value": "left"},
+                             "baseline": {"value": "middle"},
+                             "dx": {"value": 3}
+                        }
+                    }
+                }, 
+              ],
+              "marks": [
+                {
+                  "type": "line",
+                  "from": {"data": "points"},
+                  "properties": {
+                    "enter": {
+                      "x": {"scale": "x", "field": "data.x"},
+                      "y": {"scale": "y", "field": "data.y"},
+                      "stroke": {"value": "steelblue"},
+                      "fillOpacity": {"value": 0.5}
+                    },
+                    "update": {
+                      "fill": {"value": "transparent"},
+                      "size": {"value": 100}
+                    },
+                    "hover": {
+                      "fill": {"value": "pink"},
+                      "size": {"value": 300}
+                    }
+                  }
+                }
+              ]
+            }
+
+        when 'bar'
+            return {
+              "width": width - 40,
+              "height": height - 40,
+              "padding": {"top": 10, "left": 30, "bottom": 30, "right": 10},
+              "data": [
+                {
+                  "name": "table",
+                  "values": points
+                }
+              ],
+              "scales": [
+                {
+                  "name": "x",
+                  "type": "ordinal",
+                  "range": "width",
+                  "domain": {"data": "table", "field": "data.x"}
+                },
+                {
+                  "name": "y",
+                  "range": "height",
+                  "nice": true,
+                  "domain": {"data": "table", "field": "data.y"}
+                }
+              ],
+              "axes": [
+                {"type": "x", "scale": "x"},
+                {"type": "y", "scale": "y"}
+              ],
+              "marks": [
+                {
+                  "type": "rect",
+                  "from": {"data": "table"},
+                  "properties": {
+                    "enter": {
+                      "x": {"scale": "x", "field": "data.x"},
+                      "width": {"scale": "x", "band": true, "offset": -1},
+                      "y": {"scale": "y", "field": "data.y"},
+                      "y2": {"scale": "y", "value": 0}
+                    },
+                    "update": {
+                      "fill": {"value": "steelblue"}
+                    },
+                    "hover": {
+                      "fill": {"value": "red"}
+                    }
+                  }
+                }
+              ]
+            }
+
+
+        else # scatter
+            return {
+              "width": width - 100,
+              "height": height - 100,
+              "padding": {"top":50, "left":50, "bottom":50, "right":50},
+              "data": [
+                {
+                  "name": "points",
+                  "values": points
+                }
+              ],
+              "scales": [
+                {
+                  "name": "x",
+                  "nice": true,
+                  "range": "width",
+                  "domain": {"data": "points", "field": "data.x"}
+                },
+                {
+                  "name": "y",
+                  "nice": true,
+                  "range": "height",
+                  "domain": {"data": "points", "field": "data.y"}
+                }
+              ],
+              "axes": [
+                {
+                    "type": "x",
+                    "scale": "x",
+                    "properties": {
+                        "labels": {
+                             "fill": {"value": "steelblue"},
+                             "angle": {"value": 50},
+                             "fontSize": {"value": 14},
+                             "align": {"value": "left"},
+                             "baseline": {"value": "middle"},
+                             "dx": {"value": 3}
+                        }
+                    }
+                },
+                {
+                    "type": "y",
+                    "scale": "y",
+                    "properties": {
+                        "labels": {
+                             "fill": {"value": "steelblue"},
+                             "angle": {"value": 50},
+                             "fontSize": {"value": 14},
+                             "align": {"value": "left"},
+                             "baseline": {"value": "middle"},
+                             "dx": {"value": 3}
+                        }
+                    }
+                },              ],
+              "marks": [
+                {
+                  "type": "symbol",
+                  "from": {"data": "points"},
+                  "properties": {
+                    "enter": {
+                      "x": {"scale": "x", "field": "data.x"},
+                      "y": {"scale": "y", "field": "data.y"},
+                      "stroke": {"value": "steelblue"},
+                      "fillOpacity": {"value": 0.5}
+                    },
+                    "update": {
+                      "fill": {"value": "transparent"},
+                      "size": {"value": 100}
+                    },
+                    "hover": {
+                      "fill": {"value": "pink"},
+                      "size": {"value": 300}
+                    }
+                  }
+                }
+              ]
+            }
+
+
+
 
 
 
