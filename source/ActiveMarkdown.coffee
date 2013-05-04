@@ -117,7 +117,7 @@ _wrapOutput = (raw, markup, options) ->
             scripts : scripts
             styles  : styles
             markup  : markup
-            raw     : raw
+            raw     : escape(raw)
             VERSION : VERSION
             input_file_name: options.input_file_name
     else
