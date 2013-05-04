@@ -67,7 +67,11 @@ ActiveMarkdown.makeActive = (options) ->
                             Unable to make element:<br><span class="config-string">{#{ config_str }}</span>
                         </span>
                     """
-            
+
+
+# Unescape the raw source.
+$('#AMRaw').text($('#AMRaw').text())
+
 
 # Add section links to each heading, updating the ids with a counter if
 # necessary to ensure each one is unique.

@@ -15,7 +15,7 @@ unless CWD is '/'
     path        = require 'path'
     LIB_PATH    = path.join(path.dirname(fs.realpathSync(__filename)),'..','lib')
 
-VERSION = '0.3.0'
+VERSION = '0.3.1'
 exports.VERSION = VERSION
 
 
@@ -117,7 +117,7 @@ _wrapOutput = (raw, markup, options) ->
             scripts : scripts
             styles  : styles
             markup  : markup
-            raw     : raw
+            raw     : escape(raw)
             VERSION : VERSION
             input_file_name: options.input_file_name
     else
