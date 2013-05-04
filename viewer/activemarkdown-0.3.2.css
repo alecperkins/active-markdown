@@ -1,0 +1,809 @@
+/*
+Active Markdown viewer style assets
+http://activemarkdown.org
+
+Includes:
+- CodeMirror                    MIT License     http://codemirror.net/
+- CodeMirror solarized theme    MIT License     http://ethanschoonover.com/solarized
+- Active Markdown               Unlicensed      http://activemarkdown.org
+*/
+/* BASICS */
+
+.CodeMirror {
+  /* Set height, width, borders, and global font properties here */
+  font-family: monospace;
+  height: 300px;
+}
+.CodeMirror-scroll {
+  /* Set scrolling behaviour here */
+  overflow: auto;
+}
+
+/* PADDING */
+
+.CodeMirror-lines {
+  padding: 4px 0; /* Vertical padding around content */
+}
+.CodeMirror pre {
+  padding: 0 4px; /* Horizontal padding of content */
+}
+
+.CodeMirror-scrollbar-filler {
+  background-color: white; /* The little square between H and V scrollbars */
+}
+
+/* GUTTER */
+
+.CodeMirror-gutters {
+  border-right: 1px solid #ddd;
+  background-color: #f7f7f7;
+}
+.CodeMirror-linenumbers {}
+.CodeMirror-linenumber {
+  padding: 0 3px 0 5px;
+  min-width: 20px;
+  text-align: right;
+  color: #999;
+}
+
+/* CURSOR */
+
+.CodeMirror div.CodeMirror-cursor {
+  border-left: 1px solid black;
+  z-index: 3;
+}
+/* Shown when moving in bi-directional text */
+.CodeMirror div.CodeMirror-secondarycursor {
+  border-left: 1px solid silver;
+}
+.CodeMirror.cm-keymap-fat-cursor div.CodeMirror-cursor {
+  width: auto;
+  border: 0;
+  background: #7e7;
+  z-index: 1;
+}
+/* Can style cursor different in overwrite (non-insert) mode */
+.CodeMirror div.CodeMirror-cursor.CodeMirror-overwrite {}
+
+.cm-tab { display: inline-block; }
+
+/* DEFAULT THEME */
+
+.cm-s-default .cm-keyword {color: #708;}
+.cm-s-default .cm-atom {color: #219;}
+.cm-s-default .cm-number {color: #164;}
+.cm-s-default .cm-def {color: #00f;}
+.cm-s-default .cm-variable {color: black;}
+.cm-s-default .cm-variable-2 {color: #05a;}
+.cm-s-default .cm-variable-3 {color: #085;}
+.cm-s-default .cm-property {color: black;}
+.cm-s-default .cm-operator {color: black;}
+.cm-s-default .cm-comment {color: #a50;}
+.cm-s-default .cm-string {color: #a11;}
+.cm-s-default .cm-string-2 {color: #f50;}
+.cm-s-default .cm-meta {color: #555;}
+.cm-s-default .cm-error {color: #f00;}
+.cm-s-default .cm-qualifier {color: #555;}
+.cm-s-default .cm-builtin {color: #30a;}
+.cm-s-default .cm-bracket {color: #997;}
+.cm-s-default .cm-tag {color: #170;}
+.cm-s-default .cm-attribute {color: #00c;}
+.cm-s-default .cm-header {color: blue;}
+.cm-s-default .cm-quote {color: #090;}
+.cm-s-default .cm-hr {color: #999;}
+.cm-s-default .cm-link {color: #00c;}
+
+.cm-negative {color: #d44;}
+.cm-positive {color: #292;}
+.cm-header, .cm-strong {font-weight: bold;}
+.cm-em {font-style: italic;}
+.cm-link {text-decoration: underline;}
+
+.cm-invalidchar {color: #f00;}
+
+div.CodeMirror span.CodeMirror-matchingbracket {color: #0f0;}
+div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
+
+/* STOP */
+
+/* The rest of this file contains styles related to the mechanics of
+   the editor. You probably shouldn't touch them. */
+
+.CodeMirror {
+  line-height: 1;
+  position: relative;
+  overflow: hidden;
+  background: white;
+  color: black;
+}
+
+.CodeMirror-scroll {
+  /* 30px is the magic margin used to hide the element's real scrollbars */
+  /* See overflow: hidden in .CodeMirror, and the paddings in .CodeMirror-sizer */
+  margin-bottom: -30px; margin-right: -30px;
+  padding-bottom: 30px; padding-right: 30px;
+  height: 100%;
+  outline: none; /* Prevent dragging from highlighting the element */
+  position: relative;
+}
+.CodeMirror-sizer {
+  position: relative;
+}
+
+/* The fake, visible scrollbars. Used to force redraw during scrolling
+   before actuall scrolling happens, thus preventing shaking and
+   flickering artifacts. */
+.CodeMirror-vscrollbar, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler {
+  position: absolute;
+  z-index: 6;
+  display: none;
+}
+.CodeMirror-vscrollbar {
+  right: 0; top: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.CodeMirror-hscrollbar {
+  bottom: 0; left: 0;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+.CodeMirror-scrollbar-filler {
+  right: 0; bottom: 0;
+  z-index: 6;
+}
+
+.CodeMirror-gutters {
+  position: absolute; left: 0; top: 0;
+  height: 100%;
+  padding-bottom: 30px;
+  z-index: 3;
+}
+.CodeMirror-gutter {
+  height: 100%;
+  padding-bottom: 30px;
+  margin-bottom: -32px;
+  display: inline-block;
+  /* Hack to make IE7 behave */
+  *zoom:1;
+  *display:inline;
+}
+.CodeMirror-gutter-elt {
+  position: absolute;
+  cursor: default;
+  z-index: 4;
+}
+
+.CodeMirror-lines {
+  cursor: text;
+}
+.CodeMirror pre {
+  /* Reset some styles that the rest of the page might have set */
+  -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;
+  border-width: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  margin: 0;
+  white-space: pre;
+  word-wrap: normal;
+  line-height: inherit;
+  color: inherit;
+  z-index: 2;
+  position: relative;
+  overflow: visible;
+}
+.CodeMirror-wrap pre {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: normal;
+}
+.CodeMirror-linebackground {
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  z-index: 0;
+}
+
+.CodeMirror-linewidget {
+  position: relative;
+  z-index: 2;
+  overflow: auto;
+}
+
+.CodeMirror-widget {
+  display: inline-block;
+}
+
+.CodeMirror-wrap .CodeMirror-scroll {
+  overflow-x: hidden;
+}
+
+.CodeMirror-measure {
+  position: absolute;
+  width: 100%; height: 0px;
+  overflow: hidden;
+  visibility: hidden;
+}
+.CodeMirror-measure pre { position: static; }
+
+.CodeMirror div.CodeMirror-cursor {
+  position: absolute;
+  visibility: hidden;
+  border-right: none;
+  width: 0;
+}
+.CodeMirror-focused div.CodeMirror-cursor {
+  visibility: visible;
+}
+
+.CodeMirror-selected { background: #d9d9d9; }
+.CodeMirror-focused .CodeMirror-selected { background: #d7d4f0; }
+
+.cm-searching {
+  background: #ffa;
+  background: rgba(255, 255, 0, .4);
+}
+
+/* IE7 hack to prevent it from returning funny offsetTops on the spans */
+.CodeMirror span { *vertical-align: text-bottom; }
+
+@media print {
+  /* Hide the cursor when printing */
+  .CodeMirror div.CodeMirror-cursor {
+    visibility: hidden;
+  }
+}
+/*
+Modified version of the one from the CodeMirror package, which
+has some questionable aesthetic choices.
+*/
+
+
+/*
+Solarized theme for code-mirror
+http://ethanschoonover.com/solarized
+*/
+
+/*
+Solarized color pallet
+http://ethanschoonover.com/solarized/img/solarized-palette.png
+*/
+
+.solarized.base03 { color: #002b36; }
+.solarized.base02 { color: #073642; }
+.solarized.base01 { color: #586e75; }
+.solarized.base00 { color: #657b83; }
+.solarized.base0 { color: #839496; }
+.solarized.base1 { color: #93a1a1; }
+.solarized.base2 { color: #eee8d5; }
+.solarized.base3  { color: #fdf6e3; }
+.solarized.solar-yellow  { color: #b58900; }
+.solarized.solar-orange  { color: #cb4b16; }
+.solarized.solar-red { color: #dc322f; }
+.solarized.solar-magenta { color: #d33682; }
+.solarized.solar-violet  { color: #6c71c4; }
+.solarized.solar-blue { color: #268bd2; }
+.solarized.solar-cyan { color: #2aa198; }
+.solarized.solar-green { color: #859900; }
+
+/* Color scheme for code-mirror */
+
+.cm-s-solarized {
+  line-height: 1.45em;
+  font-family: Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace !important;
+  color-profile: sRGB;
+  rendering-intent: auto;
+}
+.cm-s-solarized.cm-s-dark {
+  color: #839496;
+  background-color:  #002b36;
+  text-shadow: #002b36 0 1px;
+}
+.cm-s-solarized.cm-s-light {
+  background-color: #fdf6e3;
+  color: #657b83;
+  text-shadow: #eee8d5 0 1px;
+}
+
+.cm-s-solarized .CodeMirror-widget {
+  text-shadow: none;
+}
+
+
+.cm-s-solarized .cm-keyword { color: #cb4b16 }
+.cm-s-solarized .cm-atom { color: #d33682; }
+.cm-s-solarized .cm-number { color: #d33682; }
+.cm-s-solarized .cm-def { color: #2aa198; }
+
+.cm-s-solarized .cm-variable { color: #268bd2; }
+.cm-s-solarized .cm-variable-2 { color: #b58900; }
+.cm-s-solarized .cm-variable-3 { color: #6c71c4; }
+
+.cm-s-solarized .cm-property { color: #2aa198; }
+.cm-s-solarized .cm-operator {color: #6c71c4;}
+
+.cm-s-solarized .cm-comment { color: #586e75; font-style:italic; }
+
+.cm-s-solarized .cm-string { color: #859900; }
+.cm-s-solarized .cm-string-2 { color: #b58900; }
+
+.cm-s-solarized .cm-meta { color: #859900; }
+.cm-s-solarized .cm-error,
+.cm-s-solarized .cm-invalidchar {
+  color: #586e75;
+  border-bottom: 1px dotted #dc322f;
+}
+.cm-s-solarized .cm-qualifier { color: #b58900; }
+.cm-s-solarized .cm-builtin { color: #d33682; }
+.cm-s-solarized .cm-bracket { color: #cb4b16; }
+.cm-s-solarized .CodeMirror-matchingbracket { color: #859900; }
+.cm-s-solarized .CodeMirror-nonmatchingbracket { color: #dc322f; }
+.cm-s-solarized .cm-tag { color: #93a1a1 }
+.cm-s-solarized .cm-attribute {  color: #2aa198; }
+.cm-s-solarized .cm-header { color: #586e75; }
+.cm-s-solarized .cm-quote { color: #93a1a1; }
+.cm-s-solarized .cm-hr {
+  color: transparent;
+  border-top: 1px solid #586e75;
+  display: block;
+}
+.cm-s-solarized .cm-link { color: #93a1a1; cursor: pointer; }
+.cm-s-solarized .cm-special { color: #6c71c4; }
+.cm-s-solarized .cm-em {
+  color: #999;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+.cm-s-solarized .cm-strong { color: #eee; }
+.cm-s-solarized .cm-tab:before {
+  content: "➤";   /*visualize tab character*/
+  color: #586e75;
+}
+
+.cm-s-solarized.cm-s-dark .CodeMirror-focused .CodeMirror-selected {
+  background: #386774;
+  color: inherit;
+}
+
+.cm-s-solarized.cm-s-dark ::selection {
+  background: #386774;
+  color: inherit;
+}
+
+.cm-s-solarized.cm-s-dark .CodeMirror-selected {
+  background: #586e75;
+}
+
+.cm-s-solarized.cm-s-light .CodeMirror-focused .CodeMirror-selected {
+  background: #eee8d5;
+  color: inherit;
+}
+
+.cm-s-solarized.cm-s-light ::selection {
+  background: #eee8d5;
+  color: inherit;
+}
+
+.cm-s-solarized.cm-s-light .CodeMirror-selected {
+  background: #93a1a1;
+}
+
+
+
+/* Editor styling */
+
+
+
+/* Little shadow on the view-port of the buffer view */
+.cm-s-solarized.CodeMirror {
+  border-radius: 4px;
+}
+
+/* Gutter border and some shadow from it  */
+.cm-s-solarized .CodeMirror-gutters {
+  padding: 0 15px 0 10px;
+  border-right: 1px solid;
+}
+
+/* Gutter colors and line number styling based of color scheme (dark / light) */
+
+/* Dark */
+.cm-s-solarized.cm-s-dark .CodeMirror-gutters {
+  background-color: #073642;
+  border-color: #00232c;
+}
+
+.cm-s-solarized.cm-s-dark .CodeMirror-linenumber {
+  text-shadow: #021014 0 -1px;
+}
+
+/* Light */
+.cm-s-solarized.cm-s-light .CodeMirror-gutters {
+  background-color: #eee8d5;
+  border-color: #eee8d5;
+}
+
+/* Common */
+.cm-s-solarized .CodeMirror-linenumber {
+  color: #586e75;
+}
+
+.cm-s-solarized .CodeMirror-gutter .CodeMirror-gutter-text {
+  color: #586e75;
+}
+
+.cm-s-solarized .CodeMirror-lines {
+  padding-left: 5px;
+}
+
+.cm-s-solarized .CodeMirror-lines .CodeMirror-cursor {
+  border-left: 1px solid #819090;
+}
+
+/*
+Active line. Negative margin compensates left padding of the text in the
+view-port
+*/
+.cm-s-solarized .activeline {
+  margin-left: -20px;
+}
+
+.cm-s-solarized.cm-s-dark .activeline {
+  background: rgba(255, 255, 255, 0.05);
+
+}
+.cm-s-solarized.cm-s-light .activeline {
+  background: rgba(0, 0, 0, 0.05);
+}
+body {
+  max-width: 690px;
+  margin: 0 auto;
+  background: #fafaf8;
+  color: #05050a;
+  line-height: 1.25;
+  font-size: 16px;
+  font-family: Georgia, Times, "Times New Roman", serif;
+  padding: 1rem 4rem;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Helvetica, Arial, sans-serif;
+  border-bottom: 1px solid #e6e6e6;
+  position: relative;
+}
+h1 a.section-link,
+h2 a.section-link,
+h3 a.section-link,
+h4 a.section-link,
+h5 a.section-link,
+h6 a.section-link {
+  position: absolute;
+  right: 100%;
+  margin-right: 0.5rem;
+  opacity: 0.2;
+}
+h1:hover a.section-link,
+h2:hover a.section-link,
+h3:hover a.section-link,
+h4:hover a.section-link,
+h5:hover a.section-link,
+h6:hover a.section-link {
+  opacity: 1;
+}
+h1,
+h2,
+h3 {
+  font-weight: 300;
+}
+blockquote {
+  font-style: italic;
+  border-left: 3px solid rgba(0,113,188,0.2);
+  margin-left: -19px;
+  padding-left: 1rem;
+}
+blockquote em {
+  font-style: normal;
+}
+hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid #c8c8c8;
+}
+a {
+  color: #0071bc;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+table {
+  width: 100%;
+  border: 1px solid #c8c8c8;
+  border-spacing: 0;
+  border-radius: 2px;
+}
+table td,
+table th {
+  padding: 0.5em 1em;
+}
+table p {
+  margin: 0;
+}
+table tbody tr:nth-of-type(odd) td {
+  background: #fff;
+}
+table tbody tr:nth-of-type(even) td {
+  background: #f5f5fa;
+}
+table th {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 0.8em;
+  background-color: #e6e6e6;
+}
+p code,
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code,
+blockquote code {
+  font-size: 0.8em;
+  background-color: #f5f5f5;
+  border: 1px solid #c8c8c8;
+  border-radius: 2px;
+  padding: 0 0.2em;
+  font-family: Menlo, Courier New, monospace;
+}
+#AMControls {
+  position: fixed;
+  left: -2px;
+  top: 46px;
+  width: 28px;
+}
+#AMControls hr {
+  margin: 5px 5px 5px 6px;
+}
+#AMControls button,
+#AMControls a {
+  width: 28px;
+  height: 24px;
+  display: inline-block;
+  text-align: center;
+  font-family: Menlo, Courier New, monospace;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  font-weight: bold;
+  color: #0071bc;
+}
+#AMControls button:hover,
+#AMControls a:hover {
+  text-decoration: none;
+}
+#AMControls button {
+  padding: 2px 2px 2px 3px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+#AMControls button:active,
+#AMControls button.active {
+  background-color: #e6e6e6;
+}
+.active-button,
+body.collapsed-code #AMControls button.code,
+body.highlighted-elements #AMControls button.highlight,
+body.display-raw #AMControls button.raw {
+  background-color: #e6e6e6;
+}
+#AMRaw {
+  display: none;
+  font-family: Menlo, Courier New, monospace;
+  font-size: 0.9em;
+  margin-top: 1rem;
+  white-space: pre;
+  overflow: scroll;
+}
+body.display-raw #AMContent {
+  display: none;
+}
+body.display-raw #AMRaw {
+  display: block;
+}
+body.collapsed-code .ActiveCodeBlock {
+  height: 2.4rem;
+  overflow: hidden;
+}
+body.collapsed-code .ActiveCodeBlock::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  content: "";
+  display: block;
+  z-index: 4;
+  background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, #fafaf8 100%);
+/* FF3.6+ */
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, #fafaf8 100%);
+/* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(255,255,255,0) 0%, #fafaf8 100%);
+/* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, #fafaf8 100%);
+/* IE10+ */
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fafaf8 100%);
+/* W3C */
+}
+.ActiveCodeBlock {
+  position: relative;
+}
+.CodeMirror {
+  border-radius: 0;
+  background: transparent;
+  height: auto;
+  font-size: 0.8rem;
+  margin-left: -53px;
+}
+.CodeMirror .CodeMirror-gutters {
+  border: 0;
+  background: transparent;
+}
+.CodeMirror .CodeMirror-linenumber {
+  color: rgba(0,113,188,0.2) !important;
+}
+.CodeMirror-scroll {
+  height: auto;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.AMElement.error {
+  background: rgba(190,30,45,0.4);
+  position: relative;
+  z-index: 4;
+}
+.AMElement.error .error-feedback {
+  z-index: 5;
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  width: 200px;
+  margin-left: 2px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-size: 0.8em;
+  background: #fff;
+  padding: 0.25em;
+  border: 1px solid #be1e2d;
+}
+.AMElement.error .error-feedback .config-string {
+  font-family: Menlo, Courier New, monospace;
+}
+.AMElement.error:hover .error-feedback {
+  display: block;
+}
+body.highlighted-elements .BaseElement {
+  background-color: rgba(247,230,143,0.4);
+}
+.BaseElement {
+  display: inline;
+  border-bottom: 1px dotted rgba(0,0,255,0.3);
+  position: relative;
+  -webkit-transition-property: background-color;
+  -webkit-transition-duration: 0.5s;
+  -webkit-transition-easing: linear;
+  -moz-transition-property: background-color;
+  -moz-transition-duration: 0.5s;
+  -moz-transition-easing: linear;
+  -ms-transition-property: background-color;
+  -ms-transition-duration: 0.5s;
+  -ms-transition-easing: linear;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+  transition-easing: linear;
+  background-color: transparent;
+}
+.BaseElement.no-transition {
+  -webkit-transition-property: background-color;
+  -webkit-transition-duration: 0s;
+  -webkit-transition-easing: linear;
+  -moz-transition-property: background-color;
+  -moz-transition-duration: 0s;
+  -moz-transition-easing: linear;
+  -ms-transition-property: background-color;
+  -ms-transition-duration: 0s;
+  -ms-transition-easing: linear;
+  transition-property: background-color;
+  transition-duration: 0s;
+  transition-easing: linear;
+}
+.BaseElement.changed {
+  background-color: rgba(247,230,143,0.7) !important;
+}
+.BaseElement .name {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  display: none;
+  background: #f7e68f;
+  border: 1px dotted #605839;
+  font-family: Menlo, Courier New, monospace;
+  font-size: 0.7rem;
+  padding: 0.25rem;
+  pointer-events: none;
+  z-index: 5;
+}
+.BaseElement .name:before {
+  content: "@";
+  font-style: italic;
+}
+.BaseElement.readonly {
+  border-bottom-color: rgba(130,130,130,0.4);
+}
+.BaseElement.editable:hover {
+  color: #00f;
+  border-bottom: 1px solid #00f;
+}
+.BaseElement.editable.active {
+  color: #0000be;
+  border-bottom: 1px solid #0000be;
+}
+.BaseElement:hover .name,
+.BaseElement.active .name {
+  display: block;
+}
+.StringElement {
+  cursor: text;
+  padding: 0 0.2rem;
+  margin: 0 -0.2rem;
+}
+.RangeElement {
+  cursor: col-resize;
+}
+.SwitchElement {
+  cursor: pointer;
+}
+.SwitchElement .switch {
+  position: relative;
+}
+.SwitchElement .true-label,
+.SwitchElement .false-label,
+.SwitchElement .undefined-label {
+  display: none;
+}
+.SwitchElement[value="undefined"] .undefined-label {
+  display: inline;
+}
+.SwitchElement[value="undefined"] .switch {
+  top: 0.12rem;
+  color: #808080;
+}
+.SwitchElement[value="true"] .true-label {
+  display: inline;
+}
+.SwitchElement[value="true"] .switch {
+  top: -0.12rem;
+  color: #008000;
+}
+.SwitchElement[value="false"] .false-label {
+  display: inline;
+}
+.SwitchElement[value="false"] .switch {
+  top: 0.25rem;
+  color: #f00;
+}
+.ChartElement {
+  display: block;
+  width: 100%;
+  border: 0 !important;
+}
+body.dragging-x {
+  cursor: col-resize;
+}
+body.display-variable-names .BaseElement .name {
+  display: block;
+}
