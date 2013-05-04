@@ -1,6 +1,14 @@
 # Active Markdown Changelog
 
 
+## 0.3.1
+
+### Bugfixes
+
+* Fix #23: Escaping of raw version
+* Fix Cakefile updating `package.json` version
+
+
 
 ## 0.3.0
 
