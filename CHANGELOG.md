@@ -1,6 +1,17 @@
 # Active Markdown Changelog
 
 
+
+## 0.3.2
+
+Sloppy.
+
+### Bugfixes
+
+* Fix lack of unescaping of raw version.
+
+
+
 ## 0.3.1
 
 ### Bugfixes

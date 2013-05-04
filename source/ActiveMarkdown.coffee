@@ -15,7 +15,7 @@ unless CWD is '/'
     path        = require 'path'
     LIB_PATH    = path.join(path.dirname(fs.realpathSync(__filename)),'..','lib')
 
-VERSION = '0.3.1'
+VERSION = '0.3.2'
 exports.VERSION = VERSION
 
 
