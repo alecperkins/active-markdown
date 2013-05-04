@@ -326,6 +326,11 @@ cutRelease = (options) ->
         sys.puts('!!! Module and package.json version match. Update the version in ActiveMarkdown.coffee appropriately. !!!')
         process.exit(1)
 
+    changelog_text = fs.readFileSync('CHANGELOG.md').toString()
+    if changelog_text.indexOf("## #{ AM.VERSION }") is -1
+        sys.puts("!!! CHANGELOG.md doesn't have an entry for #{ AM.VERSION }. !!!")
+        process.exit(1)
+
     sys.puts 'Building everything from orbit, just to be sure...'
 
     sys.puts "Removing #{ LIB_PATH }"
