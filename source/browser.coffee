@@ -70,7 +70,7 @@ ActiveMarkdown.makeActive = (options) ->
 
 
 # Unescape the raw source.
-$('#AMRaw').text($('#AMRaw').text())
+$('#AMRaw').text(unescape($('#AMRaw').text()))
 
 
 # Add section links to each heading, updating the ids with a counter if

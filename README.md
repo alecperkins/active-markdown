@@ -1,6 +1,6 @@
-# Active Markdown, v0.3.1
+# Active Markdown, v0.3.2
 
-*2013-5-3*
+*2013-5-4*
 
 [Active Markdown](http://activemarkdown.org) is a tool for making reactive
 documents — in the vein of [Tangle](http://worrydream.com/Tangle) — using a
@@ -111,8 +111,8 @@ Options:
     Create local copies of the asset files, relative to the specified source
     file(s). By default, the assets used are remote, specifically:
 
-        http://activemarkdown.org/viewer/activemarkdown-0.3.1-min.css
-        http://activemarkdown.org/viewer/activemarkdown-0.3.1-min.js
+        http://activemarkdown.org/viewer/activemarkdown-0.3.2-min.css
+        http://activemarkdown.org/viewer/activemarkdown-0.3.2-min.js
 
 *   `-i  --inline`
     Inline the asset files in the template. Similar to `--local`, but includes
@@ -149,7 +149,7 @@ complete reference of the elements and their configuration.
 
 The `ActiveMarkdown` module allows for programmatic parsing of Active Markdown,
 in Node via `require 'active-markdown'`, or in the browser by including the
-[script asset file](http://activemarkdown.org/viewer/activemarkdown-0.3.1-min.js).
+[script asset file](http://activemarkdown.org/viewer/activemarkdown-0.3.2-min.js).
 
 See [docs/api.html](http://activemarkdown.org/api.html) for details.
 
