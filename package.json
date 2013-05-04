@@ -1,52 +1,52 @@
 {
-  "name": "active-markdown",
-  "version": "0.3.0",
-  "description": "A tool for generating reactive documents from markdown source.",
-  "preferGlobal": true,
-  "main": "lib/ActiveMarkdown",
-  "engines": {
-    "node": "0.10.x",
-    "npm":  "1.2.x"
-  },
-  "dependencies": {
-    "cli": "0.4.4-2",
-    "fs-extra": "0.6.x",
-    "showdown": "git://github.com/alecperkins/showdown.git#4d04b7855d5ed327ebbe5a917c9e9607a4188f77",
-    "underscore": "1.4.x",
-    "underscore.string": "2.3.x"
-  },
-  "devDependencies": {
-    "backbone": "1.0.x",
-    "browserify": "2.12.x",
-    "codemirror": "3.11.x",
-    "coffee-script": "1.6.x",
-    "d3": "3.1.5",
-    "mocha": "*",
-    "should": "*",
-    "sqwish": "0.2.x",
-    "stylus": "0.32.x",
-    "uglify-js": "2.2.x",
-    "zepto": "git://github.com/madrobby/zepto.git#v1.0"
-  },
-  "bin": {
-    "activemd": "./lib/command.js"
-  },
-  "scripts": {
-    "test": "node_modules/.bin/mocha --compilers coffee:coffee-script"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/alecperkins/active-markdown.git"
-  },
-  "author": "Alec Perkins <alec@droptype.com>",
-  "license": {
-      "type": "Unlicense",
-      "url": "https://raw.github.com/alecperkins/active-markdown/master/UNLICENSE"
-  },
-  "contributors": [
-    {
-      "name": "Alec Perkins",
-      "email": "alec@droptype.com"
-    }
-  ]
+    "name": "active-markdown",
+    "version": "0.3.0",
+    "description": "A tool for generating reactive documents from markdown source.",
+    "preferGlobal": true,
+    "main": "lib/ActiveMarkdown",
+    "engines": {
+        "node": "0.10.x",
+        "npm": "1.2.x"
+    },
+    "dependencies": {
+        "cli": "0.4.4-2",
+        "fs-extra": "0.6.x",
+        "showdown": "git://github.com/alecperkins/showdown.git#4d04b7855d5ed327ebbe5a917c9e9607a4188f77",
+        "underscore": "1.4.x",
+        "underscore.string": "2.3.x"
+    },
+    "devDependencies": {
+        "backbone": "1.0.x",
+        "browserify": "2.12.x",
+        "codemirror": "3.11.x",
+        "coffee-script": "1.6.x",
+        "d3": "3.1.5",
+        "mocha": "*",
+        "should": "*",
+        "sqwish": "0.2.x",
+        "stylus": "0.32.x",
+        "uglify-js": "2.2.x",
+        "zepto": "git://github.com/madrobby/zepto.git#v1.0"
+    },
+    "bin": {
+        "activemd": "./lib/command.js"
+    },
+    "scripts": {
+        "test": "node_modules/.bin/mocha --compilers coffee:coffee-script"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/alecperkins/active-markdown.git"
+    },
+    "author": "Alec Perkins <alec@droptype.com>",
+    "license": {
+        "type": "Unlicense",
+        "url": "https://raw.github.com/alecperkins/active-markdown/master/UNLICENSE"
+    },
+    "contributors": [
+        {
+            "name": "Alec Perkins",
+            "email": "alec@droptype.com"
+        }
+    ]
 }

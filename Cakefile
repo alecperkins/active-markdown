@@ -346,7 +346,7 @@ cutRelease = (options) ->
             sys.puts "   * Updating package.json version from #{ package_json.version } to #{ AM.VERSION } "
             package_json.version = AM.VERSION
 
-            # save package.json
+            fs.writeFileSync('package.json', JSON.stringify(package_json, null, 4), 'utf-8')
 
             sys.puts "   * Rendering README.md"
             _renderReadme(AM.VERSION)
