@@ -76,17 +76,36 @@ $('#AMRaw').text(unescape($('#AMRaw').text()))
 # Add section links to each heading, updating the ids with a counter if
 # necessary to ensure each one is unique.
 heading_counts = {}
-$('h1, h2, h3, h4, h5, h6').each (i, el) ->
-    $el = $(el)
 
-    id = _s.slugify(_s.words(el.innerText).join('-'))
+# Track the tree depth in a stack, for assembling nested IDs.
+heading_stack = []
+$('h1, h2, h3, h4, h5, h6').each (i, el) ->
+    # The level as an integer for semantic comparison.
+    el.level = parseInt(el.tagName.substring(1))
+
+    # Work back up the tree if encountering a heading that doesn't belong
+    # underneath the current node.
+    while heading_stack[heading_stack.length - 1]? and el.level <= heading_stack[heading_stack.length - 1].level
+        heading_stack.pop().level
+
+    # Make this el the current node.
+    heading_stack.push(el)
+
+    # Assemble the current node's ID from the chain of headings.
+    parent_id = heading_stack[heading_stack.length - 2]?.id or ''
+    if parent_id
+        parent_id += '/'
+    id = "#{ parent_id }#{ _s.slugify(_s.words(el.innerText).join('-')) }"
+
+
+    # Track a count for adding a counter, to ensure uniqueness.
     heading_counts[id] ?= 0
     heading_counts[id] += 1
-
     if heading_counts[id] > 1
         id = "#{id}-#{heading_counts[id]}"
 
     el.id = id
+    $el = $(el)
     $el.prepend """
         <a class="section-link" href="##{id}">#</a>
     """
