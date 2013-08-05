@@ -2,6 +2,8 @@
 
 *2013-5-4*
 
+[![Stories in Ready](https://badge.waffle.io/alecperkins/active-markdown.png)](http://waffle.io/alecperkins/active-markdown)
+
 [Active Markdown](http://activemarkdown.org) is a tool for making reactive
 documents — in the vein of [Tangle](http://worrydream.com/Tangle) — using a
 plain text markdown source, with a special notation for adding interactive
