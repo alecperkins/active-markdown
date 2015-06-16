@@ -21,23 +21,34 @@ var App = React.createClass({
 })
 
 var AppView = React.createClass({
-  render: function(){
-    var self = this
-    
-    var onChangeCb = function(e){
-      self.props.flux.getActions('app').setState( {testInput: e.target.value} )
-    }
-
+  triggerMakeActive: function() {
+    var file = "data:text/html;charset=utf-8," + escape(this.props.inputText)
+    window.ActiveMarkdown.makeActive({"collapsed_code":false,"debug":false,"filename": file})
+  }
+, componentDidMount: function () {
+    this.triggerMakeActive()
+  }
+, componentDidUpdate: function(_p, _s) {
+    this.triggerMakeActive()
+  }
+, onChangeCb: function(e) {
+    this.props.flux.getActions('app').setState( {inputText: e.target.value} )
+  }
+, render: function(){
     return (
       <div>
-        this.props.testInput: {this.props.testInput}
-        <br/>
-        <input value={this.props.tesInput} onChange={onChangeCb}/>
+        <textarea rows="20" cols="80"
+                  value={this.props.inputText}
+                  onChange={this.onChangeCb}
+                  />
+        <div key={this.props.inputText} dangerouslySetInnerHTML={ { __html: ActiveMarkdown.parse(this.props.inputText) } } />
+        
         <RouteHandler/>
       </div>
     )
   }
 })
+
 
     //<DefaultRoute name="" handler={}/>
 var routes = (
