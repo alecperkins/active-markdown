@@ -1,6 +1,6 @@
 _               = require 'underscore'
 { Model }       = require 'backbone'
-CoffeeScript    = require './libraries/coffeescript-1.6.2-min.js'
+CoffeeScript    = require './libraries/coffee-script-1.9.3-min.js'
 
 # Loaded in page separately
 # CoffeeScript    = require 'coffee-script'
