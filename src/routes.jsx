@@ -4,6 +4,12 @@ var { Route, DefaultRoute, RouteHandler, Navigation } = require('react-router')
 import FluxComponent from 'flummox/component'
 import { FluxAppSingleton } from './flux/FluxApp'
 
+var ActiveMarkdown = require('../source/ActiveMarkdown')
+console.log('ActiveMarkdown', ActiveMarkdown)
+
+require('../source/browser')
+console.log('window.ActiveMarkdown', window.ActiveMarkdown)
+
 var App = React.createClass({
   render: function(){
     return (
