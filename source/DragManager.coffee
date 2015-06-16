@@ -1,4 +1,4 @@
-
+$ = require 'jquery'
 
 ###
 Handles drag operations- done globally to enable sliding action that starts on an element but continues across the window

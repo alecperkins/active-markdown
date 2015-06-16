@@ -2,6 +2,7 @@
 Browser-specific functionality.
 ###
 
+$   = require 'jquery'
 _   = require 'underscore'
 _s  = require 'underscore.string'
 
