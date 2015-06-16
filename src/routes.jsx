@@ -4,11 +4,7 @@ var { Route, DefaultRoute, RouteHandler, Navigation } = require('react-router')
 import FluxComponent from 'flummox/component'
 import { FluxAppSingleton } from './flux/FluxApp'
 
-var ActiveMarkdown = require('../source/ActiveMarkdown')
-console.log('ActiveMarkdown', ActiveMarkdown)
-
 require('../source/browser')
-console.log('window.ActiveMarkdown', window.ActiveMarkdown)
 
 var App = React.createClass({
   render: function(){
@@ -41,7 +37,7 @@ var AppView = React.createClass({
                   value={this.props.inputText}
                   onChange={this.onChangeCb}
                   />
-        <div key={this.props.inputText} dangerouslySetInnerHTML={ { __html: ActiveMarkdown.parse(this.props.inputText) } } />
+        <div key={this.props.inputText} dangerouslySetInnerHTML={ { __html: window.ActiveMarkdown.parse(this.props.inputText) } } />
         
         <RouteHandler/>
       </div>
