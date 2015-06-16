@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "backbone": "^1.2.1",
+    "codemirror": "^5.3.0",
     "coffee-loader": "^0.7.2",
     "coffee-script": "^1.9.3",
     "fs": "0.0.2",

@@ -1,4 +1,5 @@
 NamedView = require '../libraries/NamedView'
+CodeMirror = require 'codemirror'
 
 class ActiveCodeBlock extends NamedView
     @_name: 'ActiveCodeBlock'
