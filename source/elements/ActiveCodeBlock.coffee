@@ -12,7 +12,7 @@ class ActiveCodeBlock extends NamedView
         @_editor = CodeMirror @el,
             value           : @_source
             mode            : 'coffeescript'
-            lineNumbers     : true
+            lineNumbers     : false
             viewportMargin  : Infinity
             theme           : 'solarized'
 
