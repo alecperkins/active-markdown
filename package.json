@@ -21,5 +21,9 @@
     "style-loader": "^0.8.3",
     "webpack": "^1.8.11",
     "webpack-dev-server": "^1.8.2"
+  },
+  "dependencies": {
+    "coffee-loader": "^0.7.2",
+    "coffee-script": "^1.9.3"
   }
 }
