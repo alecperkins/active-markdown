@@ -39,7 +39,6 @@ class Executor
         # the CoffeeScript compiler will include them in a single closure.
         _.each @_code_blocks, (block, i) ->
             line_count = coffee_code_str.split('\n').length
-            line_count += i
             coffee_code_str += block.getSource(line_count) + '\n'
         js_code_str = CoffeeScript.compile(coffee_code_str)
         return js_code_str

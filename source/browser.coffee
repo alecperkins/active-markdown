@@ -31,6 +31,8 @@ ActiveMarkdown.makeActive = (options) ->
         collapsed_code  : options.collapsed_code
         filename        : options.filename
 
+    executor._code_blocks = []
+
     $('pre').each (i, el) ->
         $el = $(el)
         $code = $el.find('code')
