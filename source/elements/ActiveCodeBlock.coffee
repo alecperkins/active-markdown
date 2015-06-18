@@ -1,5 +1,8 @@
 NamedView = require '../libraries/NamedView'
-CodeMirror = require 'codemirror'
+Ace = require 'brace'
+
+require('brace/mode/coffee')
+#require('brace/theme/monokai')
 
 class ActiveCodeBlock extends NamedView
     @_name: 'ActiveCodeBlock'
@@ -9,13 +12,13 @@ class ActiveCodeBlock extends NamedView
         @render()
 
     render: ->
-        @_editor = CodeMirror @el,
-            value           : @_source
-            mode            : 'coffeescript'
-            lineNumbers     : false
-            viewportMargin  : Infinity
-            theme           : 'solarized'
-
+        @_editor = Ace.edit @el
+        @_editor.setValue(@_source)
+        @_editor.clearSelection()
+        #@_editor.setTheme('ace/theme/monokai')
+        @_editor.getSession().setMode('ace/mode/coffee')
+        #TODO doesn't remove warning...@_editor.$blockScrolling = Infinity
+        @_editor.setOptions maxLines: Infinity
         @_editor.on('blur', @_update)
 
     _update: =>
