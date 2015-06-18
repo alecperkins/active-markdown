@@ -37,6 +37,7 @@ ActiveMarkdown.makeActive = (options) ->
         if not $code.attr('class')
             source = $code.text()
             $new_el = $('<div>')
+            $new_el.attr('id', 'AMDEditorElement_' + i)
             $el.replaceWith($new_el)
             executor.addCodeBlock new ActiveCodeBlock
                 el              : $new_el

@@ -9,10 +9,13 @@ class ActiveCodeBlock extends NamedView
 
     initialize: ({ source }) ->
         @_source = source
+        window.ace_editors = {} if !window.ace_editors
+        window.ace_editors[@el.id] = Ace.edit @el if !window.ace_editors[@el.id]
+        @_editor = window.ace_editors[@el.id]
+        @el.parentElement.insertBefore(@_editor.container, @el)
         @render()
 
     render: ->
-        @_editor = Ace.edit @el
         @_editor.$blockScrolling = Infinity
         @_editor.setValue(@_source)
         @_editor.clearSelection()
@@ -20,7 +23,6 @@ class ActiveCodeBlock extends NamedView
         @_editor.getSession().setMode('ace/mode/coffee')
         @_editor.setOptions maxLines: Infinity
         @_editor.on('blur', @_update)
-
 
     _update: =>
         @trigger('change:source')
