@@ -13,13 +13,14 @@ class ActiveCodeBlock extends NamedView
 
     render: ->
         @_editor = Ace.edit @el
+        @_editor.$blockScrolling = Infinity
         @_editor.setValue(@_source)
         @_editor.clearSelection()
         #@_editor.setTheme('ace/theme/monokai')
         @_editor.getSession().setMode('ace/mode/coffee')
-        #TODO doesn't remove warning...@_editor.$blockScrolling = Infinity
         @_editor.setOptions maxLines: Infinity
         @_editor.on('blur', @_update)
+
 
     _update: =>
         @trigger('change:source')
