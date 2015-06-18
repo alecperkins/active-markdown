@@ -30,6 +30,7 @@
     "fs": "0.0.2",
     "jquery": "^2.1.4",
     "marked": "^0.3.3",
+    "stylus-loader": "^1.2.1",
     "underscore": "^1.8.3",
     "underscore.string": "^3.1.1"
   }

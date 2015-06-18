@@ -8,7 +8,7 @@ module.exports = {
     module: {
         loaders: [
             { test: /\.jsx?$/, loaders: ['babel-loader?stage=1'], exclude: /node_modules/ }
-          , { test: /\.css$/, loader: "style-loader!css-loader!postcss-loader" }
+          , { test: /\.(css||styl)$/, loader: "style-loader!css-loader!postcss-loader!stylus-loader" }
           , { test: /\.coffee$/, loader: "coffee-loader" }
           , { test: /\.(coffee\.md|litcoffee)$/, loader: "coffee-loader?literate" }
         ]
