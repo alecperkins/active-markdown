@@ -63,8 +63,8 @@ ActiveMarkdown.makeActive = (options) ->
         if element_class?
             element_class.make($el, config_str)
         else
-            console.error 'Unable to make element for', $el
-            if options.debug
+            #console.error 'Unable to make element for', $el
+            #if options.debug
                 $el.addClass('error')
                 $el.append """
                         <span class="error-feedback">
