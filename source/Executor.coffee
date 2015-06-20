@@ -48,17 +48,19 @@ class Executor
             @_is_executing = true
             _.defer =>
                 state = @_prepareState()
-                js_code_str = @_compileCode()
+                try
+                    js_code_str = @_compileCode()
+                    # Turn the code string into an actual function, and call it
+                    # using the `state` as `this`. The function will modify the
+                    # `state` in place.
+                    fn = Function(js_code_str)
+                    fn.call(state, js_code_str)
 
-                # Turn the code string into an actual function, and call it
-                # using the `state` as `this`. The function will modify the
-                # `state` in place.
-                fn = Function(js_code_str)
-                fn.call(state, js_code_str)
-
-                # Reassign the values of the variables using their maybe new
-                # values from the `state`.
-                @_updateVariablesFrom(state)
+                    # Reassign the values of the variables using their maybe new
+                    # values from the `state`.
+                    @_updateVariablesFrom(state)
+                catch err
+                    console.log err
                 @_is_executing = false
 
 
