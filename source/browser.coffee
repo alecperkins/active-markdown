@@ -84,20 +84,22 @@ ActiveMarkdown.makeActive = (options) ->
 
 # Add section links to each heading, updating the ids with a counter if
 # necessary to ensure each one is unique.
-heading_counts = {}
-$('h1, h2, h3, h4, h5, h6').each (i, el) ->
-    $el = $(el)
+# TODO make anchor id's and update href attr instead prepend
+# ActiveMarkdown.makeHeadingSectionLinks = () ->
+#     heading_counts = {}
+#     $('h1, h2, h3, h4, h5, h6').each (i, el) ->
+#         $el = $(el)
+#         console.log $el
+#         id = _s.slugify(_s.words(el.innerText).join('-'))
+#         heading_counts[id] ?= 0
+#         heading_counts[id] += 1
 
-    id = _s.slugify(_s.words(el.innerText).join('-'))
-    heading_counts[id] ?= 0
-    heading_counts[id] += 1
+#         if heading_counts[id] > 1
+#             id = "#{id}-#{heading_counts[id]}"
 
-    if heading_counts[id] > 1
-        id = "#{id}-#{heading_counts[id]}"
-
-    el.id = id
-    $el.prepend """
-        <a class="section-link" href="##{id}">#</a>
-    """
+#         el.id = id
+#         $el.prepend """
+#             <a class="section-link" href="##{id}">#</a>
+#         """
 
 window.ActiveMarkdown = ActiveMarkdown
