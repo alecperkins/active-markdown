@@ -33,6 +33,11 @@ ActiveMarkdown.makeActive = (options) ->
 
     executor._code_blocks = []
 
+    list_of_unused_vars = []
+    for v of executor._variables
+        if executor._variables.hasOwnProperty v
+            list_of_unused_vars.push v
+
     $('pre').each (i, el) ->
         $el = $(el)
         $code = $el.find('code')
@@ -62,6 +67,10 @@ ActiveMarkdown.makeActive = (options) ->
 
         if element_class?
             element_class.make($el, config_str)
+            var_name = config_str.match(/[^:]*/)[0]
+            i = list_of_unused_vars.indexOf var_name
+            if (i > -1)
+                list_of_unused_vars.splice i, 1
         else
             #console.error 'Unable to make element for', $el
             #if options.debug
@@ -71,6 +80,8 @@ ActiveMarkdown.makeActive = (options) ->
                             Unable to make element:<br><span class="config-string">{#{ config_str }}</span>
                         </span>
                     """
+        for v in list_of_unused_vars
+            delete executor._variables[v]
 
 
 # Add section links to each heading, updating the ids with a counter if
