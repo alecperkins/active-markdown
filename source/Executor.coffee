@@ -59,8 +59,10 @@ class Executor
                     # Reassign the values of the variables using their maybe new
                     # values from the `state`.
                     @_updateVariablesFrom(state)
+
+                    window.document.getElementById('_compile_error_msg')?.innerHTML = ''
                 catch err
-                    console.log err
+                    window.document.getElementById('_compile_error_msg')?.innerHTML = err
                 @_is_executing = false
 
 

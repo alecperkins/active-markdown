@@ -37,6 +37,10 @@ var AppView = React.createClass({
                   value={this.props.inputText}
                   onChange={this.onChangeCb}
                   />
+        <textarea rows="3" cols="80"
+                  disabled={true}
+                  id='_compile_error_msg'
+                  />
         <div key={this.props.inputText} dangerouslySetInnerHTML={ { __html: window.ActiveMarkdown.parse(this.props.inputText) } } />
         
         <RouteHandler/>
