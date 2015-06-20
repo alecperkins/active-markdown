@@ -9,7 +9,6 @@ _s  = require 'underscore.string'
 ActiveMarkdown  = require './ActiveMarkdown'
 Controls        = require './Controls'
 Executor        = require './Executor'
-DragManager     = require './DragManager'
 
 ActiveCodeBlock = require './elements/ActiveCodeBlock'
 ChartElement    = require './elements/ChartElement'
@@ -21,7 +20,6 @@ SwitchElement   = require './elements/SwitchElement'
 # TODO: Have these listen to events from the elements, instead of needing
 # to be global.
 window.executor = new Executor()
-window.drag_manager = new DragManager()
 
 ActiveMarkdown.makeActive = (options) ->
     ActiveMarkdown.options = options

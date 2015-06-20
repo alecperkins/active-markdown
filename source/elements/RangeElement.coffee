@@ -1,4 +1,5 @@
 BaseElement = require './BaseElement'
+DragManager = require '../DragManager'
 
 {
     parseNumber
@@ -45,6 +46,7 @@ class RangeElement extends BaseElement
         ///
 
     initialize: (parsed_config) ->
+        @drag_manager = new DragManager()
         parsed_config.value = @_parseTextContent(parsed_config)
         delete parsed_config.text_content
         @model = executor.getOrCreateVariable(parsed_config)
@@ -166,7 +168,7 @@ class RangeElement extends BaseElement
 
 
     _startDragging: (e) ->
-        drag_manager.start(e, this, 'x')
+        @drag_manager.start(e, this, 'x')
         @_original_value = @model.get('value')
         @$el.addClass('active')
         e.preventDefault()
