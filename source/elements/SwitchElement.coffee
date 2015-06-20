@@ -26,6 +26,7 @@ class SwitchElement extends BaseElement
         parsed_config.value = @_parseTextContent(parsed_config)
         delete parsed_config.text_content
         @model = executor.getOrCreateVariable(parsed_config)
+        @model.on('change:value', @render)
 
     @_parseConfig: (config_match) ->
         ###
