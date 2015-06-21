@@ -4,7 +4,7 @@ var { Route, DefaultRoute, RouteHandler, Navigation } = require('react-router')
 import FluxComponent from 'flummox/component'
 import { FluxAppSingleton } from './flux/FluxApp'
 
-require('../source/browser')
+require('../source/browser')()
 
 var App = React.createClass({
   render: function(){
