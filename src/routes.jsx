@@ -6,6 +6,9 @@ import { FluxAppSingleton } from './flux/FluxApp'
 
 require('../source/browser')()
 
+var Ace = require ('brace')
+require('brace/mode/markdown')
+
 var App = React.createClass({
   render: function(){
     return (
@@ -27,28 +30,69 @@ var AppView = React.createClass({
 , componentDidUpdate: function(_p, _s) {
     this.triggerMakeActive()
   }
-, onChangeCb: function(e) {
-    this.props.flux.getActions('app').setState( {inputText: e.target.value} )
+, onChangeCb: function(val) {
+    this.props.flux.getActions('app').setState( {inputText: val} )
   }
 , render: function(){
     return (
       <div>
-        <textarea rows="20" cols="80"
+        <div style={{position: 'relative'}}>
+          <Editor onChange={this.onChangeCb}
                   value={this.props.inputText}
-                  onChange={this.onChangeCb}
+                  mode='markdown'
+                  idName='markdown-editor'
                   />
-        <textarea rows="3" cols="80"
-                  disabled={true}
-                  id='_compile_error_msg'
-                  />
-        <div key={this.props.inputText} dangerouslySetInnerHTML={ { __html: window.ActiveMarkdown.parse(this.props.inputText) } } />
+
+          <textarea rows='3'
+                    style={{position: 'absolute', right: '0', bottom: '0', width: '100%', textAlign: 'right', backgroundColor: 'transparent', color: 'red', border: 'none'}}
+                    disabled={true}
+                    id='_compile_error_msg'
+                    />
+        </div>
+
         
+          <div key={this.props.inputText} dangerouslySetInnerHTML={ { __html: window.ActiveMarkdown.parse(this.props.inputText) } } />
+
         <RouteHandler/>
       </div>
     )
   }
 })
 
+var Editor = React.createClass({
+  componentDidMount: function () {
+    var editor = ace.edit(this.props.idName)
+    editor.getSession().setMode('ace/mode/' +this.props.mode)
+    if (this.props.theme) editor.setTheme('ace/theme/' +this.props.theme)
+    editor.setWrapBehavioursEnabled(true)
+    editor.getSession().setUseSoftTabs(true)
+    editor.setOptions({ maxLines: Infinity})
+    editor.$blockScrolling = Infinity
+    editor.getSession().setUseWrapMode(true)
+
+    document.getElementById(this.props.idName).env.document.setValue(this.props.value)
+    editor.on("change", this.jsEditorOnChange)
+  }
+, jsEditorOnChange: function (e){
+    var v = document.getElementById(this.props.idName).env.document.getValue()
+    //text = editor.getSession().getValue()
+    this.props.onChange(v)
+  }
+, render: function (){
+    var self = this
+    var style = {
+      'position': 'relative'
+    , 'height': self.props.height || '200px'
+    }
+    if (self.props.width) style.width = self.props.width
+    
+    return (
+      <div>
+        <div id={this.props.idName} style={style} />
+      </div>
+    )
+  }
+})
 
     //<DefaultRoute name="" handler={}/>
 var routes = (
