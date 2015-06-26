@@ -23,7 +23,7 @@ class StringElement extends BaseElement
         @_text_content = parsed_config.text_content
         @model = executor.getOrCreateVariable
             name: parsed_config.name
-        @model.on('change:value', @render)
+        @model.on('change', @render)
         @_fadeChange = _.debounce(@_doFade, 1000)
 
 
