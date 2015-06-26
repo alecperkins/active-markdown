@@ -75,6 +75,8 @@ ActiveMarkdown.makeActive = (options) ->
         for v in list_of_unused_vars
             delete window.executor._variables[v]
 
+    window.executor._deferredExecute()
+
 
 # Add section links to each heading, updating the ids with a counter if
 # necessary to ensure each one is unique.
