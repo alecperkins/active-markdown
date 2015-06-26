@@ -66,6 +66,7 @@ ActiveMarkdown.makeActive = (options) ->
         else
             #console.error 'Unable to make element for', $el
             #if options.debug
+                if $el.context.innerHTML is '' then $el.context.innerHTML = 'error'
                 $el.addClass('error')
                 $el.append """
                         <span class="error-feedback">
