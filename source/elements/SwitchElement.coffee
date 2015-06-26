@@ -60,7 +60,7 @@ class SwitchElement extends BaseElement
             group = text_content.match(pattern)
             return group
 
-        default_value = undefined
+        default_value = false
         @_before_text = ''
         @_after_text = ''
         @_text_content = text_content
