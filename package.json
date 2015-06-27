@@ -2,7 +2,7 @@
   "name": "template",
   "version": "0.0.1",
   "description": "webpack-dev-server-react-router-flummox-template",
-  "main": "./src/entry.js",
+  "main": "./exports.js",
   "scripts": {
     "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.js --progress --colors",
     "watch": "./node_modules/webpack/bin/webpack.js --config webpack.production.config.js --progress --colors --watch"
