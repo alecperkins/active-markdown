@@ -37,7 +37,7 @@ var App = React.createClass({
                   />
 
           <textarea rows='3'
-                    style={{position: 'absolute', right: '0', bottom: '0', width: '100%', textAlign: 'right', backgroundColor: 'transparent', color: 'red', border: 'none'}}
+                    style={{position: 'absolute', right: '0', bottom: '0', width: '100%', textAlign: 'right', backgroundColor: 'transparent', color: 'red', border: 'none', pointerEvents: 'none'}}
                     disabled={true}
                     id='_compile_error_msg'
                     />
