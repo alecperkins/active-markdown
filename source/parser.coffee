@@ -1,7 +1,4 @@
-Showdown    = require 'showdown'
-
-github_ext = require 'showdown/src/extensions/github'
-table_ext = require 'showdown/src/extensions/table'
+marked = require 'marked'
 
 parseMarkdown = (markdown_source) ->
     AMD_PATTERN = /(`?)(!?)\[([=:,;$%-\.\w\d\s]*)]{([-\w\d=\.\:,\[\] ]+)}/g
@@ -22,10 +19,6 @@ parseMarkdown = (markdown_source) ->
 
         return span
 
-    converter = new Showdown.converter
-        extensions: [github_ext, table_ext]
-    markup = converter.makeHtml(pure_markdown)
-    return markup
-
+    return marked(pure_markdown)
 
 module.exports = parseMarkdown

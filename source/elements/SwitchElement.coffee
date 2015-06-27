@@ -26,6 +26,7 @@ class SwitchElement extends BaseElement
         parsed_config.value = @_parseTextContent(parsed_config)
         delete parsed_config.text_content
         @model = executor.getOrCreateVariable(parsed_config)
+        @model.on('change:value', @render)
 
     @_parseConfig: (config_match) ->
         ###
@@ -59,7 +60,7 @@ class SwitchElement extends BaseElement
             group = text_content.match(pattern)
             return group
 
-        default_value = undefined
+        default_value = false
         @_before_text = ''
         @_after_text = ''
         @_text_content = text_content

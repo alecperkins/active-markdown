@@ -1,52 +1,33 @@
 {
-    "name": "active-markdown",
-    "version": "0.3.2",
-    "description": "A tool for generating reactive documents from markdown source.",
-    "preferGlobal": true,
-    "main": "lib/ActiveMarkdown",
-    "engines": {
-        "node": "0.10.x",
-        "npm": "1.2.x"
-    },
-    "dependencies": {
-        "cli": "0.4.4-2",
-        "fs-extra": "0.6.x",
-        "showdown": "git://github.com/alecperkins/showdown.git#4d04b7855d5ed327ebbe5a917c9e9607a4188f77",
-        "underscore": "1.4.x",
-        "underscore.string": "2.3.x"
-    },
-    "devDependencies": {
-        "backbone": "1.0.x",
-        "browserify": "2.12.x",
-        "codemirror": "3.11.x",
-        "coffee-script": "1.6.x",
-        "d3": "3.1.5",
-        "mocha": "*",
-        "should": "*",
-        "sqwish": "0.2.x",
-        "stylus": "0.32.x",
-        "uglify-js": "2.2.x",
-        "zepto": "git://github.com/madrobby/zepto.git#v1.0"
-    },
-    "bin": {
-        "activemd": "./lib/command.js"
-    },
-    "scripts": {
-        "test": "node_modules/.bin/mocha --compilers coffee:coffee-script"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/alecperkins/active-markdown.git"
-    },
-    "author": "Alec Perkins <alec@droptype.com>",
-    "license": {
-        "type": "Unlicense",
-        "url": "https://raw.github.com/alecperkins/active-markdown/master/UNLICENSE"
-    },
-    "contributors": [
-        {
-            "name": "Alec Perkins",
-            "email": "alec@droptype.com"
-        }
-    ]
+  "name": "template",
+  "version": "0.0.1",
+  "description": "webpack-dev-server-react-router-flummox-template",
+  "main": "./exports.js",
+  "scripts": {
+    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.js --progress --colors",
+    "watch": "./node_modules/webpack/bin/webpack.js --config webpack.production.config.js --progress --colors --watch"
+  },
+  "author": "Reslav Hollos",
+  "devDependencies": {
+    "autoprefixer-core": "^5.2.1",
+    "css-loader": "^0.9.1",
+    "jsx-loader": "^0.13.2",
+    "postcss-loader": "^0.4.4",
+    "react": "^0.13.3",
+    "style-loader": "^0.8.3",
+    "webpack": "^1.8.11",
+    "webpack-dev-server": "^1.8.2"
+  },
+  "dependencies": {
+    "backbone": "^1.2.1",
+    "brace": "^0.5.1",
+    "coffee-loader": "^0.7.2",
+    "coffee-script": "^1.9.3",
+    "fs": "0.0.2",
+    "jquery": "^2.1.4",
+    "marked": "^0.3.3",
+    "stylus-loader": "^1.2.1",
+    "underscore": "^1.8.3",
+    "underscore.string": "^3.1.1"
+  }
 }

@@ -1,4 +1,5 @@
 NamedView = require './libraries/NamedView'
+$ = require 'jquery'
 
 class Controls extends NamedView
     @_name: 'Controls'

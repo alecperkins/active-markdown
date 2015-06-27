@@ -45,10 +45,6 @@ transition($properties, $duration=1s, $easing=linear)
     transition-duration: $duration
     transition-easing: $easing
 
-
-
-// Base body styles
-
 body
     max-width   : 690px
     margin      : 0 auto
@@ -206,25 +202,6 @@ body.collapsed-code
 
 .ActiveCodeBlock
     position: relative
-
-.CodeMirror
-    border-radius   : 0
-    background      : transparent
-    height          : auto
-    font-size       : 0.8rem
-    margin-left     : -53px
-
-    .CodeMirror-gutters
-        border      : 0
-        background  : transparent
-
-    .CodeMirror-linenumber
-        color: $blockquote_color !important
-
-.CodeMirror-scroll
-    height      : auto
-    overflow-y  : hidden
-    overflow-x  : auto
 
 .AMElement.error
     background  : $light_error_color

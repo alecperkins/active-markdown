@@ -1,5 +1,6 @@
 _               = require 'underscore'
 { Model }       = require 'backbone'
+CoffeeScript    = require './libraries/coffee-script-1.9.3-min.js'
 
 # Loaded in page separately
 # CoffeeScript    = require 'coffee-script'
@@ -38,7 +39,6 @@ class Executor
         # the CoffeeScript compiler will include them in a single closure.
         _.each @_code_blocks, (block, i) ->
             line_count = coffee_code_str.split('\n').length
-            line_count += i
             coffee_code_str += block.getSource(line_count) + '\n'
         js_code_str = CoffeeScript.compile(coffee_code_str)
         return js_code_str
@@ -48,17 +48,21 @@ class Executor
             @_is_executing = true
             _.defer =>
                 state = @_prepareState()
-                js_code_str = @_compileCode()
+                try
+                    js_code_str = @_compileCode()
+                    # Turn the code string into an actual function, and call it
+                    # using the `state` as `this`. The function will modify the
+                    # `state` in place.
+                    fn = Function(js_code_str)
+                    fn.call(state, js_code_str)
 
-                # Turn the code string into an actual function, and call it
-                # using the `state` as `this`. The function will modify the
-                # `state` in place.
-                fn = Function(js_code_str)
-                fn.call(state, js_code_str)
+                    # Reassign the values of the variables using their maybe new
+                    # values from the `state`.
+                    @_updateVariablesFrom(state)
 
-                # Reassign the values of the variables using their maybe new
-                # values from the `state`.
-                @_updateVariablesFrom(state)
+                    window.document.getElementById('_compile_error_msg')?.innerHTML = ''
+                catch err
+                    window.document.getElementById('_compile_error_msg')?.innerHTML = err
                 @_is_executing = false
 
 
