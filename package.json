@@ -4,20 +4,16 @@
   "description": "webpack-dev-server-react-router-flummox-template",
   "main": "./src/entry.js",
   "scripts": {
-    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.js --progress --colors --port 9999",
-    "watch": "./node_modules/webpack/bin/webpack.js --config webpack.config.js --progress --colors --watch"
+    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.js --progress --colors",
+    "watch": "./node_modules/webpack/bin/webpack.js --config webpack.production.config.js --progress --colors --watch"
   },
   "author": "Reslav Hollos",
   "devDependencies": {
-    "autoprefixer-core": "^5.2.0",
-    "babel-core": "^5.2.17",
-    "babel-loader": "^5.0.0",
-    "babel-runtime": "^5.2.17",
+    "autoprefixer-core": "^5.2.1",
     "css-loader": "^0.9.1",
-    "flummox": "^3.5.2",
+    "jsx-loader": "^0.13.2",
     "postcss-loader": "^0.4.4",
     "react": "^0.13.3",
-    "react-router": "^0.13.3",
     "style-loader": "^0.8.3",
     "webpack": "^1.8.11",
     "webpack-dev-server": "^1.8.2"

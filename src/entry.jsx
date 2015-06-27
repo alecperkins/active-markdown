@@ -1,28 +1,21 @@
 var React = require('react')
-var { Route, DefaultRoute, RouteHandler, Navigation } = require('react-router')
-
-import FluxComponent from 'flummox/component'
-import { FluxAppSingleton } from './flux/FluxApp'
 
 require('../source/browser')()
+require('../source/misc/style.styl')
+var demo = require('./demo.coffee')
 
 var Ace = require ('brace')
 require('brace/mode/markdown')
 
 var App = React.createClass({
-  render: function(){
-    return (
-      <FluxComponent flux={FluxAppSingleton} connectToStores={['app']}>
-        <AppView {...this.props}/>
-      </FluxComponent>
-    )
+  getInitialState: function () {
+    return {
+      inputText: demo
+    }
   }
-})
-
-var AppView = React.createClass({
-  triggerMakeActive: function() {
-    var file = "data:text/html;charset=utf-8," + escape(this.props.inputText)
-    window.ActiveMarkdown.makeActive({"collapsed_code":false,"debug":false,"filename": file})
+, triggerMakeActive: function() {
+    var file = "data:text/html;charset=utf-8," + escape(this.state.inputText)
+    window.ActiveMarkdown.makeActive({'filename': file})
   }
 , componentDidMount: function () {
     this.triggerMakeActive()
@@ -31,14 +24,14 @@ var AppView = React.createClass({
     this.triggerMakeActive()
   }
 , onChangeCb: function(val) {
-    this.props.flux.getActions('app').setState( {inputText: val} )
+    this.setState({inputText: val})
   }
 , render: function(){
     return (
       <div>
         <div style={{position: 'relative'}}>
           <Editor onChange={this.onChangeCb}
-                  value={this.props.inputText}
+                  value={this.state.inputText}
                   mode='markdown'
                   idName='markdown-editor'
                   />
@@ -50,10 +43,8 @@ var AppView = React.createClass({
                     />
         </div>
 
-        
-          <div key={this.props.inputText} dangerouslySetInnerHTML={ { __html: window.ActiveMarkdown.parse(this.props.inputText) } } />
-
-        <RouteHandler/>
+        <div key={this.state.inputText} dangerouslySetInnerHTML={ { __html: window.ActiveMarkdown.parse(this.state.inputText) } } />
+      
       </div>
     )
   }
@@ -62,7 +53,7 @@ var AppView = React.createClass({
 var Editor = React.createClass({
   componentDidMount: function () {
     var editor = ace.edit(this.props.idName)
-    editor.getSession().setMode('ace/mode/' +this.props.mode)
+    if (this.props.mode) editor.getSession().setMode('ace/mode/' +this.props.mode)
     if (this.props.theme) editor.setTheme('ace/theme/' +this.props.theme)
     editor.setWrapBehavioursEnabled(true)
     editor.getSession().setUseSoftTabs(true)
@@ -94,10 +85,4 @@ var Editor = React.createClass({
   }
 })
 
-    //<DefaultRoute name="" handler={}/>
-var routes = (
-  <Route name="app" path="/" handler={App}>
-  </Route>
-)
-
-module.exports = routes
+React.render(<App/>, document.getElementById('app'))

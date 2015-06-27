@@ -1,5 +1,5 @@
 module.exports = {
-    entry: "./src/entry.js",
+    entry: "./src/entry.jsx",
     output: {
         path: "./",
         filename: "bundle.js"
@@ -7,7 +7,7 @@ module.exports = {
     devtool: "source-map",
     module: {
         loaders: [
-            { test: /\.jsx?$/, loaders: ['babel-loader?stage=1'], exclude: /node_modules/ }
+            { test: /\.jsx?$/, loaders: ['jsx-loader'], exclude: /node_modules/ }
           , { test: /\.(css||styl)$/, loader: "style-loader!css-loader!postcss-loader!stylus-loader" }
           , { test: /\.coffee$/, loader: "coffee-loader" }
           , { test: /\.(coffee\.md|litcoffee)$/, loader: "coffee-loader?literate" }
