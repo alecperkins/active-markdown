@@ -1,7 +1,7 @@
 marked = require 'marked'
 
 parseMarkdown = (markdown_source) ->
-    AMD_PATTERN = /(`?)(!?)\[([=:,;$%-\.\w\d\s]*)]{([-\w\d=\.\:,\[\] ]+)}/g
+    AMD_PATTERN = /(`?)(!?)\[(.*?)]{([-\w\d=\.\:,\[\] ]+)}/g
     pure_markdown = markdown_source.replace AMD_PATTERN, (args...) ->
         [
             code_flag
