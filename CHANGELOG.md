@@ -1,4 +1,24 @@
+@@ -0,0 +1,106 @@
 # Active Markdown Changelog
+
+
+## 0.4.0
+
+Full rewrite, spec change, adding and removing features.
+
+- [breaking] JavaScript for active code blocks, no more CoffeeScript
+- [breaking] Remove the public in-browser API
+- [breaking] Remove `--debug`, `--collapsed_code` options
+- Datasets using markdown fenced code blocks
+- Front matter metadata support
+- Native HTML form field support
+- Touch-support for RangeElements
+- Fully inlined scripts and styles every time, unminified
+- `watch` subcommand
+- Use [Chartist](https://chartist.dev) instead of Vega
+- Use [prism-code-editor](https://www.npmjs.com/package/prism-code-editor) instead of CodeMirror
+- Use vitest instead of mocha
+- Use a grown-up license (MIT)
 
 
 
@@ -80,7 +100,7 @@ command to CoffeeScript.
 ### Bugfixes
 
 * Avoid parsing Active Markdown notation inside code, so it's possible to talk
-  about Active Markdown using Active Markdown 
+  about Active Markdown using Active Markdown
 
 ### Features
 

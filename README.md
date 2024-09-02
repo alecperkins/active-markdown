@@ -1,79 +1,74 @@
-# Active Markdown, v0.3.2
+---
+title: Active Markdown
+---
 
-*2013-5-4*
+# Active Markdown
 
-[![Stories in Ready](https://badge.waffle.io/alecperkins/active-markdown.png)](http://waffle.io/alecperkins/active-markdown)
+[![latest npm version](https://img.shields.io/npm/v/active-markdown)](https://www.npmjs.com/package/active-markdown)
+[![MIT license](https://img.shields.io/npm/l/active-markdown)](https://github.com/alecperkins/active-markdown/blob/main/LICENSE)
 
-[Active Markdown](http://activemarkdown.org) is a tool for making reactive
-documents — in the vein of [Tangle](http://worrydream.com/Tangle) — using a
-plain text markdown source, with a special notation for adding interactive
-controls and variables. The logic is determined by the content of the code
-blocks, which is actually executed on-the-fly to update the variables.
+[Active Markdown](http://activemarkdown.org) is a tool for making reactive documents — in the vein of [Tangle](http://worrydream.com/Tangle) — using a plain text markdown source, with a special notation for adding interactive controls and variables. The logic is determined by the content of the javascript code blocks, which is executed on-the-fly to update the variables.
 
 A sample raw Active Markdown file looks like this:
 
-    # St Ives
+```markdown
+## St Ives
 
-    An old riddle.
+An [old riddle](https://en.wikipedia.org/wiki/As_I_was_going_to_St_Ives).
 
-    > As [I]{travelers: we or I} [was]{verb} going to *St Ives*  
-    > I met a man with [7 wives]{wives: 1..10}  
-    > Every wife had [7 sacks]{sacks: 1..10}  
-    > Every sack had [7 cats]{cats: 1..10}  
-    > Every cat had [7 kits]{kits: 1..10}  
-    > Kits, cats, sacks, wives  
-    > How many were going to St Ives?
+> As [I]{solo: I or we} [was]{verb} going to **St Ives**,
+> I met a man with [7 wives]{wives: 1..10},
+> Every wife had [7 sacks]{sacks: 1..10},
+> Every sack had [7 cats]{cats: 1..10},
+> Every cat had [7 kits]{kits: 1..10}:
+> Kits, cats, sacks, wives,
+> How many were going to St Ives?
 
-        total_sacks = @wives * @sacks
-        total_cats  = total_sacks * @cats
-        total_kits  = total_cats * @kits
-        man         = 1
+A _reasonable_ guess is [2752]{first_guess}, a sum of the beings the narrator met:
 
-        if @travelers
-            narrator = 2
-            @verb = 'were'
-        else
-            narrator = 1
-            @verb = 'was'
+    const man   = 1;
+    total_sacks = wives * sacks;
+    total_cats  = total_sacks * cats;
+    total_kits  = total_cats * kits;
 
-    The first guess is often [2753]{first_guess}…
+    first_guess = man + wives + total_cats + total_kits;
 
-        @first_guess = man + @wives + total_cats + total_kits + narrator
+And another guess might follow the second to last line more literally and sum [2401 kits]{total_kits}, [343 cats]{total_cats}, [49 sacks]{total_sacks}, and [7 wives]{wives} for an answer of [2800]{second_guess}:
 
-    …but the correct answer is **[1]{answer}**.
+    second_guess = total_kits + total_cats + total_sacks + wives;
 
-        @answer = narrator
+…but the correct answer is [1]{answer}.
+
+    if (solo) {
+      travelers = 1;
+      verb = 'was';
+    } else {
+      travelers = 2;
+      verb = 'were';
+    }
+
+    answer = travelers;
+```
 
 
-([rendered form &raquo;](http://activemarkdown.org/st-ives.html))
+([rendered form](https://activemarkdown.org/st-ives.html))
 
-…where the `[7]{wives: 1..10}` gets replaced with a slider from `1` to `10`,
-defaulting at `7`. Whenever the value of one of the variables is changed, the
-code in the given code block is executed using the current state of all the
-variables. Then, the variables are updated with the new state.
+…where the `[7]{wives: 1..10}` gets replaced with a slider from `1` to `10`, defaulting at `7`. Whenever the value of one of the variables is changed, the code in the given code blocks is executed using the current state of all the variables. Then, the variables are updated with the new state.
 
-The notation is similar to the syntax for images and links, but when combined
-with some UI code by the rendering command, creates a rich, interactive and
-reactive document. Inspired by [literate CoffeeScript](http://coffeescript.org/#literate)
-and [Tangle](http://worrydream.com/Tangle/), the goal is a lightweight format
-for specifying interaction without requiring the creation of a webapp. Also,
-the document exposes its logic directly, and allows for easy modification and
+The notation is similar to the syntax for images and links, but when combined with some UI code by the rendering command, creates a rich, interactive and reactive document. Inspired by [literate CoffeeScript](https://coffeescript.org/#literate) and [Tangle](https://worrydream.com/Tangle/), the goal is a lightweight format for specifying interaction without requiring the creation of a webapp. Also, the document exposes its logic directly, and allows for easy modification and
 experimentation.
 
-    [text value]{var_name}                  - interpolated variable (readonly)
-    [5]{var_name: 1..10}                    - slider from 1 to 10, default 5
-    [this]{var_name: this or that}          - toggle switch between `this` or `that`
+| Notation                            | Output                                      |
+|-------------------------------------|---------------------------------------------|
+| `[text value]{var_name}`            | interpolated, formatted variable (readonly) |
+| `[5]{var_name: 1..10}`              | slider from 1 to 10, default 5              |
+| `[this]{var_name: this or that}`    | toggle switch between `this` or `that`      |
+| `![y vs x]{line=someFn 1..10 by 2}` | line chart driven by function `someFn`      |
+| `![y vs x]{scatter=mydata ..}`      | scatter chart driven by dataset `mydata`    |
+| <code>&grave;&grave;&grave;csv=mydata\ncol1,col2,col3\n1,2,3\n&grave;&grave;&grave;</code>      | CSV dataset                                 |
 
-The code blocks have access to these variables under the top-level `this`
-object. Also, the code blocks are *editable*, and recompiled for every execution,
-allowing for additional interactivity. (Note: the code in the code blocks MUST
-be [CoffeeScript](http://coffeescript.org).)
+The code blocks have access to these variables in their scope, and modify the page state by assigning to those variables. Also, the code blocks are *editable*, and recompiled for every execution, allowing for additional interactivity. (Note: the code in the code blocks MUST be JavaScript.)
 
-This is still experimental, and very rough around the edges. For more
-information, see the [initial writeup](http://activemarkdown.org/an-experiment.html).
-
-Active Markdown uses [Showdown](https://github.com/coreyti/showdown) for
-markdown–HTML conversion, with the `github` and `table` extensions enabled.
 
 
 ## 0–60 (getting started)
@@ -89,11 +84,8 @@ markdown–HTML conversion, with the `github` and `table` extensions enabled.
 
     The command can generate a sample file for you to use and examine.
 
-        $ activemd --sample
-        Generating sample: am_sample.md
-
-        $ activemd --sample > some_name.md
-        Generating sample
+        $ activemd sample
+        Sample saved to ./sample.md.
 
 3.  Open the compiled file in your favorite browser:
 
@@ -102,81 +94,42 @@ markdown–HTML conversion, with the `github` and `table` extensions enabled.
 
 ## Usage
 
-The basic usage is `activemd FILE`. This will compile a markdown file with the
-Active Markdown notation into an HTML file
+The basic usage is `activemd <file>`. This will compile a markdown file with the Active Markdown notation into an HTML file
 
-    activemd [options] FILE(S)
+    activemd [command] [options] <file>
+
+Commands:
+
+- `compile <file>`: compile the given file to HTML (also the default action if no command specified)
+- `watch <file>`: recompile the given file on every change and trigger a reload in the open browser
+- `sample`: generate a sample Active Markdown document
 
 Options:
-
-*   `-l  --local`
-    Create local copies of the asset files, relative to the specified source
-    file(s). By default, the assets used are remote, specifically:
-
-        http://activemarkdown.org/viewer/activemarkdown-0.3.2-min.css
-        http://activemarkdown.org/viewer/activemarkdown-0.3.2-min.js
-
-*   `-i  --inline`
-    Inline the asset files in the template. Similar to `--local`, but includes
-    the content of the assets in the actual output file, creating a single,
-    self-contained Active Markdown viewer file.
-
-*   `-c  --collapsed_code`
-    Collapse the code blocks by default.
 
 *   `    --title TITLE`
     Use the specified string as the title of the compiled HTML file.
 
-*   `    --sample`
-    Generate a sample file that contains all of the possible controls in
-    various configurations.
-
-*   `    --debug`
-    Set the debug flag when compiling, using unminified versions of the viewer
-    asset files and providing error feedback.
-
 
 ## Notation
 
-The notation for specifying elements is similar to the regular Markdown syntax
-for links and images, generally following this format:
+The notation for specifying elements is similar to the regular markdown syntax for links and images but with braces instead of parentheses, generally following this format:
 
 `[text content]{variable_name: configuration}`
 
-See [docs/reference.html](http://activemarkdown.org/reference.html) for a
-complete reference of the elements and their configuration.
-
-
-## API
-
-The `ActiveMarkdown` module allows for programmatic parsing of Active Markdown,
-in Node via `require 'active-markdown'`, or in the browser by including the
-[script asset file](http://activemarkdown.org/viewer/activemarkdown-0.3.2-min.js).
-
-See [docs/api.html](http://activemarkdown.org/api.html) for details.
+See [docs/reference.html](https://activemarkdown.org/reference.html) for a complete reference of the elements and their configuration. See [docs/examples.md](https://activemarkdown.org/examples.html) for a variety of examples showing different usage.
 
 
 ## Authors
 
-* [Alec Perkins](https://github.com/alecperkins) ([Droptype Inc](http://droptype.com))
+* [Alec Perkins](https://alecperkins.net)
 
-Thanks to [J Voight](https://github.com/joyrexus), [Alex
-Cabrera](http://alexcabrera.me/), [John Debs](http://johndebs.com/), and
-[Supriyo Sinha](http://supriyosinha.com) for help with the notation.
+Thanks to [J Voight](https://github.com/joyrexus), [Alex Cabrera](https://alexcabrera.me/), [John Debs](https://johndebs.com/), and Supriyo Sinha for help with the notation.
 
-The concept and controls are heavily influenced by [Bret
-Victor’s](http://worrydream.com) [Tangle](http://worrydream.com/Tangle)
-library for creating reactive documents.
-
-* [You?](https://github.com/alecperkins/active-markdown/issues) - Active
-Markdown is still very experimental, and input on the notation, bugs, use
-cases, control elements, and anything else is very welcome.
+The concept and controls are heavily influenced by [Bret Victor’s](https://worrydream.com) [Tangle](https://worrydream.com/Tangle) library for creating reactive documents.
 
 
 ## License
 
-Unless otherwise noted, this software is Unlicensed, aka Public Domain. See
-[/UNLICENSE](https://github.com/alecperkins/active-markdown/blob/master/UNLICENSE)
-for more information.
+This package is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
-
+See `./LICENSE` for more information.

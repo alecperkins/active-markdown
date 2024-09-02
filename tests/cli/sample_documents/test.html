@@ -1,0 +1,130 @@
+<h1 id="test-document">Test document</h1>
+<p>This is a test document for Active Markdown, adapted from John Gruber’s <a href="http://daringfireball.net/projects/markdown/syntax.text">Markdown syntax specification</a>.</p>
+<h1 id="an-atx-style-h1">An atx-style H1</h1>
+<h2 id="an-atx-style-h2">An atx-style H2</h2>
+<h3 id="an-atx-style-h3">An atx-style H3</h3>
+<h4 id="an-atx-style-h4">An atx-style H4</h4>
+<h5 id="an-atx-style-h5">An atx-style H5</h5>
+<h6 id="an-atx-style-h6">An atx-style H6</h6>
+<h1 id="a-closed-atx-h1">A closed atx H1</h1>
+<h2 id="a-closed-atx-h2">A closed atx H2</h2>
+<h3 id="a-closed-atx-h3">A closed atx H3</h3>
+<h4 id="a-closed-atx-h4">A closed atx H4</h4>
+<h5 id="a-closed-atx-h5">A closed atx H5</h5>
+<h6 id="a-closed-atx-h6">A closed atx H6</h6>
+<h1 id="a-setext-style-h1">A setext-style H1</h1>
+<h2 id="a-setext-style-h2">A setext-style H2</h2>
+<p>This is an ordinary paragraph. It should be wrapped in <code>&lt;p&gt;</code> tags.</p>
+<p>This is another paragraph that<br>uses the GFM-style line ending<br>behavior. It should still be<br>one paragraph.</p>
+<p>Paragraphs can contain inline <em>emphasis</em>, <strong>strong</strong>, and <code>code</code> elements. The <em>alternate</em> forms <strong>work</strong>, but are ugly. In-word underscores for things like variable_names are ignored, per GFM. URLs are specified using a simple <a href="http://example.com">notation</a>. Images use a similar notation, but with a bang: <img src="http://placekitten.com/300/200/" alt="Cats">.</p>
+<p>However, ChartElements use a similar notation but do not become images. <span class="js-amd-embed" data-config="line=someFunction: 0..100 by 5">y vs x</span></p>
+<blockquote>
+<p>This is a blockquote. It should be wrapped in <code>&lt;blockquote&gt;</code> tags.<br>It continues onto the next line but still the same block. It supports<br>formatting like <em>emphasis</em> and <strong>strong</strong>.</p>
+</blockquote>
+<p>Active content can be added into paragraphs: <span class="js-amd-element" data-config="value1: 0..1 by 0.1">1.0</span>.</p>
+<blockquote>
+<p>And it can be added to blockquotes: <span class="js-amd-element" data-config="value2">output value</span>.</p>
+</blockquote>
+<pre><code>// This is a code block that will become active.
+someFunction = (x) =&gt; {
+  return x * 2;
+}
+value2 = someFunction(value1);
+</code></pre>
+<pre><code class="language-javascript">// This is a code block that will not become active.
+someFunction = (x) =&gt; {
+  return x * 2;
+}
+value2 = someFunction(value1);
+</code></pre>
+<pre><code class="language-python"># This is another inactive code block.
+def howManyArgs(*args):
+    return len(args)
+
+print howManyArgs(1,2,3,4,5,6)
+</code></pre>
+<pre><code class="language-markdown">This is a code block with &lt;span class=&quot;js-amd-element&quot; data-config=&quot;value1: 1..10&quot;&gt;active content&lt;/span&gt;
+that is ignored because it’s in code.
+</code></pre>
+<p>Active Markdown in <code>[inline code]{inline: yes or no}</code> <span class="js-amd-element" data-config="ignored: is or isnt">is</span> ignored by the parser. It would be difficult to talk about Active Markdown using itself, otherwise.</p>
+<ul>
+<li>unordered</li>
+<li>list</li>
+<li>items<ul>
+<li>can</li>
+<li>be<ul>
+<li>nested</li>
+</ul>
+</li>
+<li>as<ul>
+<li>one</li>
+<li>would</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>expect</li>
+</ul>
+<hr>
+<ul>
+<li>other</li>
+<li>symbols<ul>
+<li>work</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li>because<ul>
+<li>why</li>
+</ul>
+</li>
+<li>not</li>
+</ul>
+<hr>
+<ol>
+<li>ordered</li>
+<li>lists<ol>
+<li>have</li>
+<li>an</li>
+</ol>
+</li>
+<li>order</li>
+</ol>
+<hr>
+<ul>
+<li>this</li>
+<li>list</li>
+<li>contains <span class="js-amd-element" data-config="value2: 1..10">active content</span></li>
+</ul>
+<hr>
+<p>Tables also work, because they are useful.</p>
+<table>
+<thead>
+<tr>
+<th>Ones</th>
+<th>Twos</th>
+<th>Threes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>2</td>
+<td>4</td>
+<td>6</td>
+</tr>
+<tr>
+<td>3</td>
+<td>6</td>
+<td>9</td>
+</tr>
+<tr>
+<td>4</td>
+<td>8</td>
+<td>12</td>
+</tr>
+</tbody></table>
