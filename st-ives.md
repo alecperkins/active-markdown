@@ -1,35 +1,37 @@
-# St Ives
 
-An old riddle.
+## St Ives
 
-> As [I]{travelers: we or I} [was]{verb} going to *St Ives*  
-> I met a man with [7 wives]{wives: 1..10}  
-> Every wife had [7 sacks]{sacks: 1..10}  
-> Every sack had [7 cats]{cats: 1..10}  
-> Every cat had [7 kits]{kits: 1..10}  
-> Kits, cats, sacks, wives  
+An [old riddle](https://en.wikipedia.org/wiki/As_I_was_going_to_St_Ives).
+
+> As [I]{solo: I or we} [was]{verb} going to **St Ives**,
+> I met a man with [7 wives]{wives: 1..10},
+> Every wife had [7 sacks]{sacks: 1..10},
+> Every sack had [7 cats]{cats: 1..10},
+> Every cat had [7 kits]{kits: 1..10}:
+> Kits, cats, sacks, wives,
 > How many were going to St Ives?
 
-    total_sacks = @wives * @sacks
-    total_cats  = total_sacks * @cats
-    total_kits  = total_cats * @kits
-    man         = 1
+A _reasonable_ guess is [2752]{first_guess}, a sum of the beings the narrator met:
 
-    if @travelers
-        narrator = 2
-        @verb = 'were'
-    else
-        narrator = 1
-        @verb = 'was'
+    const man   = 1;
+    total_sacks = wives * sacks;
+    total_cats  = total_sacks * cats;
+    total_kits  = total_cats * kits;
 
-The first guess is often [2753]{first_guess}…
+    first_guess = man + wives + total_cats + total_kits;
 
-    @first_guess = man + @wives + total_cats + total_kits + narrator
+And another guess might follow the second to last line more literally and sum [2401 kits]{total_kits}, [343 cats]{total_cats}, [49 sacks]{total_sacks}, and [7 wives]{wives} for an answer of [2800]{second_guess}:
+
+    second_guess = total_kits + total_cats + total_sacks + wives;
 
 …but the correct answer is [1]{answer}.
 
-    @answer = narrator
+    if (solo) {
+      travelers = 1;
+      verb = 'was';
+    } else {
+      travelers = 2;
+      verb = 'were';
+    }
 
-- - -
-
-(This file is an example of [Active Markdown](http://activemarkdown.org)).
+    answer = travelers;
