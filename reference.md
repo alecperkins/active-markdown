@@ -496,7 +496,7 @@ Use `CTRL+C` to quit the watcher.
 
 ### Sample
 
-`activemd sample` will generate a [`sample.md` file]('./sample.md) in the current working directory.
+`activemd sample` will generate a [`sample.md` file](./sample.md) in the current working directory.
 
 
 - - -
