@@ -20,12 +20,13 @@ And edit this JavaScript to say `walk_distance * 3`:
 
 That was generated from this markdown:
 
-```markdown
-I would walk [500]{walk_distance: 100..1000 by 10} miles and I would walk [500]{second_walk} more…
+<pre><code class="language-markdown">
+I would walk [500]&#123;walk_distance: 100..1000 by 10&#125; miles
+and I would walk [500]&#123;second_walk&#125; more…
 
     second_walk = walk_distance * 3
 
-```
+</code></pre>
 
 ## Getting started
 
